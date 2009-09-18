@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <wizard id="wizard_jasper_server_grandlivre_report" keyword="client_print_multi" model="account.move.line" name="jasper.server.grandlivre.report" string="Grand Livre Jasper"/>
+    <wizard id="wizard_jasper_server_balancedessoldes_report" keyword="client_print_multi" model="account.move.line" name="jasper.server.balancedessoldes.report" string="Balance des soldes"/>
+    <menuitem icon="STOCK_PRINT" sequence="1" id="jasper" name="Reports Jasper" />
+    <menuitem icon="STOCK_PRINT" action="wizard_jasper_server_grandlivre_report" id="menu_jasper_server_grandlivre" parent="jasper" type="wizard"/>
+    <menuitem icon="STOCK_PRINT" action="wizard_jasper_server_balancedessoldes_report" id="menu_jasper_server_balancedessoldes" parent="jasper" type="wizard"/>
+  </data>
+</openerp>
