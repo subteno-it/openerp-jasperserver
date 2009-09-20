@@ -1,9 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,22 +19,22 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Jasper Server',
-    'version': '0.1',
+    'version': '0.2',
     'category': 'Tools',
     'description': """This module used JasperServer For Reports.""",
     'author': 'Everlibre',
     'website': 'http://openerp.com',
-    'depends': ['base'],
+    'depends': [
+        'base'
+    ],
     'init_xml': [],
     'update_xml': [
         'jasper_server_report.xml',
-        
     ],
     'demo_xml': [],
     'installable': True,
-    
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
