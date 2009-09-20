@@ -22,8 +22,7 @@
 #
 ##############################################################################
 
-import object
-import report
-import wizard
+import grandlivre
+import balancedessoldes
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
