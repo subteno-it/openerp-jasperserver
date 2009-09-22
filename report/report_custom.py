@@ -43,7 +43,7 @@ class report_custom(report_int):
         print
         print body
         print
-        h.add_credentials('jasperadmin', 'chkvoldsk')
+        h.add_credentials('jasperadmin', 'jasperadmin')
         resp, content = h.request("http://127.0.0.1:8080/jasperserver/services/repository", "POST", body,headers)
         self.obj=external_pdf(content)
         return (self.obj.pdf, 'pdf')
