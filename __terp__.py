@@ -30,10 +30,11 @@
     'author': 'Everlibre,SYLEAM',
     'website': 'http://everlibre.fr',
     'depends': [
-        'base'
+        'base',
     ],
     'init_xml': [],
     'update_xml': [
+        'view/menu.xml',
         'report/report.xml',
         'wizard/wizard.xml',
     ],
