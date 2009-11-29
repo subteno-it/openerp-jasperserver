@@ -35,6 +35,7 @@
     'init_xml': [],
     'update_xml': [
         'view/menu.xml',
+        'view/oojasper.xml',
         'report/report.xml',
         'wizard/wizard.xml',
     ],
