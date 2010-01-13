@@ -51,8 +51,8 @@
             <field name="arch" type="xml">
 
                 <form string="Jasper Server">
-                    <field name="host"/>
-                    <field name="port"/>
+                    <field name="host" select="1"/>
+                    <field name="port" select="1"/>
                     <field name="user"/>
                     <field name="pass"/>
                     <field name="repo" colspan="4"/>
@@ -63,7 +63,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_jasper_server">
-            <field name="name">Jasper Server</field>
+            <field name="name">Jasper Server configuration</field>
             <field name="res_model">jasper.server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -73,8 +73,8 @@
 
         <menuitem id="menu_jasper_server"
             action="action_jasper_server"
-            icon="STOCK_PRINT"
-            parent="menu_jasper_server_configuration"/>
+            icon="STOCK_PREFERENCES"
+            parent="menu_jasper"/>
 
 
     </data>
