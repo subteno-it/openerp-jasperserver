@@ -50,6 +50,30 @@ class jasper_document(osv.osv):
             'action' : fields.many2one('ir.actions.act_window', 'Actions'),
     }
 
+    def create(self, cr, uid, vals, context=None):
+        """
+
+        """
+        if not context:
+            context = {)
+
+        pass
+
+
+    def write(self, cr, uid, ids, vals, context=None):
+        """
+
+        """
+        if not context:
+            context = {)
+
+        pass
+
+
+def add_wizard(self, cr, uid):
+    """docstring for add_wizard"""
+    pass
+
 jasper_document()
 
 
