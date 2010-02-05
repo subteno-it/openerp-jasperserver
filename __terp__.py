@@ -37,7 +37,7 @@
         'view/menu.xml',
         'view/oojasper.xml',
         #'report/report.xml',
-        #'wizard/wizard.xml',
+        'wizard/wizard.xml',
     ],
     'demo_xml': [],
     'installable': True,

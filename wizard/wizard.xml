@@ -24,5 +24,17 @@
         #
         ##############################################################################
 
+        <wizard id="wizard_jasper_make_template"
+            name="jasper_server.make_template"
+            model="ir.model"
+            string="Make XML Template"
+            menu="False"/>
+
+        <menuitem id="menu_jasper_make_template" 
+            parent="menu_jasper"
+            sequence="20"
+            action="wizard_jasper_make_template"
+            type="wizard"/>
+
     </data>
 </openerp>
