@@ -25,29 +25,6 @@
         #
         ##############################################################################
 
-        <wizard id="wizard_jasper_server_grandlivre_report" 
-            string="Grand Livre Jasper"
-            name="jasper.server.grandlivre.report" 
-            model="account.move.line" 
-            keyword="client_print_multi"/>
-
-        <wizard id="wizard_jasper_server_balancedessoldes_report" 
-            string="Balance des soldes"
-            name="jasper.server.balancedessoldes.report" 
-            model="account.move.line" 
-            keyword="client_print_multi"/>
-
-        <menuitem id="menu_jasper_server_grandlivre"
-            icon="STOCK_PRINT" 
-            action="wizard_jasper_server_grandlivre_report" 
-            parent="jasper" 
-            type="wizard"/>
-
-        <menuitem id="menu_jasper_server_balancedessoldes"
-            icon="STOCK_PRINT" 
-            action="wizard_jasper_server_balancedessoldes_report" 
-            parent="jasper" 
-            type="wizard"/>
 
     </data>
 </openerp>
