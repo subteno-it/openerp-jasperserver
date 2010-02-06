@@ -26,11 +26,17 @@ import wizard
 import pooler
 import base64
 
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 init_form = """<?xml version="1.0" ?>
 <form string="Make template">
   <field name="model" colspan="4" width="300"/>
   <field name="depth"/>
   <field name="model_id"/>
+  <field name="indent"/>
 </form>
 """
 
@@ -38,15 +44,15 @@ init_fields = {
     'model': {'string': 'Model', 'type': 'many2one', 'relation': 'ir.model', 'required': True},
     'depth': {'string': 'Depth', 'type': 'integer', 'required': True, 'default': 3},
     'model_id': {'string': 'Id', 'type': 'integer', 'required': True, 'default': 1},
+    'indent': {'string': 'Indent the XML output ?', 'type': 'boolean', 'default': True},
 }
 
 def _init(self, cr, uid, data, context):
-    print 'DATA: %r' % data
-    print 'CONTEXT: %r' % context
     return {}
 
 save_form = """<?xml version="1.0" ?>
 <form string="Save template">
+  <separator string="Select the location to save the data file" colspan="4"/>
   <field name="datas" filename="filename"/>
   <field name="filename" invisible="1"/>
 </form>
@@ -59,9 +65,17 @@ save_fields = {
 
 
 def _generate(self, cr, uid, data, context):
-    
-    print 'GENERATE'
-    datas = base64.encodestring('TEST')
+    """
+    Compose the XML
+    """
+    form = data['form']
+    j_obj = pooler.get_pool(cr.dbname).get('jasper.server')
+    context['indent'] = form['indent']
+    buf = StringIO()
+    buf.write(j_obj.generator(cr, uid, form['model'], form['model_id'], form['depth'], context=context))
+
+    datas = base64.encodestring(buf.getvalue())
+    buf.close()
     filename = 'jasper.xml'
     res = {'datas': datas , 'filename': filename}
     return res
@@ -90,6 +104,5 @@ class make_template(wizard.interface):
     }
 
 make_template('jasper_server.make_template')
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
