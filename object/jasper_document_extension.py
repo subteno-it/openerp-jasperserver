@@ -62,7 +62,7 @@ class jasper_document(osv.osv):
             'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group-id', 'Groups', ),
             'action' : fields.many2one('ir.actions.act_window', 'Actions'),
             'depth' : fields.integer('Depth', required=True),
-            'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice'),
+            'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
             'format' : fields.selection(_get_formats, 'Formats'),
             }
 
