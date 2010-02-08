@@ -113,11 +113,15 @@
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
         <form string="Jasper Document">
-            <field name="name" select="1"/> <newline/>
-            <field name="model" select="1"/> <newline/>
-            <field name="jasper_file"/> <newline/>
-            <field name="action" select="1"/> <newline/>
-            <field name="group_ids" />
+            <field name="name" select="1" colspan="4"/>
+            <field name="model" select="1" colspan="4"/>
+            <field name="jasper_file" colspan="4"/>
+            <field name="action" select="1" colspan="4"/>
+            <separator string="Groups" colspan="4"/>
+            <field name="group_ids" nolabel="1" colspan="4"/>
+            <field name="format_choice"/>
+            <field name="format" attrs="{'readonly':[('format_choice','!=','multi')]}"/>
+            <field name="active" colspan="4"/>
         </form>
     </field>
 </record>

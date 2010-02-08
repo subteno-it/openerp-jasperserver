@@ -41,21 +41,38 @@ jasper_document_extension()
 class jasper_document(osv.osv):
     _name = 'jasper.document'
     _description = 'Jasper Document'
+    
+    
+    def _get_formats(self, cr, uid, ids):
+        """
+
+        """
+        extension_obj = self.pool.get('jasper.document.extension')
+        ext_ids = extension_obj.search(cr, uid, [])
+        extensions = self.pool.get('jasper.document.extension').read(cr, uid, ext_ids)
+        extensions = [(extension['jasper_code'], extension['name']+" (*."+extension['extension']+")") for extension in extensions]
+        return extensions
+
 
     _columns = {
             'name' : fields.char('Name', size=128, required=True), # button name
+            'active' : fields.boolean('Active', help="Indicates if this document is active or not"),
             'model' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
             'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
             'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group-id', 'Groups', ),
             'action' : fields.many2one('ir.actions.act_window', 'Actions'),
+            'depth' : fields.integer('Depth', required=True),
+            'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice'),
+            'format' : fields.selection(_get_formats, 'Formats'),
             }
+
 
     def create(self, cr, uid, vals, context=None):
         """
 
         """
         if not context:
-            context = {)
+            context = {}
 
         return True
 
@@ -65,7 +82,7 @@ class jasper_document(osv.osv):
 
         """
         if not context:
-            context = {)
+            context = {}
 
         return True
 
@@ -75,7 +92,7 @@ class jasper_document(osv.osv):
 
         """
         if not context:
-            context = {)
+            context = {}
 
         return True
 
