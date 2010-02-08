@@ -96,9 +96,10 @@
     <field name="type">tree</field>
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
-        <tree string="Jasper Document">
+        <tree string="Jasper Document" colors="#f66a00:enabled==False" >
             <field name="name"/>
             <field name="model"/>
+            <field name="enabled"/>
             <field name="jasper_file"/>
             <field name="action"/>
         </tree>
@@ -117,11 +118,12 @@
             <field name="model" select="1" colspan="4"/>
             <field name="jasper_file" colspan="4"/>
             <field name="action" select="1" colspan="4"/>
+            <field name="depth" colspan="4"/>
             <separator string="Groups" colspan="4"/>
             <field name="group_ids" nolabel="1" colspan="4"/>
             <field name="format_choice"/>
             <field name="format"/><!-- attrs="{'readonly':[('format_choice','!=','multi')]}"/>-->
-            <field name="active" colspan="4"/>
+            <field name="enabled" colspan="4"/>
         </form>
     </field>
 </record>

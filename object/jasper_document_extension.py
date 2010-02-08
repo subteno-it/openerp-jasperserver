@@ -56,10 +56,10 @@ class jasper_document(osv.osv):
 
     _columns = {
             'name' : fields.char('Name', size=128, required=True), # button name
-            'active' : fields.boolean('Active', help="Indicates if this document is active or not"),
+            'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
             'model' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
             'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
-            'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group-id', 'Groups', ),
+            'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
             'action' : fields.many2one('ir.actions.act_window', 'Actions'),
             'depth' : fields.integer('Depth', required=True),
             'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
@@ -74,7 +74,7 @@ class jasper_document(osv.osv):
         if not context:
             context = {}
 
-        return True
+        return super(jasper_document, self).create(cr, uid, vals, context=context)
 
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -84,17 +84,17 @@ class jasper_document(osv.osv):
         if not context:
             context = {}
 
-        return True
+        return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
 
 
-    def unlink(self, cr, uid, ids, vals, context=None):
+    def unlink(self, cr, uid, ids, context=None):
         """
 
         """
         if not context:
             context = {}
 
-        return True
+        return super(jasper_document, self).unlink(cr, uid, ids)
 
 
     def add_wizard(self, cr, uid):
