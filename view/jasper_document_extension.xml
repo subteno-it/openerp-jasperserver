@@ -120,7 +120,7 @@
             <separator string="Groups" colspan="4"/>
             <field name="group_ids" nolabel="1" colspan="4"/>
             <field name="format_choice"/>
-            <field name="format" attrs="{'readonly':[('format_choice','!=','multi')]}"/>
+            <field name="format"/><!-- attrs="{'readonly':[('format_choice','!=','multi')]}"/>-->
             <field name="active" colspan="4"/>
         </form>
     </field>
