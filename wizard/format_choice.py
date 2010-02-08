@@ -31,9 +31,11 @@ form  = """<?xml version="1.0" ?>
 </form>
 """
 
-def _get_formats(self, cr, uid, ids):
+def _get_formats(self, cr, uid, data, context=None):
     pool = pooler.get_pool(cr.dbname)
-    return pool.get('jasper.document')._get_formats(cr, uid, ids)
+    print 'data %r'%data
+    res = pool.get('jasper.document').get_formats(cr, uid, [])
+    return res
 
 fields = {
     'format_choice' : {'string': 'Format', 'type': 'selection', 'selection': _get_formats, 'required': True},
@@ -47,8 +49,10 @@ def _select_format(self, cr, uid, data, context=None):
 
     pool = pooler.get_pool(cr.dbname)
     document_obj = pool.get('jasper.document')
-    document = document_obj.browse(cr, uid, data[ids], context=context)
-    if document_id :
+    document = document_obj.browse(cr, uid, data['ids'], context=context)[0]
+    print "DEBUG  wizard::_select_format -> data = %r"%data
+    print "DEBUG  wizard::_select_format -> context = %r"%context
+    if document.id :
         if document.format_choice == 'mono':
             action = 'create_wizard'
         elif document.format_choice == 'multi':
@@ -58,7 +62,7 @@ def _select_format(self, cr, uid, data, context=None):
 
 def _create_wizard(self, cr, uid, data, context=None):
 
-    return True
+    return {}
 
 class format_choice(wizard.interface):
  states = {

@@ -39,8 +39,11 @@
         'view/jasper_document_extension.xml',
         #'report/report.xml',
         'wizard/wizard.xml',
+        'data/jasper_document_extension.xml',
     ],
-    'demo_xml': [],
+    'demo_xml': [
+        'demo/jasper_document.xml',
+        ],
     'installable': True,
 }
 

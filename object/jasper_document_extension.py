@@ -43,7 +43,7 @@ class jasper_document(osv.osv):
     _description = 'Jasper Document'
     
     
-    def _get_formats(self, cr, uid, ids):
+    def get_formats(self, cr, uid, ids):
         """
 
         """
@@ -63,7 +63,7 @@ class jasper_document(osv.osv):
             'action' : fields.many2one('ir.actions.act_window', 'Actions'),
             'depth' : fields.integer('Depth', required=True),
             'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
-            'format' : fields.selection(_get_formats, 'Formats'),
+            'format' : fields.selection(get_formats, 'Formats'),
             }
 
 

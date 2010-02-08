@@ -3,9 +3,8 @@
     <data>
         ##############################################################################
         #
-        #    jasper_server module for OpenERP
-        #    Copyright (c) 2008-2009 EVERLIBRE (http://everlibre.fr) Eric VERNICHON
-        #    Copyright (C) 2009 SYLEAM ([http://www.syleam.fr]) Christophe CHAUVET
+        #    jasper_server module for OpenERP, 
+        #    Copyright (C) 2010 SYLEAM Info Services ([http://www.Syleam.fr/]) Damien CRIER
         #
         #    This file is a part of jasper_server
         #
@@ -24,27 +23,13 @@
         #
         ##############################################################################
 
-        <wizard id="wizard_jasper_document_print"
-            name="jasper_server.document_print"
-            model="jasper.document"
-            string="Document Print"/>
-
-        <wizard id="wizard_jasper_document_print_res_partner"
-            name="jasper_server.document_print"
-            model="res.partner"
-            string="Document Print"/>
-
-        <wizard id="wizard_jasper_make_template"
-            name="jasper_server.make_template"
-            model="ir.model"
-            string="Make XML Template"
-            menu="False"/>
-
-        <menuitem id="menu_jasper_make_template" 
-            parent="menu_jasper"
-            sequence="20"
-            action="wizard_jasper_make_template"
-            type="wizard"/>
+        <record model="jasper.document" id="jasper_document_4">
+            <field name="name">UNACTIVE - MULTI FORMAT</field>
+            <field name="depth">3</field>
+            <field name="jasper_file">UNACTIVE - MULTI FORMAT</field>
+            <field name="format_choice">multi</field>
+            <field name="model" ref="base.model_res_partner"/>
+        </record>
 
     </data>
 </openerp>
