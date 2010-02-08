@@ -33,7 +33,7 @@ class jasper_document_extension(osv.osv):
             'name' : fields.char('Name', size=128, translate=True),
             'jasper_code' : fields.char('Code', size=32, required=True),
             'extension' : fields.char('Extension', size=10, required=True),
-    }
+            }
 
 jasper_document_extension()
 
@@ -48,7 +48,7 @@ class jasper_document(osv.osv):
             'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
             'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group-id', 'Groups', ),
             'action' : fields.many2one('ir.actions.act_window', 'Actions'),
-    }
+            }
 
     def create(self, cr, uid, vals, context=None):
         """
@@ -57,7 +57,7 @@ class jasper_document(osv.osv):
         if not context:
             context = {)
 
-        pass
+        return True
 
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -67,12 +67,47 @@ class jasper_document(osv.osv):
         if not context:
             context = {)
 
-        pass
+        return True
 
 
-def add_wizard(self, cr, uid):
-    """docstring for add_wizard"""
-    pass
+    def unlink(self, cr, uid, ids, vals, context=None):
+        """
+
+        """
+        if not context:
+            context = {)
+
+        return True
+
+
+    def add_wizard(self, cr, uid):
+        """
+
+        """
+        if not context:
+            context = {}
+
+        return True
+
+
+    def update_wizard(self, cr, uid):
+        """
+
+        """
+        if not context:
+            context = {}
+
+        return True
+
+
+    def remove_wizard(self, cr, uid):
+        """
+
+        """
+        if not context:
+            context = {}
+
+        return True
 
 jasper_document()
 
