@@ -24,6 +24,13 @@
         #
         ##############################################################################
 
+        <wizard id="wizard_jasper_document_print"
+            name="jasper_server.document_print"
+            model="jasper.document"
+            string="Document Print"
+            menu="False"/>
+
+
         <wizard id="wizard_jasper_make_template"
             name="jasper_server.make_template"
             model="ir.model"

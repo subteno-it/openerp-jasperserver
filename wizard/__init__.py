@@ -22,6 +22,9 @@
 #
 ##############################################################################
 
+
 import make_template
+import format_choice
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -90,7 +90,7 @@ class format_choice(wizard.interface):
             },
         }
 
-format_choice('jasper_document_format_choice')
+format_choice('jasper_server.document_print')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
