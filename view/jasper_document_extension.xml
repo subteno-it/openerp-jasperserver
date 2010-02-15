@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        ##############################################################################
+        #
+        #    jasper_server module for OpenERP, 
+        #    Copyright (C) 2010 SYLEAM Info Services ([http://www.Syleam.fr/]) Damien CRIER
+        #
+        #    This file is a part of jasper_server
+        #
+        #    jasper_server is free software: you can redistribute it and/or modify
+        #    it under the terms of the GNU General Public License as published by
+        #    the Free Software Foundation, either version 3 of the License, or
+        #    (at your option) any later version.
+        #
+        #    jasper_server is distributed in the hope that it will be useful,
+        #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        #    GNU General Public License for more details.
+        #
+        #    You should have received a copy of the GNU General Public License
+        #    along with this program.  If not, see [http://www.gnu.org/licenses/].
+        #
+        ##############################################################################
+
+
+        <!--
+            Document extension
+        -->
+
+        <record id="view_document_extension_tree" model="ir.ui.view">
+            <field name="name">Jasper Document Extension [list]</field>
+            <field name="model">jasper.document.extension</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Document extensions">
+                    <field name="jasper_code"/>
+                    <field name="extension"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_document_extension_form" model="ir.ui.view">
+            <field name="name">Jasper Document Extension [form]</field>
+            <field name="model">jasper.document.extension</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Documents extensions">
+                    <field name="name" select="2"/>
+                    <field name="jasper_code" select="1"/>
+                    <field name="extension" select="2"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_document_extension_view">
+            <field name="name">Jasper Document Extension</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">jasper.document.extension</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+
+        <record model="ir.actions.act_window.view" id="open_document_extension_form">
+            <field name="act_window_id" ref="act_open_document_extension_view"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_document_extension_form"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="open_document_extension_tree">
+            <field name="act_window_id" ref="act_open_document_extension_view"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_document_extension_tree"/>
+        </record>
+
+        <menuitem id="menu_jasper_document_extension" 
+            parent="jasper_server.menu_jasper"
+            sequence="20"
+            action="act_open_document_extension_view"/>
+
+
+        <!--
+            Document
+        -->
+
+<record id="view_document_tree" model="ir.ui.view">
+    <field name="name">Jasper Document [tree]</field>
+    <field name="model">jasper.document</field>
+    <field name="type">tree</field>
+    <field name="priority" eval="8"/>
+    <field name="arch" type="xml">
+        <tree string="Jasper Document" colors="#f66a00:enabled==False" >
+            <field name="name"/>
+            <field name="model"/>
+            <field name="enabled"/>
+            <field name="jasper_file"/>
+            <field name="action"/>
+        </tree>
+    </field>
+</record>
+
+
+<record id="view_document_form" model="ir.ui.view">
+    <field name="name">Jasper Document</field>
+    <field name="model">jasper.document</field>
+    <field name="type">form</field>
+    <field name="priority" eval="8"/>
+    <field name="arch" type="xml">
+        <form string="Jasper Document">
+            <field name="name" select="1" colspan="4"/>
+            <field name="model" select="1" colspan="4"/>
+            <field name="jasper_file" colspan="4"/>
+            <field name="action" select="1" colspan="4"/>
+            <field name="depth" colspan="4"/>
+            <separator string="Groups" colspan="4"/>
+            <field name="group_ids" nolabel="1" colspan="4"/>
+            <field name="format_choice"/>
+            <field name="format"/><!-- attrs="{'readonly':[('format_choice','!=','multi')]}"/>-->
+            <field name="enabled" colspan="4"/>
+        </form>
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="act_open_document_view">
+    <field name="name">Jasper Document</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">jasper.document</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">form</field>
+    <field name="domain">[]</field>
+    <field name="context">{}</field>
+</record>
+
+
+<record model="ir.actions.act_window.view" id="open_document_form">
+    <field name="act_window_id" ref="act_open_document_view"/>
+    <field name="sequence" eval="2"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_document_form"/>
+</record>
+
+        <record model="ir.actions.act_window.view" id="open_document_tree">
+            <field name="act_window_id" ref="act_open_document_view"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_document_tree"/>
+        </record>
+
+<menuitem id="menu_jasper_document" 
+    parent="jasper_server.menu_jasper"
+    sequence="20"
+    action="act_open_document_view"/>
+    </data>
+</openerp>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        ##############################################################################
+        #
+        #    jasper_server module for OpenERP, 
+        #    Copyright (C) 2010 SYLEAM Info Services ([http://www.Syleam.fr/]) Damien CRIER
+        #
+        #    This file is a part of jasper_server
+        #
+        #    jasper_server is free software: you can redistribute it and/or modify
+        #    it under the terms of the GNU General Public License as published by
+        #    the Free Software Foundation, either version 3 of the License, or
+        #    (at your option) any later version.
+        #
+        #    jasper_server is distributed in the hope that it will be useful,
+        #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        #    GNU General Public License for more details.
+        #
+        #    You should have received a copy of the GNU General Public License
+        #    along with this program.  If not, see [http://www.gnu.org/licenses/].
+        #
+        ##############################################################################
+
+
+        <record model="jasper.document.extension" id="jasper_document_extension_1">
+            <field name="jasper_code">ODS</field>
+            <field name="name">OpenOffice Writer</field>
+            <field name="extension">ods</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_2">
+            <field name="jasper_code">PDF</field>
+            <field name="name">PDF Viewer</field>
+            <field name="extension">pdf</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_3">
+            <field name="jasper_code">ODS</field>
+            <field name="name">OpenOffice Calc</field>
+            <field name="extension">ods</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_4">
+            <field name="jasper_code">DOCX</field>
+            <field name="name">Microsoft® Word 2007</field>
+            <field name="extension">docx</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_5">
+            <field name="jasper_code">XLSX</field>
+            <field name="name">Microsoft® Excel 2007</field>
+            <field name="extension">xlsx</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_6">
+            <field name="jasper_code">XLS</field>
+            <field name="name">Microsoft® Excel (97 -&gt; 2003)</field>
+            <field name="extension">xls</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_7">
+            <field name="jasper_code">CSV</field>
+            <field name="name">Text Editor</field>
+            <field name="extension">csv</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_8">
+            <field name="jasper_code">RTF</field>
+            <field name="name">Rich Text Format</field>
+            <field name="extension">rtf</field>
+        </record>
+
+        <record model="jasper.document.extension" id="jasper_document_extension_9">
+            <field name="jasper_code">FLASH</field>
+            <field name="name">Flash Viewer</field>
+            <field name="extension">flash</field>
+        </record>
+
+    </data>
+</openerp>

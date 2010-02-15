@@ -22,7 +22,9 @@
 #
 ##############################################################################
 
+
 import oojasper
+import jasper_document_extension
 
 # Add report path to the python path
 import os
