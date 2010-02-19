@@ -30,10 +30,10 @@ class jasper_document_extension(osv.osv):
     _description = 'Jasper Document Extension'
 
     _columns = {
-            'name' : fields.char('Name', size=128, translate=True),
-            'jasper_code' : fields.char('Code', size=32, required=True),
-            'extension' : fields.char('Extension', size=10, required=True),
-            }
+        'name' : fields.char('Name', size=128, translate=True),
+        'jasper_code' : fields.char('Code', size=32, required=True),
+        'extension' : fields.char('Extension', size=10, required=True),
+    }
 
 jasper_document_extension()
 
@@ -41,11 +41,10 @@ jasper_document_extension()
 class jasper_document(osv.osv):
     _name = 'jasper.document'
     _description = 'Jasper Document'
-    
-    
+
     def get_formats(self, cr, uid, ids):
         """
-
+        Return the list of all types of document that can be generate by JasperServer
         """
         extension_obj = self.pool.get('jasper.document.extension')
         ext_ids = extension_obj.search(cr, uid, [])
@@ -53,19 +52,17 @@ class jasper_document(osv.osv):
         extensions = [(extension['jasper_code'], extension['name']+" (*."+extension['extension']+")") for extension in extensions]
         return extensions
 
-
     _columns = {
-            'name' : fields.char('Name', size=128, required=True), # button name
-            'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
-            'model' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
-            'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
-            'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
-            'action' : fields.many2one('ir.actions.act_window', 'Actions'),
-            'depth' : fields.integer('Depth', required=True),
-            'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
-            'format' : fields.selection(get_formats, 'Formats'),
-            }
-
+        'name' : fields.char('Name', size=128, required=True), # button name
+        'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
+        'model' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
+        'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
+        'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
+        'action' : fields.many2one('ir.actions.act_window', 'Actions'),
+        'depth' : fields.integer('Depth', required=True),
+        'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
+        'format' : fields.selection(get_formats, 'Formats'),
+    }
 
     def create(self, cr, uid, vals, context=None):
         """
@@ -127,7 +124,5 @@ class jasper_document(osv.osv):
         return True
 
 jasper_document()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
