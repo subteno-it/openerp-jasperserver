@@ -25,6 +25,7 @@ from osv import osv
 from osv import fields
 from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG, LOG_INFO, LOG_ERROR
+from tools import ustr
 
 def log_error(message):
     Logger().notifyChannel('jasper_server', LOG_ERROR, message)
@@ -50,7 +51,7 @@ class jasper_server(osv.osv):
 
     _defaults = {
         'host': lambda *a: 'localhost',
-        'port': lambda *a: 8080,
+        'port': lambda *a: 8180,
         'user': lambda *a: 'jasperadmin',
         'pass': lambda *a: 'jasperadmin',
         'repo': lambda *a: '/jasperserver/services/repository',
@@ -75,7 +76,7 @@ class jasper_server(osv.osv):
         """
         convert element in lowercase and replace space per _
         """
-        return element.lower().replace(' ','_')
+        return ustr(element).lower().replace(' ','_')
 
     def generate_context(self, cr, uid, context=None):
         """
@@ -126,10 +127,7 @@ class jasper_server(osv.osv):
             'ir.model.grid','ir.model.access','ir.ui.menu','ir.actions.act_window',
             'ir.action.wizard','ir.attachment','ir.cron','ir.rule','ir.rule.group',
             'ir.actions.actions','ir.actions.report.custom','ir.actions.report.xml',
-            'ir.actions.url','ir.ui.view','ir.sequence','res.partner.event',
-            'account.account','account.move','account.move.line','account.journal',
-            'stock.location','product.pricelist','res.partner.category','sale.order.line',
-            'stock.move',
+            'ir.actions.url','ir.ui.view','ir.sequence',
         )
 
         ##
@@ -160,7 +158,7 @@ class jasper_server(osv.osv):
                 name = mod_fields[f]['string']
                 type = mod_fields[f]['type']
                 value = mod[f]
-                e = Element(field, label='%s' % name)
+                e = Element(field, label='%s' % self.format_element(name))
                 if type in ('char','integer','text','selection'):
                     if value:
                         e.text = unicode(value)
