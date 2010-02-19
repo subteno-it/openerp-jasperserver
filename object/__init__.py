@@ -24,7 +24,7 @@
 
 
 import oojasper
-import jasper_document_extension
+import jasper_document
 
 # Add report path to the python path
 import os

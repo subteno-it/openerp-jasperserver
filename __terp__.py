@@ -36,14 +36,14 @@
     'update_xml': [
         'view/menu.xml',
         'view/oojasper.xml',
-        'view/jasper_document_extension.xml',
+        'view/jasper_document.xml',
         #'report/report.xml',
         'wizard/wizard.xml',
         'data/jasper_document_extension.xml',
     ],
     'demo_xml': [
         'demo/jasper_document.xml',
-        ],
+    ],
     'installable': True,
 }
 
