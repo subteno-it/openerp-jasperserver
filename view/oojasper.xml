@@ -84,7 +84,7 @@
         <menuitem id="menu_jasper_server"
             action="action_jasper_server"
             icon="STOCK_PREFERENCES"
-            parent="menu_jasper"/>
+            parent="menu_jasper_configuration"/>
 
 
     </data>
