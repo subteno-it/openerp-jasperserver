@@ -42,16 +42,21 @@ class jasper_document(osv.osv):
     _name = 'jasper.document'
     _description = 'Jasper Document'
 
-    def get_formats(self, cr, uid, ids):
+    def _get_formats(self, cr, uid, context=None):
         """
         Return the list of all types of document that can be generate by JasperServer
         """
+        if not context:
+            context = {}
         extension_obj = self.pool.get('jasper.document.extension')
         ext_ids = extension_obj.search(cr, uid, [])
         extensions = self.pool.get('jasper.document.extension').read(cr, uid, ext_ids)
         extensions = [(extension['jasper_code'], extension['name']+" (*."+extension['extension']+")") for extension in extensions]
         return extensions
 
+    # TODO: Add One2many with model list and depth for each, use for ban process
+    # TODO: Add dynamic parameter to send to jasper report server
+    # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
         'name' : fields.char('Name', size=128, required=True), # button name
         'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
@@ -61,12 +66,12 @@ class jasper_document(osv.osv):
         'action' : fields.many2one('ir.actions.act_window', 'Actions'),
         'depth' : fields.integer('Depth', required=True),
         'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
-        'format' : fields.selection(get_formats, 'Formats'),
+        'format' : fields.selection(_get_formats, 'Formats'),
     }
 
     def create(self, cr, uid, vals, context=None):
         """
-
+        Dynamicaly declare the wizard for this document
         """
         if not context:
             context = {}

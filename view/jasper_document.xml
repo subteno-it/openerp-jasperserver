@@ -112,16 +112,22 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Jasper Document">
-                    <field name="name" select="1" colspan="4"/>
-                    <field name="model" select="1" colspan="4"/>
-                    <field name="jasper_file" colspan="4"/>
-                    <field name="action" select="1" colspan="4"/>
-                    <field name="depth" colspan="4"/>
-                    <separator string="Groups" colspan="4"/>
-                    <field name="group_ids" nolabel="1" colspan="4"/>
-                    <field name="format_choice"/>
-                    <field name="format"/>
-                    <field name="enabled" colspan="4"/>
+                    <field name="name" select="1"/>
+                    <field name="enabled" select="2"/>
+                    <field name="model" select="1"/>
+                    <field name="depth"/>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <field name="jasper_file" colspan="4"/>
+                            <field name="action" select="1" colspan="4"/>
+                            <separator string="Output format" colspan="4"/>
+                            <field name="format_choice"/>
+                            <field name="format"/>
+                        </page>
+                        <page string="Groups">
+                            <field name="group_ids" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
