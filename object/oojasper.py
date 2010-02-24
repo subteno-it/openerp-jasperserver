@@ -165,7 +165,7 @@ class jasper_server(osv.osv):
                 elif type == 'float':
                     #e.set('precision', str(mod_fields[f]['digits'][0]))
                     #e.set('accuracy', str(mod_fields[f]['digits'][1]))
-                    e.text = str(value)
+                    e.text = value and str(value) or 0.0
                 elif type == 'date':
                     e.set('format','YYYY-mm-dd')
                     if value:
