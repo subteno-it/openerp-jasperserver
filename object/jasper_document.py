@@ -68,6 +68,11 @@ class jasper_document(osv.osv):
         'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
         'format' : fields.selection(_get_formats, 'Formats'),
         'report_unit': fields.char('Report Unit', size=128, help='Enter the name for report unit in Jasper Server', required=True),
+        'mode': fields.selection([('sql','SQL'),('xml','XML')], 'Mode', required=True),
+    }
+
+    _defaults = {
+        'mode': lambda *a: 'csv',
     }
 
     def make_action(self, cr, uid, id, context=None):
