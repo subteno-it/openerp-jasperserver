@@ -67,6 +67,7 @@ class jasper_document(osv.osv):
         'depth' : fields.integer('Depth', required=True),
         'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
         'format' : fields.selection(_get_formats, 'Formats'),
+        'report_unit': fields.char('Report Unit', size=128, help='Enter the name for report unit in Jasper Server', required=True),
     }
 
     def make_action(self, cr, uid, id, context=None):

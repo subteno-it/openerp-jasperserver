@@ -119,6 +119,7 @@
                     <notebook colspan="4">
                         <page string="General">
                             <field name="jasper_file" colspan="4"/>
+                            <field name="report_unit" colspan="4"/>
                             <field name="action" select="1" colspan="4"/>
                             <separator string="Output format" colspan="4"/>
                             <field name="format_choice"/>
