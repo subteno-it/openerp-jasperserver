@@ -21,9 +21,9 @@
 #
 ##############################################################################
 
-
 import wizard
 import pooler
+from tools.translate import _
 
 form  = """<?xml version="1.0" ?>
 <form string="Format choice">
@@ -49,23 +49,38 @@ def _select_format(self, cr, uid, data, context=None):
 
     pool = pooler.get_pool(cr.dbname)
     document_obj = pool.get('jasper.document')
-    document = document_obj.browse(cr, uid, data['ids'], context=context)[0]
-    print "DEBUG  wizard::_select_format -> data = %r"%data
-    print "DEBUG  wizard::_select_format -> context = %r"%context
+    model_obj = pool.get('ir.model')
+    mod_ids = model_obj.search(cr, uid, [('model','=', data['model'])])[0]
+    doc_ids = document_obj.search(cr, uid, [('model_id','=',mod_ids)])
+    if not doc_ids:
+        raise wizard.except_wizard(_('Error'), _('No report found!'))
+    document = document_obj.browse(cr, uid, doc_ids[0], context=context)
     if document.id :
         if document.format_choice == 'mono':
             action = 'create_wizard'
         elif document.format_choice == 'multi':
             action = 'format_choice'
+            raise wizard.except_wizard(_('Error'), _('No implemented yet!'))
+    ##
+    # Compose the uri to launch to JasperServer
+    #
     return action
 
-
 def _create_wizard(self, cr, uid, data, context=None):
-
-    return {}
+    pool = pooler.get_pool(cr.dbname)
+    document_obj = pool.get('jasper.document')
+    model_obj = pool.get('ir.model')
+    mod_ids = model_obj.search(cr, uid, [('model','=', data['model'])])[0]
+    doc_ids = document_obj.search(cr, uid, [('model_id','=',mod_ids)])
+    if not doc_ids:
+        raise wizard.except_wizard(_('Error'), _('No report found!'))
+    document = document_obj.browse(cr, uid, doc_ids[0], context=context)
+    uri = '/openerp/bases/%s/%s' % (cr.dbname, document.report_unit)
+    data['form']['params'] = (document.format, uri)
+    return data['form']
 
 class format_choice(wizard.interface):
- states = {
+    states = {
         'init':{
             'actions': [],
             'result': {
@@ -88,8 +103,9 @@ class format_choice(wizard.interface):
         'create_wizard':{
             'actions': [_create_wizard],
             'result' : {
-                    'type' : 'state',
-                    'state' : 'end',
+                'type': 'print', 
+                'report': 'print.jasper.server',
+                'state': 'end'
                 }
             },
         }
