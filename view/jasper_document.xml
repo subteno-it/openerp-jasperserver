@@ -97,7 +97,7 @@
             <field name="arch" type="xml">
                 <tree string="Jasper Document" colors="#f66a00:enabled==False" >
                     <field name="name"/>
-                    <field name="model"/>
+                    <field name="model_id"/>
                     <field name="enabled"/>
                     <field name="jasper_file"/>
                     <field name="action"/>
@@ -114,7 +114,7 @@
                 <form string="Jasper Document">
                     <field name="name" select="1"/>
                     <field name="enabled" select="2"/>
-                    <field name="model" select="1"/>
+                    <field name="model_id" select="1"/>
                     <field name="depth"/>
                     <notebook colspan="4">
                         <page string="General">

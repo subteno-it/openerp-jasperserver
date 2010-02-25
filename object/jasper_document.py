@@ -60,14 +60,38 @@ class jasper_document(osv.osv):
     _columns = {
         'name' : fields.char('Name', size=128, required=True), # button name
         'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
-        'model' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
+        'model_id' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
         'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
         'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
-        'action' : fields.many2one('ir.actions.act_window', 'Actions'),
+        'action' : fields.many2one('ir.actions.wizard', 'Actions', readonly=True),
         'depth' : fields.integer('Depth', required=True),
         'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
         'format' : fields.selection(_get_formats, 'Formats'),
     }
+
+    def make_action(self, cr, uid, id, context=None):
+        """
+        If action doesn't exists we must create it
+        """
+        data_obj = self.pool.get('ir.model.data')
+        b = self.browse(cr, uid, id, context=context)
+        res = {
+                'name': b.name,
+                'wiz_name': 'jasper_server.document_print',
+                'multi': False,
+                'model': b.model_id.model,
+        }
+        xml_id = 'document_print'
+
+        res_id = data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, xml_id)
+        #self.write(cr, uid, [id], {'action': res_id})
+
+        keyword = 'client_print_multi'
+        value = 'ir.actions.wizard,%d' % res_id
+        # creation du bouton
+        data_obj.ir_set(cr, uid, 'action', keyword, b.name, [b.model_id.model], value,
+                        replace=True, isobject=True, xml_id=xml_id)
+        return res_id
 
     def create(self, cr, uid, vals, context=None):
         """
@@ -75,17 +99,19 @@ class jasper_document(osv.osv):
         """
         if not context:
             context = {}
-
-        return super(jasper_document, self).create(cr, uid, vals, context=context)
+        doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
+        act_id = self.make_action(cr, uid, doc_id, context=context)
+        return doc_id
 
 
     def write(self, cr, uid, ids, vals, context=None):
         """
-
+        If the description change, we must update the action
         """
         if not context:
             context = {}
-
+        for id in ids:
+            self.make_action(cr, uid, id, context=context)
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
 
 
@@ -99,34 +125,34 @@ class jasper_document(osv.osv):
         return super(jasper_document, self).unlink(cr, uid, ids)
 
 
-    def add_wizard(self, cr, uid):
-        """
-
-        """
-        if not context:
-            context = {}
-
-        return True
-
-
-    def update_wizard(self, cr, uid):
-        """
-
-        """
-        if not context:
-            context = {}
-
-        return True
-
-
-    def remove_wizard(self, cr, uid):
-        """
-
-        """
-        if not context:
-            context = {}
-
-        return True
+#    def add_wizard(self, cr, uid):
+#        """
+#
+#        """
+#        if not context:
+#            context = {}
+#
+#        return True
+#
+#
+#    def update_wizard(self, cr, uid):
+#        """
+#
+#        """
+#        if not context:
+#            context = {}
+#
+#        return True
+#
+#
+#    def remove_wizard(self, cr, uid):
+#        """
+#
+#        """
+#        if not context:
+#            context = {}
+#
+#        return True
 
 jasper_document()
 
