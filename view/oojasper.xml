@@ -54,9 +54,10 @@
                 <form string="Jasper Server">
                     <group colspan="4" col="6">
                         <group colspan="4" col="4">
-                            <field name="host" select="1" colspan="4"/>
+                            <field name="host" select="1"/>
                             <field name="port" select="1"/>
                             <field name="sequence"/>
+                            <field name="enable" select="1"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="user"/>
