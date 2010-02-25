@@ -130,36 +130,6 @@ class jasper_document(osv.osv):
 
         return super(jasper_document, self).unlink(cr, uid, ids)
 
-
-#    def add_wizard(self, cr, uid):
-#        """
-#
-#        """
-#        if not context:
-#            context = {}
-#
-#        return True
-#
-#
-#    def update_wizard(self, cr, uid):
-#        """
-#
-#        """
-#        if not context:
-#            context = {}
-#
-#        return True
-#
-#
-#    def remove_wizard(self, cr, uid):
-#        """
-#
-#        """
-#        if not context:
-#            context = {}
-#
-#        return True
-
 jasper_document()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
