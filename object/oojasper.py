@@ -159,21 +159,18 @@ class jasper_server(osv.osv):
                 type = mod_fields[f]['type']
                 value = mod[f]
                 e = Element(field, label='%s' % self.format_element(name))
-                if type in ('char','integer','text','selection'):
-                    if value:
-                        e.text = unicode(value)
+                if type in ('char','text','selection'):
+                    e.text = value and unicode(value) or ''
+                elif type == 'integer':
+                    e .text = value and str(value) or '0'
                 elif type == 'float':
-                    #e.set('precision', str(mod_fields[f]['digits'][0]))
-                    #e.set('accuracy', str(mod_fields[f]['digits'][1]))
                     e.text = value and str(value) or '0.0'
                 elif type == 'date':
                     e.set('format','YYYY-mm-dd')
-                    if value:
-                        e.text = value
+                    e.text = value or ''
                 elif type == 'datetime':
                     e.set('format','YYYY-mm-dd HH:MM:SS')
-                    if value:
-                        e.text = value
+                    e.text = value or ''
                 elif type == 'boolean':
                     e.text = str(value)
                 elif type == 'many2one':
@@ -189,8 +186,7 @@ class jasper_server(osv.osv):
                 elif type in ('one2many','many2many'):
                     if depth > 0 and value and mod_fields[f]['relation'] not in ban:
                         for v in value:
-                            e = self.generate_xml(cr, uid, mod_fields[f]['relation'], v, depth - 1, relation, field)
-                            x.append(e)
+                            x.append(self.generate_xml(cr, uid, mod_fields[f]['relation'], v, depth - 1, relation, field))
                         continue
                     else:
                         e.set('id','%r' % value)
