@@ -3,7 +3,7 @@
 #
 #    jasper_server module for OpenERP
 #    Copyright (c) 2008-2009 EVERLIBRE (http://everlibre.fr) Eric VERNICHON
-#    Copyright (C) 2009 SYLEAM ([http://www.syleam.fr]) Christophe CHAUVET
+#    Copyright (C) 2009-2010 SYLEAM ([http://www.syleam.fr]) Christophe CHAUVET
 #
 #    This file is a part of jasper_server
 #
@@ -24,7 +24,7 @@
 
 {
     'name': 'Jasper Server Interface',
-    'version': '0.2',
+    'version': '0.2.0',
     'category': 'Tools',
     'description': """This module interface JasperServer For Reports.""",
     'author': 'Everlibre,SYLEAM',
