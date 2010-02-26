@@ -29,11 +29,6 @@
             model="jasper.document"
             string="Document Print"/>
 
-        <wizard id="wizard_jasper_document_print_res_partner"
-            name="jasper_server.document_print"
-            model="res.partner"
-            string="Document Print"/>
-
         <wizard id="wizard_jasper_make_template"
             name="jasper_server.make_template"
             model="ir.model"
