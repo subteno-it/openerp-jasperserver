@@ -1,0 +1,66 @@
+2010-02_27: 0.2.0
+=================
+
+Bugfixes
+--------
+
+ * Not linked to a bug report:
+   * Year in license header
+   * Fix bad revision number, must be 0.2.0 instead of 0.2
+   * Don't show the action in res.partner
+   * Fix an issue when a float field is False
+   * Missing field enable
+   * Float = False must be replace by 0.0 to not raise an error on iReport and JS
+   * Improve document view
+   * Bad ban model
+   * Missing replace xml element on field name
+   * rename jasper.document::active by jasper.document::enabled
+   * call super() method in methods create, write and unlink
+   * Issue when invoke the jasper class on other module
+   * Issue on a new database
+   * Change password to replace by the default onew
+
+
+Improvements
+------------
+
+ * Add active_ids and send it to JS as OERP_ACTIVE_IDS
+ * Move XML to a new tab
+ * Improve the value retrieve from the object
+ * Add mode field to indicate if the data was retrieve by SQL or XML
+ * Add the name of the report unit in the document
+ * search the real document to print
+ * Add dynamicaly parameter
+ * Return the PDF correctly by extract in dime message
+ * Mise a jour des champs et creation des boutons
+ * Move the jasper report declaration to report
+ * Dime python library to extract the multipart content
+ * Rename correctly the file for jasper document
+ * Move the jasper configuration in a specific directory
+ * Add template and french translation
+ * Change port number of jacper server to mathc when tomcat was installed on Debian
+ * add datas in jasper_document_extension
+ * add demo for jasper_document
+ * extension selection works in wizard
+ * add orange color for jasper.document which are not enabled
+ * add reference to wizard in __init__ and in wizard.xml
+ * add required=True in jasper.document object in 'format_choice' field
+ * add wizard
+ * add fields selection for document output format in python and xml
+ * add methods create/write/unlink and (add|update|remove)_wizard  (just squeleton)
+ * add prototypes for create/write/add_wizard
+ * add jasper_document and jasper_document_extension objects and view
+ * add references in __terp__ and __init__
+ * Add generate method to the jasper_server method
+ * Possibility to ban a model when use to relation fields
+ * Possibility to indent the XML when exaact the template
+ * report path to the python path
+ * New wizard to generate a XML template from a object + ID
+ * Add field sequence on Jasper Server List
+ * Reorganize view
+ * move the configuration menu
+ * Jasper server configuration
+ * OOEP 001 Compliant
+ * PEP8 and PEP0263 compliant
+
+
