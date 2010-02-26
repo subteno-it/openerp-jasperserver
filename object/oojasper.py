@@ -44,7 +44,6 @@ class jasper_server(osv.osv):
         'user': fields.char('Username', size=128, required=True, help='Enter the username for JasperServer user, by default is jasperadmin'),
         'pass': fields.char('Password', size=128, required=True, help='Enter the password for the user, by defaul is jasperadmin'),
         'repo': fields.char('Repository', size=256, required=True, help='Enter the address of the repository'),
-        'wsdl': fields.char('WSDL', size=256, help='Enter the address of the WSDL description'),
         'sequence': fields.integer('Sequence'),
         'enable': fields.boolean('Enable', help='Check this, if the server is available',),
     }
@@ -55,7 +54,6 @@ class jasper_server(osv.osv):
         'user': lambda *a: 'jasperadmin',
         'pass': lambda *a: 'jasperadmin',
         'repo': lambda *a: '/jasperserver/services/repository',
-        'wsdl': lambda *a: '/jasperserver/services/repository?wsdl',
         'sequence': lambda *a: 10,
     }
 
