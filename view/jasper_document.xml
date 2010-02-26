@@ -115,12 +115,11 @@
                     <field name="name" select="1"/>
                     <field name="enabled" select="2"/>
                     <field name="model_id" select="1"/>
-                    <field name="depth"/>
+                    <field name="mode"/>
                     <notebook colspan="4">
                         <page string="General">
                             <field name="jasper_file" colspan="4"/>
                             <field name="report_unit"/>
-                            <field name="mode"/>
                             <field name="action" select="1" colspan="4"/>
                             <separator string="Output format" colspan="4"/>
                             <field name="format_choice"/>
@@ -128,6 +127,9 @@
                         </page>
                         <page string="Groups">
                             <field name="group_ids" nolabel="1" colspan="4"/>
+                        </page>
+                        <page string="XML" attrs="{'invisible': [('mode','=','sql')]}">
+                            <field name="depth"/>
                         </page>
                     </notebook>
                 </form>
