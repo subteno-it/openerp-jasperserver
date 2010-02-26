@@ -119,8 +119,11 @@ class report_jasper(report_int):
 
         js = js_obj.read(cr, uid, js_ids, context=context)[0]
         uri = 'http://%s:%d%s' % (js['host'], js['port'], js['repo'])
+        print 'DATA: %r' % data
 
-        par = self.parameter(data['form'], {'active_id': data['id'], 'model': data['model']})
+        par = self.parameter(data['form'], {'active_id': data['id'],
+                                            'active_ids': data['form']['ids'],
+                                            'model': data['model']})
         body_args = {
             'format': data['form']['params'][0],
             'path': data['form']['params'][1],

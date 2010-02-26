@@ -39,7 +39,6 @@ def _get_formats(self, cr, uid, data, context=None):
 
 fields = {
     'format_choice' : {'string': 'Format', 'type': 'selection', 'selection': _get_formats, 'required': True},
-
 }
 
 
@@ -77,6 +76,7 @@ def _create_wizard(self, cr, uid, data, context=None):
     document = document_obj.browse(cr, uid, doc_ids[0], context=context)
     uri = '/openerp/bases/%s/%s' % (cr.dbname, document.report_unit)
     data['form']['params'] = (document.format, uri)
+    data['form']['ids'] = data['ids']
     return data['form']
 
 class format_choice(wizard.interface):
