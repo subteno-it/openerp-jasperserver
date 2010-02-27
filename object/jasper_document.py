@@ -59,6 +59,7 @@ class jasper_document(osv.osv):
     # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
         'name' : fields.char('Name', size=128, required=True), # button name
+        'service': fields.char('Service name', size=64, help='Enter the service name register at start by OpenERP Server'),
         'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
         'model_id' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
         'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename

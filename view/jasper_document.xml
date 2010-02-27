@@ -113,13 +113,14 @@
             <field name="arch" type="xml">
                 <form string="Jasper Document">
                     <field name="name" select="1"/>
-                    <field name="enabled" select="2"/>
+                    <field name="service" select="1"/>
                     <field name="model_id" select="1"/>
                     <field name="mode"/>
                     <notebook colspan="4">
                         <page string="General">
+                            <field name="report_unit" select="1"/>
+                            <field name="enabled" select="2"/>
                             <field name="jasper_file" colspan="4"/>
-                            <field name="report_unit"/>
                             <field name="action" select="1" colspan="4"/>
                             <separator string="Output format" colspan="4"/>
                             <field name="format_choice"/>
