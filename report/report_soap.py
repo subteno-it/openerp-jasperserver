@@ -61,9 +61,11 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
     &lt;request operationName=&quot;runReport&quot;&gt;
         &lt;argument name=&quot;RUN_OUTPUT_FORMAT&quot;&gt;%(format)s&lt;/argument&gt;
         &lt;argument name=&quot;PAGE&quot;&gt;0&lt;/argument&gt;
+        &lt;argument name=&quot;REPORT_LOCALE&quot;&gt;&lt;![CDATA[fr]]&gt;&lt;/argument&gt;
         &lt;argument name=&quot;USE_DIME_ATTACHMENTS&quot;&gt;
             &lt;![CDATA[1]]&gt;
         &lt;/argument&gt;
+        &lt;argument name=&quot;REPORT_DATA_SOURCE&quot;&gt;&lt;![CDATA[%(database)s]]&gt;&lt;/argument&gt;
         &lt;resourceDescriptor name=&quot;&quot; wsType=&quot;reportUnit&quot; uriString=&quot;%(path)s&quot; isNew=&quot;false&quot;&gt;
             &lt;label&gt;&lt;/label&gt;
             %(param)s
@@ -107,6 +109,7 @@ class Report(object):
             'format': self.data['form']['params'][0],
             'path': self.data['form']['params'][1],
             'param': par,
+            'database': '/openerp/databases/%s' % self.cr.dbname,
         }
 
         body = BODY_TEMPLATE % body_args
