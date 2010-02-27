@@ -121,7 +121,6 @@
                             <field name="report_unit" select="1"/>
                             <field name="enabled" select="2"/>
                             <field name="jasper_file" colspan="4"/>
-                            <field name="action" select="1" colspan="4"/>
                             <separator string="Output format" colspan="4"/>
                             <field name="format_choice"/>
                             <field name="format"/>

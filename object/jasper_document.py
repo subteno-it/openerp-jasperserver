@@ -64,7 +64,6 @@ class jasper_document(osv.osv):
         'model_id' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
         'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
         'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
-        'action' : fields.many2one('ir.actions.wizard', 'Actions', readonly=True),
         'depth' : fields.integer('Depth', required=True),
         'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
         'format' : fields.selection(_get_formats, 'Formats'),
@@ -73,7 +72,8 @@ class jasper_document(osv.osv):
     }
 
     _defaults = {
-        'mode': lambda *a: 'csv',
+        'format_choice': lambda *a: 'mono',
+        'mode': lambda *a: 'sql',
     }
 
     def make_action(self, cr, uid, id, context=None):
