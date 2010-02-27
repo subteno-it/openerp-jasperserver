@@ -129,7 +129,7 @@
                         <page string="Groups">
                             <field name="group_ids" nolabel="1" colspan="4"/>
                         </page>
-                        <page string="XML" attrs="{'invisible': [('mode','=','sql')]}">
+                        <page string="XML" attrs="{'invisible': [('mode','!=','xml')]}">
                             <field name="depth"/>
                         </page>
                     </notebook>
