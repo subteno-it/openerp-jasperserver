@@ -100,7 +100,6 @@
                     <field name="model_id"/>
                     <field name="enabled"/>
                     <field name="jasper_file"/>
-                    <field name="action"/>
                 </tree>
             </field>
         </record>
