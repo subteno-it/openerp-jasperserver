@@ -24,11 +24,14 @@
         ##############################################################################
 
         <record model="jasper.document" id="jasper_document_4">
-            <field name="name">UNACTIVE - MULTI FORMAT</field>
-            <field name="depth">3</field>
-            <field name="jasper_file">UNACTIVE - MULTI FORMAT</field>
+            <field name="name">Partner List</field>
+            <field name="depth">2</field>
+            <field name="jasper_file">partner_list.jrxml</field>
             <field name="format_choice">multi</field>
-            <field name="model" ref="base.model_res_partner"/>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="enabled" eval="0"/>
+            <field name="report_unit">PartnerList</field>
+            <field name="mode">sql</field>
         </record>
 
     </data>
