@@ -34,6 +34,8 @@
     ],
     'init_xml': [],
     'update_xml': [
+        'security/groups.xml',
+        'security/ir.model.access.csv',
         'data/jasper_document_extension.xml',
         'view/menu.xml',
         'view/oojasper.xml',
