@@ -26,6 +26,10 @@ from osv import osv
 from osv import fields
 
 class ir_actions_wizard(osv.osv):
+    """
+    Add boolean field, that identify the wizard link to a jasper document
+    Use to registered report at start
+    """
     _inherit = 'ir.actions.wizard'
 
     _columns = {

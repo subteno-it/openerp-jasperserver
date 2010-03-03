@@ -95,7 +95,7 @@ class Report(object):
         js_obj = self.pool.get('jasper.server')
         js_ids = js_obj.search(self.cr, self.uid, [('enable','=',True)])
         if not len(js_ids):
-            raise Exception('Error, no JasperServer not found!')
+            raise Exception('Error, no JasperServer found!')
 
         js = js_obj.read(self.cr, self.uid, js_ids, context=self.context)[0]
         uri = 'http://%s:%d%s' % (js['host'], js['port'], js['repo'])
@@ -127,13 +127,13 @@ class Report(object):
         except HttpLib2Error, e:
             raise Exception('Error: %r' % e)
         except Exception, e:
-            raise Exception('Error: %r' % e)
-        print 'RESP: %r' % resp
+            raise Exception('Error: %s' % str(e))
+        #print 'RESP: %r' % resp
         if resp.get('content-type') != 'application/dime' :
-            raise Exception('Error, Document not found')
+            raise Exception('Error, Jasper document not found')
 
         ##
-        # We must deconpose the dime record to return the PDF only
+        # We must decompose the dime record to return the PDF only
         #
         fp = StringIO(content)
         a = Message.load(fp)
