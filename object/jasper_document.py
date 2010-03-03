@@ -74,7 +74,7 @@ class jasper_document(osv.osv):
     _defaults = {
         'format_choice': lambda *a: 'mono',
         'mode': lambda *a: 'sql',
-        'format': lambda *a: 'pdf',
+        #'format': lambda *a: 'pdf',
     }
 
     def make_action(self, cr, uid, id, context=None):

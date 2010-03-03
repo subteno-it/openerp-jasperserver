@@ -134,7 +134,7 @@ class ir_action_wizard(osv.osv):
     _inherit = 'ir.actions.wizard'
 
     def __init__(self, pool, cr):
-        cr.execute("""select wiz_name from ir_act_wizard where jasper=true""")
+        cr.execute("""select wiz_name from ir_act_wizard where wiz_name like 'jasper.%'""")
         records = cr.dictfetchall()
 
         for rec in records:

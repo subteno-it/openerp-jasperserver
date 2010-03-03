@@ -23,9 +23,9 @@
 ##############################################################################
 
 
+import wizard
 import oojasper
 import jasper_document
-import wizard
 
 # Add report path to the python path
 import os
