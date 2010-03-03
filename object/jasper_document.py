@@ -85,13 +85,14 @@ class jasper_document(osv.osv):
         b = self.browse(cr, uid, id, context=context)
         res = {
                 'name': b.name,
-                'wiz_name': 'jasper_server.document_print',
+                'wiz_name': 'jasper.%s' % b.service,
                 'multi': False,
                 'model': b.model_id.model,
+                'jasper': True,
         }
-        xml_id = 'document_print'
+        xml_id = 'wizard_jasper_%s' % b.service
 
-        res_id = data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, xml_id)
+        res_id = data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, xml_id, noupdate=True)
         #self.write(cr, uid, [id], {'action': res_id})
 
         keyword = 'client_print_multi'
