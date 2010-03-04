@@ -32,7 +32,6 @@ class report_jasper(report_int):
     """
     Extend report_int to use Jasper Server
     """
-    # TODO: define __init__ to register the service at start
     def create(self, cr, uid, ids, data, context=None):
         if not context:
             context = {}

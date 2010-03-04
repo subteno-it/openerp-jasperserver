@@ -46,14 +46,14 @@ class format_choice(wizard.interface):
     If format = multi, compose a wizard to ask the extension of document
     if format = mono, juste launch teh report and return the format previously defined
     """
+
     def _select_format(self, cr, uid, data, context=None):
-        print 'WIZ_NAME: %r' % self.wiz_name
         if not context:
             context={}
         wiz_name = self.wiz_name.replace('jasper.','')
         pool = pooler.get_pool(cr.dbname)
         document_obj = pool.get('jasper.document')
-        doc_ids = document_obj.search(cr, uid, [('service','=',wiz_name)])
+        doc_ids = document_obj.search(cr, uid, [('service','=', wiz_name)])
         if not doc_ids:
             raise wizard.except_wizard(_('Error'), _('No report found!'))
         document = document_obj.browse(cr, uid, doc_ids[0], context=context)
@@ -69,16 +69,15 @@ class format_choice(wizard.interface):
         return action
 
     def _create_wizard(self, cr, uid, data, context=None):
+        wiz_name = self.wiz_name.replace('jasper.','')
         pool = pooler.get_pool(cr.dbname)
         document_obj = pool.get('jasper.document')
-        model_obj = pool.get('ir.model')
-        mod_ids = model_obj.search(cr, uid, [('model','=', data['model'])])[0]
-        doc_ids = document_obj.search(cr, uid, [('model_id','=',mod_ids)])
+        doc_ids = document_obj.search(cr, uid, [('service','=', wiz_name)])
         if not doc_ids:
             raise wizard.except_wizard(_('Error'), _('No report found!'))
         document = document_obj.browse(cr, uid, doc_ids[0], context=context)
         uri = '/openerp/bases/%s/%s' % (cr.dbname, document.report_unit)
-        data['form']['params'] = (document.format, uri)
+        data['form']['params'] = (document.format, uri, document.mode, document.depth)
         data['form']['ids'] = data['ids']
         return data['form']
 

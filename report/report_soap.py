@@ -65,7 +65,6 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
         &lt;argument name=&quot;USE_DIME_ATTACHMENTS&quot;&gt;
             &lt;![CDATA[1]]&gt;
         &lt;/argument&gt;
-        &lt;argument name=&quot;REPORT_DATA_SOURCE&quot;&gt;&lt;![CDATA[%(database)s]]&gt;&lt;/argument&gt;
         &lt;resourceDescriptor name=&quot;&quot; wsType=&quot;reportUnit&quot; uriString=&quot;%(path)s&quot; isNew=&quot;false&quot;&gt;
             &lt;label&gt;&lt;/label&gt;
             %(param)s
@@ -100,11 +99,17 @@ class Report(object):
         js = js_obj.read(self.cr, self.uid, js_ids, context=self.context)[0]
         uri = 'http://%s:%d%s' % (js['host'], js['port'], js['repo'])
         print 'DATA: %r' % self.data
-
-        par = self.parameter(self.data['form'], 
-                {'active_id': self.data['id'],
+        d_par = {'active_id': self.data['id'],
                  'active_ids': self.data['form']['ids'],
-                 'model': self.model})
+                 'model': self.model}
+
+        # If XML we must compose it
+        if self.data['form']['params'][2] == 'xml':
+            d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0], 
+                    self.data['form']['params'][3], context=self.context)
+            d_par['xml_data'] = d_xml
+
+        par = self.parameter(self.data['form'], d_par)
         body_args = {
             'format': self.data['form']['params'][0],
             'path': self.data['form']['params'][1],
@@ -113,9 +118,9 @@ class Report(object):
         }
 
         body = BODY_TEMPLATE % body_args
-        print
-        print body
-        print
+        #print
+        #print body
+        #print
 
         headers = {'Content-type': 'text/xml', 'charset':'UTF-8',"SOAPAction":"runReport"}
         h = Http()
@@ -128,8 +133,9 @@ class Report(object):
             raise Exception('Error: %r' % e)
         except Exception, e:
             raise Exception('Error: %s' % str(e))
-        #print 'RESP: %r' % resp
+        print 'RESP: %r' % resp
         if resp.get('content-type') != 'application/dime' :
+            print 'CONTENT: %r' % content
             raise Exception('Error, Jasper document not found')
 
         ##
@@ -157,6 +163,9 @@ class Report(object):
     def parameter(self, dico, resource):
         res = ''
         for key in resource:
+            print key
+            if key in 'xml_data':
+                continue
             e = Element('parameter')
             e.set('name','OERP_%s' % key.upper())
             e.text = str(resource[key])
@@ -176,6 +185,10 @@ class Report(object):
             else:
                 e.text = val and str(val) or ''
             res += tostring(e) + '\n'
-        return self.entities(res)
+        res = self.entities(res)
+        if resource.get('xml_data'):
+            res += '&lt;parameter class=&quot;java.lang.String&quot; name=&quot;XML_DATA&quot;&gt;'
+            res += '&lt;![CDATA[&quot;%s&quot;]]&gt;&lt;/parameter&gt;' % resource['xml_data']
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
