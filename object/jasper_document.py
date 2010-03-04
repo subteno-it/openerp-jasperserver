@@ -83,9 +83,10 @@ class jasper_document(osv.osv):
         """
         data_obj = self.pool.get('ir.model.data')
         b = self.browse(cr, uid, id, context=context)
+        wiz_name = 'jasper.%s' % b.service
         res = {
                 'name': b.name,
-                'wiz_name': 'jasper.%s' % b.service,
+                'wiz_name': wiz_name,
                 'multi': False,
                 'model': b.model_id.model,
                 'jasper': True,
@@ -100,6 +101,14 @@ class jasper_document(osv.osv):
         # creation du bouton
         data_obj.ir_set(cr, uid, 'action', keyword, b.name, [b.model_id.model], value,
                         replace=True, isobject=True, xml_id=xml_id)
+        ##
+        # Automatic registration to be directly available
+        import netsvc
+        from jasper_server.wizard.format_choice import format_choice
+
+        if not netsvc.service_exist(wiz_name):
+            format_choice(wiz_name)
+
         return res_id
 
     def create(self, cr, uid, vals, context=None):
