@@ -100,7 +100,7 @@ class Report(object):
         uri = 'http://%s:%d%s' % (js['host'], js['port'], js['repo'])
         print 'DATA: %r' % self.data
         d_par = {'active_id': self.data['id'],
-                 'active_ids': self.data['form']['ids'],
+                 'active_ids': ','.join(map(str, self.data['form']['ids'])),
                  'model': self.model}
 
         # If XML we must compose it
