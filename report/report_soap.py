@@ -27,6 +27,7 @@ from report.render import render
 from httplib2 import Http, ServerNotFoundError ,HttpLib2Error
 from dime import Message
 from lxml.etree import Element, tostring
+from netsvc import Logger, LOG_DEBUG
 
 ##
 # If cStringIO is available, we use it
@@ -44,6 +45,9 @@ class external_pdf(render):
     def _render(self):
         return self.pdf
 
+logger = Logger()
+def log_debug(message):
+    logger.notifyChannel('jasper_server', LOG_DEBUG, ' %s' % message)
 
 ##
 # Construct the body template for SOAP
@@ -98,7 +102,8 @@ class Report(object):
 
         js = js_obj.read(self.cr, self.uid, js_ids, context=self.context)[0]
         uri = 'http://%s:%d%s' % (js['host'], js['port'], js['repo'])
-        print 'DATA: %r' % self.data
+        log_debug('DATA:')
+        log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
         d_par = {'active_id': self.data['id'],
                  'active_ids': ','.join(map(str, self.data['form']['ids'])),
                  'model': self.model}
@@ -118,9 +123,7 @@ class Report(object):
         }
 
         body = BODY_TEMPLATE % body_args
-        #print
-        #print body
-        #print
+        log_debug('****\n%s\n****' % body)
 
         headers = {'Content-type': 'text/xml', 'charset':'UTF-8',"SOAPAction":"runReport"}
         h = Http()
@@ -133,9 +136,10 @@ class Report(object):
             raise Exception('Error: %r' % e)
         except Exception, e:
             raise Exception('Error: %s' % str(e))
-        print 'RESP: %r' % resp
+        log_debug('HTTP -> RESPONSE:')
+        log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
         if resp.get('content-type') != 'application/dime' :
-            print 'CONTENT: %r' % content
+            log_debug('CONTENT: %r' % content)
             raise Exception('Error, Jasper document not found')
 
         ##
@@ -144,7 +148,7 @@ class Report(object):
         fp = StringIO(content)
         a = Message.load(fp)
         for x in a.records:
-            print  'Type: %r' % x.type.value
+            log_debug('HTTP -> CONTENT -> Type: %r' % x.type.value)
             if x.type.value == 'application/pdf':
                 content = x.data
         self.obj=external_pdf(content)
@@ -163,7 +167,7 @@ class Report(object):
     def parameter(self, dico, resource):
         res = ''
         for key in resource:
-            print key
+            log_debug('PARAMETER -> RESOURCE: %s' % key)
             if key in 'xml_data':
                 continue
             e = Element('parameter')
@@ -172,6 +176,7 @@ class Report(object):
             res += tostring(e) + '\n'
 
         for key in dico:
+            log_debug('PARAMETER -> DICO: %s' % key)
             if key in 'params':
                 continue
             val = dico[key]
