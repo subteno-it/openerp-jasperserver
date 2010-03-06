@@ -28,6 +28,9 @@ from httplib2 import Http, ServerNotFoundError ,HttpLib2Error
 from dime import Message
 from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG
+from tempfile import mkstemp
+import os
+from subprocess import call
 
 ##
 # If cStringIO is available, we use it
@@ -95,6 +98,7 @@ class Report(object):
 
     def execute(self):
         """Launch the report and return it"""
+        ids = self.data['form']['ids']
         js_obj = self.pool.get('jasper.server')
         js_ids = js_obj.search(self.cr, self.uid, [('enable','=',True)])
         if not len(js_ids):
@@ -104,55 +108,86 @@ class Report(object):
         uri = 'http://%s:%d%s' % (js['host'], js['port'], js['repo'])
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
-        d_par = {'active_id': self.data['id'],
-                 'active_ids': ','.join(map(str, self.data['form']['ids'])),
-                 'model': self.model}
-
-        # If XML we must compose it
-        if self.data['form']['params'][2] == 'xml':
-            d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0], 
-                    self.data['form']['params'][3], context=self.context)
-            d_par['xml_data'] = d_xml
-
-        par = self.parameter(self.data['form'], d_par)
-        body_args = {
-            'format': self.data['form']['params'][0],
-            'path': self.data['form']['params'][1],
-            'param': par,
-            'database': '/openerp/databases/%s' % self.cr.dbname,
-        }
-
-        body = BODY_TEMPLATE % body_args
-        log_debug('****\n%s\n****' % body)
-
-        headers = {'Content-type': 'text/xml', 'charset':'UTF-8',"SOAPAction":"runReport"}
-        h = Http()
-        h.add_credentials(js['user'], js['pass'])
-        try:
-            resp, content = h.request(uri, "POST", body, headers)
-        except ServerNotFoundError:
-            raise Exception('Error, Server not found !')
-        except HttpLib2Error, e:
-            raise Exception('Error: %r' % e)
-        except Exception, e:
-            raise Exception('Error: %s' % str(e))
-        log_debug('HTTP -> RESPONSE:')
-        log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
-        if resp.get('content-type') != 'application/dime' :
-            log_debug('CONTENT: %r' % content)
-            raise Exception('Error, Jasper document not found')
 
         ##
-        # We must decompose the dime record to return the PDF only
+        # For each IDS, launch a query, and return only one result
         #
-        fp = StringIO(content)
-        a = Message.load(fp)
-        for x in a.records:
-            log_debug('HTTP -> CONTENT -> Type: %r' % x.type.value)
-            if x.type.value == 'application/pdf':
-                content = x.data
-        self.obj=external_pdf(content)
+        pdf_list = []
+        for ex in ids:
+            # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
+            # We cannot use $X{IN, field, Collection}
+            d_par = {'active_id': ex,
+                     'active_ids': ex,
+                     'model': self.model}
 
+            # If XML we must compose it
+            if self.data['form']['params'][2] == 'xml':
+                d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0], 
+                        self.data['form']['params'][3], context=self.context)
+                d_par['xml_data'] = d_xml
+
+            par = self.parameter(self.data['form'], d_par)
+            body_args = {
+                'format': self.data['form']['params'][0],
+                'path': self.data['form']['params'][1],
+                'param': par,
+                'database': '/openerp/databases/%s' % self.cr.dbname,
+            }
+
+            body = BODY_TEMPLATE % body_args
+            log_debug('****\n%s\n****' % body)
+
+            headers = {'Content-type': 'text/xml', 'charset':'UTF-8',"SOAPAction":"runReport"}
+            h = Http()
+            h.add_credentials(js['user'], js['pass'])
+            try:
+                resp, content = h.request(uri, "POST", body, headers)
+            except ServerNotFoundError:
+                raise Exception('Error, Server not found !')
+            except HttpLib2Error, e:
+                raise Exception('Error: %r' % e)
+            except Exception, e:
+                raise Exception('Error: %s' % str(e))
+            log_debug('HTTP -> RESPONSE:')
+            log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
+            if resp.get('content-type') != 'application/dime' :
+                log_debug('CONTENT: %r' % content)
+                raise Exception('Error, Jasper document not found')
+
+            ##
+            # We must decompose the dime record to return the PDF only
+            #
+            fp = StringIO(content)
+            a = Message.load(fp)
+            for x in a.records:
+                log_debug('HTTP -> CONTENT -> Type: %r' % x.type.value)
+                if x.type.value == 'application/pdf':
+                    content = x.data
+                    # Store the PDF in TEMP directory
+                    __, f_name = mkstemp(suffix='.pdf', prefix='jasper')
+                    pdf_list.append(f_name)
+                    fpdf = open(f_name, 'w+b')
+                    fpdf.write(content)
+                    fpdf.close()
+
+        ##
+        # Create a global file for each PDF file, use Ghostscript to concatenate them
+        # Retrieve the global if there is a multiple file
+        #
+        if len(ids) > 1:
+            # -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=firstANDsecond.pdf -dBATCH
+            __, f_name = mkstemp(suffix='.pdf', prefix='jasper-global')
+            cmd = ['gs', '-dNOPAUSE', '-sDEVICE=pdfwrite', '-sOUTPUTFILE=%s' % f_name, '-dBATCH']
+            cmd.extend(pdf_list)
+            retcode = call(cmd)
+            log_debug('PDF -> RETCODE: %r' % retcode)
+            if retcode != 0:
+                raise Exception('Error: cannot concatenate the PDF file!')
+            content = open(f_name, 'r').read()
+            os.remove(f_name)
+            for f in pdf_list:
+                os.remove(f)
+        self.obj=external_pdf(content)
         return (self.obj.pdf, 'pdf')
 
     @staticmethod
