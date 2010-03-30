@@ -126,6 +126,27 @@ class Report(object):
                         self.data['form']['params'][3], context=self.context)
                 d_par['xml_data'] = d_xml
 
+            # Retrieve the company information and send them in parameter
+            user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
+            d_par['company_name'] = user.company_id.name
+            d_par['company_hearder1'] = user.company_id.rml_header1 or ''
+            d_par['company_footer1'] = user.company_id.rml_footer1 or ''
+            d_par['company_footer2'] = user.company_id.rml_footer2 or ''
+            d_par['company_website'] = user.company_id.partner_id.website or ''
+            d_par['company_currency'] = user.company_id.currency_id.name or ''
+
+            # Search the default address for the company.
+            addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id],['default'])['default']
+            addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
+            d_par['company_street'] = addr.street or ''
+            d_par['company_street2'] = addr.street2 or ''
+            d_par['company_zip'] = addr.zip or ''
+            d_par['company_city'] = addr.city or ''
+            d_par['company_country'] = addr.country_id.name or ''
+            d_par['company_phone'] = addr.phone or ''
+            d_par['company_fax'] = addr.fax or ''
+            d_par['company_mail'] = addr.email or ''
+
             par = self.parameter(self.data['form'], d_par)
             body_args = {
                 'format': self.data['form']['params'][0],
@@ -192,6 +213,14 @@ class Report(object):
 
     @staticmethod
     def entities(data):
+        """
+        Convert XML string to XML entities 
+
+        @type  data: str
+        @param data: XML String
+        @rtype: str
+        @return: XML string converted
+        """
         data = data.replace('&','&amp;')
         data = data.replace('<','&lt;')
         data = data.replace('>','&gt;')
@@ -200,6 +229,16 @@ class Report(object):
         return data
 
     def parameter(self, dico, resource):
+        """
+        Convert value to a parameter for SOAP query
+
+        @type  dico: dict
+        @param dico: Contain parameter starts with OERP_
+        @type  resource: dict
+        @param resource: Contain parameter starts with WIZARD_
+        @rtype: xmlstring
+        @return: XML String representation
+        """
         res = ''
         for key in resource:
             log_debug('PARAMETER -> RESOURCE: %s' % key)
