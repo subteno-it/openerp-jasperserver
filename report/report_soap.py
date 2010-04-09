@@ -31,6 +31,7 @@ from netsvc import Logger, LOG_DEBUG
 from tempfile import mkstemp
 import os
 from subprocess import call
+from parser import ParseHTML
 
 ##
 # If cStringIO is available, we use it
@@ -172,7 +173,7 @@ class Report(object):
                 raise Exception('Error: %s' % str(e))
             log_debug('HTTP -> RESPONSE:')
             log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
-            if resp.get('content-type') != 'application/dime' :
+            if resp.get('content-type').startswith('text/xml'):
                 log_debug('CONTENT: %r' % content)
                 fp = StringIO(content)
                 tree = parse(fp)
@@ -183,24 +184,27 @@ class Report(object):
                 fp = StringIO(r[0].text)
                 tree = parse(fp)
                 fp.close()
-                raise Exception('%s (%s)' % (tree.xpath('//returnMessage')[0].text,
-                                tree.xpath('//returnCode')[0].text))
-
-            ##
-            # We must decompose the dime record to return the PDF only
-            #
-            fp = StringIO(content)
-            a = Message.load(fp)
-            for x in a.records:
-                log_debug('HTTP -> CONTENT -> Type: %r' % x.type.value)
-                if x.type.value == 'application/pdf':
-                    content = x.data
-                    # Store the PDF in TEMP directory
-                    __, f_name = mkstemp(suffix='.pdf', prefix='jasper')
-                    pdf_list.append(f_name)
-                    fpdf = open(f_name, 'w+b')
-                    fpdf.write(content)
-                    fpdf.close()
+                raise Exception('Code: %s\nMessage: %s' % (tree.xpath('//returnCode')[0].text,
+                                tree.xpath('//returnMessage')[0].text))
+            elif resp.get('content-type').startswith('text/html'):
+                raise Exception ('Error: %s' % ParseHTML(content))
+            elif resp.get('content-type') == 'application/dime' :
+                ##
+                # We must decompose the dime record to return the PDF only
+                fp = StringIO(content)
+                a = Message.load(fp)
+                for x in a.records:
+                    log_debug('HTTP -> CONTENT -> Type: %r' % x.type.value)
+                    if x.type.value == 'application/pdf':
+                        content = x.data
+                        # Store the PDF in TEMP directory
+                        __, f_name = mkstemp(suffix='.pdf', prefix='jasper')
+                        pdf_list.append(f_name)
+                        fpdf = open(f_name, 'w+b')
+                        fpdf.write(content)
+                        fpdf.close()
+            else:
+                raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
 
         ##
         # Create a global file for each PDF file, use Ghostscript to concatenate them
