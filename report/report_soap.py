@@ -26,7 +26,7 @@ import pooler
 from report.render import render
 from httplib2 import Http, ServerNotFoundError ,HttpLib2Error
 from dime import Message
-from lxml.etree import Element, tostring
+from lxml.etree import Element, tostring, parse
 from netsvc import Logger, LOG_DEBUG
 from tempfile import mkstemp
 import os
@@ -174,7 +174,17 @@ class Report(object):
             log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
             if resp.get('content-type') != 'application/dime' :
                 log_debug('CONTENT: %r' % content)
-                raise Exception('Error, Jasper document not found')
+                fp = StringIO(content)
+                tree = parse(fp)
+                fp.close()
+                r = tree.xpath('//runReportReturn')
+                if not r:
+                    raise Exception('Error, invalid Jasper Message')
+                fp = StringIO(r[0].text)
+                tree = parse(fp)
+                fp.close()
+                raise Exception('%s (%s)' % (tree.xpath('//returnMessage')[0].text,
+                                tree.xpath('//returnCode')[0].text))
 
             ##
             # We must decompose the dime record to return the PDF only

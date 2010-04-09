@@ -106,8 +106,9 @@ class jasper_document(osv.osv):
         import netsvc
         from jasper_server.wizard.format_choice import format_choice
 
-        if netsvc.service_exist(wiz_name):
-            del netsvc.SERVICES[wiz_name]
+        print 'MAJ: %r' % netsvc.service_exist(wiz_name)
+        if not netsvc.service_exist(wiz_name):
+            #del netsvc.SERVICES[wiz_name]
             format_choice(wiz_name)
 
         return res_id
