@@ -24,16 +24,23 @@
 
 from cStringIO import StringIO
 from HTMLParser import HTMLParser
+from lxml.etree import parse
 
 class HTML2Text(HTMLParser):
+    """
+    Instance the HTML for decode the message
+    return by the JasperServer
+    """
     def __init__(self):
         HTMLParser.__init__(self)
         self.output = StringIO()
         self.is_valid = True
         self.is_linefeed = True
         self.is_title = True
+
     def get_text(self):
         return self.output.getvalue()
+
     def handle_data(self, data):
         if not self.is_valid:
             self.output.write(data)
@@ -41,6 +48,7 @@ class HTML2Text(HTMLParser):
             self.output.write('\n')
         elif self.is_title:
             self.output.write('\n')
+
     def handle_starttag(self, tag, attrs):
         if tag == "body":
             self.is_valid = False
@@ -48,6 +56,7 @@ class HTML2Text(HTMLParser):
             self.is_linefeed = False
         elif tag.startswith('h'):
             self.is_title = False
+
     def handle_endtag(self, tag):
         if tag == "body":
             self.is_valid = True
@@ -56,7 +65,28 @@ class HTML2Text(HTMLParser):
         elif tag.startswith('h'):
             self.is_title = True
 
+def ParseXML(source):
+    """
+    Read the JasperServer Error code
+    and return the code and the message
+    """
+    fp = StringIO(source)
+    tree = parse(fp)
+    fp.close()
+    r = tree.xpath('//runReportReturn')
+    if not r:
+        raise Exception('Error, invalid Jasper Message')
+    fp = StringIO(r[0].text)
+    tree = parse(fp)
+    fp.close()
+    return (tree.xpath('//returnCode')[0].text,
+            tree.xpath('//returnMessage')[0].text)
+
+
 def ParseHTML(source):
+    """
+    Read the HTML content return by an authentification error
+    """
     p = HTML2Text()
     p.feed(source)
     return p.get_text()

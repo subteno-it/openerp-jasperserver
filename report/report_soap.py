@@ -26,12 +26,12 @@ import pooler
 from report.render import render
 from httplib2 import Http, ServerNotFoundError ,HttpLib2Error
 from dime import Message
-from lxml.etree import Element, tostring, parse
+from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG
 from tempfile import mkstemp
 import os
 from subprocess import call
-from parser import ParseHTML
+from parser import ParseHTML, ParseXML
 
 ##
 # If cStringIO is available, we use it
@@ -175,18 +175,9 @@ class Report(object):
             log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
             if resp.get('content-type').startswith('text/xml'):
                 log_debug('CONTENT: %r' % content)
-                fp = StringIO(content)
-                tree = parse(fp)
-                fp.close()
-                r = tree.xpath('//runReportReturn')
-                if not r:
-                    raise Exception('Error, invalid Jasper Message')
-                fp = StringIO(r[0].text)
-                tree = parse(fp)
-                fp.close()
-                raise Exception('Code: %s\nMessage: %s' % (tree.xpath('//returnCode')[0].text,
-                                tree.xpath('//returnMessage')[0].text))
+                raise Exception('Code: %s\nMessage: %s' % ParseXML(content))
             elif resp.get('content-type').startswith('text/html'):
+                log_debug('CONTENT: %r' % content)
                 raise Exception ('Error: %s' % ParseHTML(content))
             elif resp.get('content-type') == 'application/dime' :
                 ##
