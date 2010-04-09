@@ -25,17 +25,15 @@
 import pooler
 from report.render import render
 from httplib2 import Http, ServerNotFoundError ,HttpLib2Error
-from dime import Message
 from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG
 from tempfile import mkstemp
 import os
 from subprocess import call
-from parser import ParseHTML, ParseXML
+from parser import ParseHTML, ParseXML, ParseDIME
 
 ##
 # If cStringIO is available, we use it
-#
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -171,6 +169,7 @@ class Report(object):
                 raise Exception('Error: %r' % e)
             except Exception, e:
                 raise Exception('Error: %s' % str(e))
+
             log_debug('HTTP -> RESPONSE:')
             log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
             if resp.get('content-type').startswith('text/xml'):
@@ -180,27 +179,13 @@ class Report(object):
                 log_debug('CONTENT: %r' % content)
                 raise Exception ('Error: %s' % ParseHTML(content))
             elif resp.get('content-type') == 'application/dime' :
-                ##
-                # We must decompose the dime record to return the PDF only
-                fp = StringIO(content)
-                a = Message.load(fp)
-                for x in a.records:
-                    log_debug('HTTP -> CONTENT -> Type: %r' % x.type.value)
-                    if x.type.value == 'application/pdf':
-                        content = x.data
-                        # Store the PDF in TEMP directory
-                        __, f_name = mkstemp(suffix='.pdf', prefix='jasper')
-                        pdf_list.append(f_name)
-                        fpdf = open(f_name, 'w+b')
-                        fpdf.write(content)
-                        fpdf.close()
+                ParseDIME(content, pdf_list)
             else:
                 raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
 
         ##
         # Create a global file for each PDF file, use Ghostscript to concatenate them
         # Retrieve the global if there is a multiple file
-        #
         if len(ids) > 1:
             # -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=firstANDsecond.pdf -dBATCH
             __, f_name = mkstemp(suffix='.pdf', prefix='jasper-global')
