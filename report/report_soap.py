@@ -31,6 +31,7 @@ from tempfile import mkstemp
 import os
 from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME
+from tools.misc import ustr
 
 ##
 # If cStringIO is available, we use it
@@ -237,7 +238,7 @@ class Report(object):
                 continue
             e = Element('parameter')
             e.set('name','OERP_%s' % key.upper())
-            e.text = str(resource[key])
+            e.text = ustr(resource[key])
             res += tostring(e) + '\n'
 
         for key in dico:
@@ -253,7 +254,7 @@ class Report(object):
                 else:
                     e.text = ','.join(map(str, val))
             else:
-                e.text = val and str(val) or ''
+                e.text = val and ustr(val) or ''
             res += tostring(e) + '\n'
         res = self.entities(res)
         if resource.get('xml_data'):
