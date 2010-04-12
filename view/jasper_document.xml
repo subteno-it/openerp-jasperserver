@@ -130,6 +130,10 @@
                         <page string="XML" attrs="{'invisible': [('mode','!=','xml')]}">
                             <field name="depth"/>
                         </page>
+                        <page string="Processes">
+                            <field name="before" colspan="4"/>
+                            <field name="after" colspan="4"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
