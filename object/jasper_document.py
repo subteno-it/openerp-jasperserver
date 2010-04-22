@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
+#    jasper_server module for OpenERP,
 #    Copyright (C) 2010 SYLEAM Info Services (<http://www.Syleam.fr/>) Damien CRIER
 #
 #    This file is a part of jasper_server
@@ -70,6 +70,8 @@ class jasper_document(osv.osv):
         'format' : fields.selection(_get_formats, 'Formats'),
         'report_unit': fields.char('Report Unit', size=128, help='Enter the name for report unit in Jasper Server', required=True),
         'mode': fields.selection([('sql','SQL'),('xml','XML')], 'Mode', required=True),
+        'before': fields.text('Before', help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),
+        'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
     }
 
     _defaults = {
