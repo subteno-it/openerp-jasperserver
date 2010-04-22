@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-19 07:35:42+0000\n"
-"PO-Revision-Date: 2010-02-19 19:18+0100\n"
+"POT-Creation-Date: 2010-04-22 15:59:25+0000\n"
+"PO-Revision-Date: 2010-04-22 18:07+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,14 +20,19 @@ msgid "Single Format"
 msgstr "Format unique"
 
 #. module: jasper_server
-#: field:jasper.document,model:0
+#: field:jasper.document,model_id:0
 msgid "Object Model"
 msgstr "Objet"
 
 #. module: jasper_server
+#: help:jasper.server,host:0
+msgid "Enter hostname or IP address"
+msgstr "Entrer l'hôte ou l'adresse IP"
+
+#. module: jasper_server
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Le nom de l'objet doit commencer par un x_ et ne doit pas contenir de caractères spéciaux !"
 
 #. module: jasper_server
 #: model:ir.actions.act_window,name:jasper_server.act_open_document_view
@@ -38,9 +43,25 @@ msgid "Jasper Document"
 msgstr "Document Jasper"
 
 #. module: jasper_server
+#: help:jasper.document,after:0
+msgid "This field must be filled with a valid SQL request and will be executed AFTER the report edition"
+msgstr "Ce champ doit être remplit avec une requête SQL valide et sera exécuté APRÈS le rapport d'édition"
+
+#. module: jasper_server
+#: code:addons/jasper_server/wizard/format_choice.py:0
+#, python-format
+msgid "No implemented yet!"
+msgstr "Pas encore implémenté!"
+
+#. module: jasper_server
 #: model:ir.ui.menu,name:jasper_server.menu_jasper
 msgid "Jasper Report"
 msgstr "Jasper Report"
+
+#. module: jasper_server
+#: field:jasper.document,format:0
+msgid "Formats"
+msgstr "Formats"
 
 #. module: jasper_server
 #: help:jasper.server,enable:0
@@ -50,7 +71,7 @@ msgstr "Cochez ceci, si le serveur est disponible"
 #. module: jasper_server
 #: wizard_view:jasper_server.make_template,init:0
 msgid "Make template"
-msgstr ""
+msgstr "Générer un template"
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,valid,filename:0
@@ -68,6 +89,7 @@ msgid "Microsoft® Excel (97 -> 2003)"
 msgstr "Microsoft® Excel (97 -> 2003)"
 
 #. module: jasper_server
+#: wizard_view:jasper.partner_list,format_choice:0
 #: wizard_view:jasper_server.document_print,format_choice:0
 msgid "Format choice"
 msgstr "Choix du format"
@@ -78,19 +100,35 @@ msgid "OpenOffice Writer"
 msgstr "OpenOffice Writer"
 
 #. module: jasper_server
-#: model:ir.module.module,shortdesc:jasper_server.module_meta_information
-msgid "Jasper Server Interface"
-msgstr "Interface JasperServer"
+#: field:jasper.document,name:0
+#: field:jasper.document.extension,name:0
+msgid "Name"
+msgstr "Nom"
 
 #. module: jasper_server
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom du modèle invalide pour l'action définit."
 
 #. module: jasper_server
-#: wizard_view:jasper_server.make_template,valid:0
-msgid "Save template"
-msgstr "Sauvegarder modèle"
+#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_partner_list
+msgid "Test"
+msgstr "Test"
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Execute SQL query after treatment"
+msgstr "Exécuter un requête SQL après le traitement"
+
+#. module: jasper_server
+#: field:jasper.server,port:0
+msgid "Port"
+msgstr "Part"
+
+#. module: jasper_server
+#: help:jasper.document,report_unit:0
+msgid "Enter the name for report unit in Jasper Server"
+msgstr "Entrer le nom du Report Unit dans Jasper Server"
 
 #. module: jasper_server
 #: help:jasper.server,repo:0
@@ -107,7 +145,12 @@ msgstr "Jasper Server"
 #: model:ir.model,name:jasper_server.model_jasper_document_extension
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_document_extension
 msgid "Jasper Document Extension"
-msgstr ""
+msgstr "Extension des documents jasper"
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Processes"
+msgstr "Processus"
 
 #. module: jasper_server
 #: field:jasper.server,enable:0
@@ -125,9 +168,15 @@ msgid "Repository"
 msgstr "Dépôt"
 
 #. module: jasper_server
+#: wizard_field:jasper.partner_list,format_choice,format_choice:0
 #: wizard_field:jasper_server.document_print,format_choice,format_choice:0
 msgid "Format"
 msgstr "Format"
+
+#. module: jasper_server
+#: wizard_view:jasper_server.make_template,valid:0
+msgid "Select the location to save the data file"
+msgstr "Sélectionner un emplacement ou sauvegarder le fichier de données"
 
 #. module: jasper_server
 #: help:jasper.server,pass:0
@@ -135,9 +184,9 @@ msgid "Enter the password for the user, by defaul is jasperadmin"
 msgstr "Entrer le mot de passe pour l'utilisateur, par défaut c'est jasperadmin"
 
 #. module: jasper_server
-#: help:jasper.server,host:0
-msgid "Enter hostname or IP address"
-msgstr ""
+#: field:jasper.document,after:0
+msgid "After"
+msgstr "Après"
 
 #. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_8
@@ -145,8 +194,12 @@ msgid "Rich Text Format"
 msgstr "Format Texte Enrichi"
 
 #. module: jasper_server
+#: help:jasper.document,before:0
+msgid "This field must be filled with a valid SQL request and will be executed BEFORE the report edition"
+msgstr "Ce champ doit être remplit avec une requête SQL valide et sera exécuté AVANT le rapport d'édition"
+
+#. module: jasper_server
 #: model:ir.actions.wizard,name:jasper_server.wizard_jasper_document_print
-#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_document_print_res_partner
 msgid "Document Print"
 msgstr "Impression de document"
 
@@ -183,9 +236,9 @@ msgid "Make XML Template"
 msgstr "Générer un modèle XML"
 
 #. module: jasper_server
-#: field:jasper.server,pass:0
-msgid "Password"
-msgstr "Mot de passe"
+#: model:ir.ui.menu,name:jasper_server.menu_jasper_configuration
+msgid "Configuration"
+msgstr "Configuration"
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,valid,datas:0
@@ -198,9 +251,10 @@ msgid "PDF Viewer"
 msgstr "Visionneuse PDF"
 
 #. module: jasper_server
-#: field:jasper.server,wsdl:0
-msgid "WSDL"
-msgstr "WSDL"
+#: view:jasper.document:0
+#: selection:jasper.document,mode:0
+msgid "XML"
+msgstr "XML"
 
 #. module: jasper_server
 #: field:jasper.server,user:0
@@ -228,6 +282,16 @@ msgid "Indent the XML output ?"
 msgstr "Indenter le XML ?"
 
 #. module: jasper_server
+#: view:jasper.document:0
+msgid "Output format"
+msgstr "Format de sortie"
+
+#. module: jasper_server
+#: field:jasper.document,report_unit:0
+msgid "Report Unit"
+msgstr "Report Unit"
+
+#. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_3
 msgid "OpenOffice Calc"
 msgstr "OpenOffice Calc"
@@ -239,19 +303,30 @@ msgid "Depth"
 msgstr "Profondeur"
 
 #. module: jasper_server
-#: field:jasper.document,format:0
-msgid "Formats"
-msgstr "Formats"
+#: field:jasper.document,mode:0
+msgid "Mode"
+msgstr "Mode"
 
 #. module: jasper_server
-#: help:jasper.server,wsdl:0
-msgid "Enter the address of the WSDL description"
-msgstr "Entrer l'adresse pour la description WSDL"
+#: code:addons/jasper_server/wizard/format_choice.py:0
+#, python-format
+msgid "Error"
+msgstr "Erreur"
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,model:0
 msgid "Model"
 msgstr "Modèle"
+
+#. module: jasper_server
+#: field:jasper.document,service:0
+msgid "Service name"
+msgstr "Nom du service"
+
+#. module: jasper_server
+#: wizard_view:jasper_server.make_template,valid:0
+msgid "Save template"
+msgstr "Sauvegarder modèle"
 
 #. module: jasper_server
 #: help:jasper.server,user:0
@@ -264,6 +339,7 @@ msgid "Code"
 msgstr "Code"
 
 #. module: jasper_server
+#: wizard_button:jasper.partner_list,format_choice,create_wizard:0
 #: wizard_button:jasper_server.document_print,format_choice,create_wizard:0
 #: wizard_button:jasper_server.make_template,init,valid:0
 msgid "OK"
@@ -281,6 +357,11 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: jasper_server
+#: view:jasper.document:0
+msgid "Execute SQL query before treatment"
+msgstr "Exécuter un requête SQL avant le traitement"
+
+#. module: jasper_server
 #: field:jasper.document,jasper_file:0
 msgid "Jasper file"
 msgstr "Fichier Jasper"
@@ -296,19 +377,30 @@ msgid "Documents extensions"
 msgstr "Extensions des documents"
 
 #. module: jasper_server
-#: field:jasper.document,action:0
-msgid "Actions"
-msgstr "Actions"
+#: field:jasper.server,pass:0
+msgid "Password"
+msgstr "Mot de passe"
 
 #. module: jasper_server
-#: field:jasper.server,port:0
-msgid "Port"
-msgstr "Part"
+#: model:ir.module.module,shortdesc:jasper_server.module_meta_information
+msgid "Jasper Server Interface"
+msgstr "Interface JasperServer"
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "General"
+msgstr "Général"
 
 #. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_9
 msgid "Flash Viewer"
 msgstr "Visionneuse Flash"
+
+#. module: jasper_server
+#: code:addons/jasper_server/wizard/format_choice.py:0
+#, python-format
+msgid "No report found!"
+msgstr "Pas de rapport trouvé!"
 
 #. module: jasper_server
 #: field:jasper.document,format_choice:0
@@ -321,21 +413,31 @@ msgid "Done"
 msgstr "Terminer"
 
 #. module: jasper_server
-#: wizard_view:jasper_server.make_template,valid:0
-msgid "Select the location to save the data file"
-msgstr "Sélectionner un emplacement ou sauvegarder le fichier de données"
+#: field:ir.actions.wizard,jasper:0
+msgid "Jasper"
+msgstr "Jasper"
 
 #. module: jasper_server
+#: selection:jasper.document,mode:0
+msgid "SQL"
+msgstr "SQL"
+
+#. module: jasper_server
+#: wizard_button:jasper.partner_list,format_choice,end:0
 #: wizard_button:jasper_server.document_print,format_choice,end:0
 #: wizard_button:jasper_server.make_template,init,end:0
 msgid "Cancel"
 msgstr "Annuler"
 
 #. module: jasper_server
-#: field:jasper.document,name:0
-#: field:jasper.document.extension,name:0
-msgid "Name"
-msgstr "Nom"
+#: help:jasper.document,service:0
+msgid "Enter the service name register at start by OpenERP Server"
+msgstr "Entrer le nom du service enregistré au démarrage de OpenERP Server"
+
+#. module: jasper_server
+#: help:jasper.document,enabled:0
+msgid "Indicates if this document is active or not"
+msgstr "Indique si ce document est actif ou pas"
 
 #. module: jasper_server
 #: view:jasper.document.extension:0
@@ -348,7 +450,14 @@ msgid "Id"
 msgstr "Id"
 
 #. module: jasper_server
-#: help:jasper.document,enabled:0
-msgid "Indicates if this document is active or not"
-msgstr "Indique si ce document est actif ou pas"
+#: field:jasper.document,before:0
+msgid "Before"
+msgstr "Avant"
+
+#~ msgid "WSDL"
+#~ msgstr "WSDL"
+#~ msgid "Enter the address of the WSDL description"
+#~ msgstr "Entrer l'adresse pour la description WSDL"
+#~ msgid "Actions"
+#~ msgstr "Actions"
 
