@@ -59,7 +59,8 @@ class jasper_document(osv.osv):
     # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
         'name' : fields.char('Name', size=128, required=True), # button name
-        'service': fields.char('Service name', size=64, help='Enter the service name register at start by OpenERP Server'),
+        'service': fields.char('Service name', size=64, required=True, 
+            help='Enter the service name register at start by OpenERP Server'),
         'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
         'model_id' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
         'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
@@ -106,9 +107,9 @@ class jasper_document(osv.osv):
         import netsvc
         from jasper_server.wizard.format_choice import format_choice
 
-        print 'MAJ: %r' % netsvc.service_exist(wiz_name)
-        if not netsvc.service_exist(wiz_name):
-            #del netsvc.SERVICES[wiz_name]
+        if netsvc.service_exist(wiz_name):
+            if isinstance(netsvc.SERVICES[wiz_name], format_choice):
+                del netsvc.SERVICES[wiz_name]
             format_choice(wiz_name)
 
         return res_id
