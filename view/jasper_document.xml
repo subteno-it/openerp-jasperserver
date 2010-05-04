@@ -131,8 +131,15 @@
                             <field name="depth"/>
                         </page>
                         <page string="Processes">
-                            <field name="before" colspan="4"/>
-                            <field name="after" colspan="4"/>
+                            <separator string="Execute SQL query before treatment" colspan="4"/>
+                            <field name="before" colspan="4" nolabel="1"/>
+                            <separator string="Execute SQL query after treatment" colspan="4"/>
+                            <field name="after" colspan="4" nolabel="1"/>
+                            <separator string="Legend" colspan="4"/>
+                            <group colspan="4" col="6">
+                                <label string="%%(id)s" colspan="2"/>
+                                <newline/>
+                            </group>
                         </page>
                     </notebook>
                 </form>

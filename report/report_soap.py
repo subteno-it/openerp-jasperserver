@@ -156,6 +156,12 @@ class Report(object):
                 'database': '/openerp/databases/%s' % self.cr.dbname,
             }
 
+            ###
+            ## Execute the before query if it available
+            ##
+            if js.get('before'):
+                cr.execute(js['before'], {'id': ex})
+
             body = BODY_TEMPLATE % body_args
             log_debug('****\n%s\n****' % body)
 
@@ -183,6 +189,12 @@ class Report(object):
                 ParseDIME(content, pdf_list)
             else:
                 raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
+
+            ###
+            ## Execute the before query if it available
+            ##
+            if js.get('after'):
+                cr.execute(js['after'], {'id': ex})
 
         ##
         # Create a global file for each PDF file, use Ghostscript to concatenate them
