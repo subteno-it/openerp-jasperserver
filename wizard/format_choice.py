@@ -121,7 +121,7 @@ def registered_wizard(name):
     if netsvc.service_exist(gname):
         if isinstance(netsvc.SERVICES[gname], format_choice):
             return
-        del netsvc.SERVICES[name]
+        del netsvc.SERVICES[gname]
     format_choice(name)
 
 ##
