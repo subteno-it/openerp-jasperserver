@@ -24,7 +24,7 @@
 
 {
     'name': 'Jasper Server Interface',
-    'version': '0.4.0',
+    'version': '0.4.1',
     'category': 'Tools',
     'description': """This module interface JasperServer For Reports.""",
     'author': 'Everlibre,SYLEAM',
