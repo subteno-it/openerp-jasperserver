@@ -76,7 +76,6 @@ class jasper_document(osv.osv):
         'before': fields.text('Before', help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),
         'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
     }
-    # TODO: migration script to compute the action for existing entries
 
     _defaults = {
         'format_choice': lambda *a: 'mono',
@@ -144,11 +143,6 @@ class jasper_document(osv.osv):
             context = {}
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         act_id = self.make_action(cr, uid, doc_id, context=context)
-        ###
-        ## Update action_id 
-        ctx = context.copy()
-        ctx.setdefault('action',True)
-        self.write(cr, uid, doc_id, {'action_id': act_id}, context=ctx)
         return doc_id
 
 
