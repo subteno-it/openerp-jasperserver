@@ -120,7 +120,7 @@ class jasper_document(osv.osv):
         """
         Dynamicaly declare the wizard for this document
         """
-        if not context:
+        if context is None:
             context = {}
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         act_id = self.make_action(cr, uid, doc_id, context=context)
@@ -131,7 +131,7 @@ class jasper_document(osv.osv):
         """
         If the description change, we must update the action
         """
-        if not context:
+        if context is None:
             context = {}
         for id in ids:
             self.make_action(cr, uid, id, context=context)
@@ -142,8 +142,10 @@ class jasper_document(osv.osv):
         """
 
         """
-        if not context:
+        if context is None:
             context = {}
+        ###
+        ## Unlink the button on the object before remove this reference
 
         return super(jasper_document, self).unlink(cr, uid, ids)
 
