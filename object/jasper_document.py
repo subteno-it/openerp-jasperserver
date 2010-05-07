@@ -76,6 +76,7 @@ class jasper_document(osv.osv):
         'before': fields.text('Before', help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),
         'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
     }
+    # TODO: migration script to compute the action for existing entries
 
     _defaults = {
         'format_choice': lambda *a: 'mono',
@@ -95,7 +96,7 @@ class jasper_document(osv.osv):
         :return: ID for this reference
         """
         data_obj = self.pool.get('ir.model.data')
-        return data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, ref_id, noupdate=True)
+        return data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, ref_id, noupdate=False)
 
 
     def make_action(self, cr, uid, id, context=None):
@@ -127,7 +128,10 @@ class jasper_document(osv.osv):
         if netsvc.service_exist(wiz_name):
             if isinstance(netsvc.SERVICES[wiz_name], format_choice):
                 del netsvc.SERVICES[wiz_name]
-        format_choice(wiz_name)
+        try:
+            format_choice(wiz_name)
+        except AssertionError:
+            pass
         logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % b.name)
 
         return res_id
@@ -140,6 +144,11 @@ class jasper_document(osv.osv):
             context = {}
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         act_id = self.make_action(cr, uid, doc_id, context=context)
+        ###
+        ## Update action_id 
+        ctx = context.copy()
+        ctx.setdefault('action',True)
+        self.write(cr, uid, doc_id, {'action_id': act_id}, context=ctx)
         return doc_id
 
 
@@ -149,19 +158,32 @@ class jasper_document(osv.osv):
         """
         if context is None:
             context = {}
-        for id in ids:
-            self.make_action(cr, uid, id, context=context)
+        if not context.get('action'):
+            for id in ids:
+                self.make_action(cr, uid, id, context=context)
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
 
 
     def unlink(self, cr, uid, ids, context=None):
         """
-
+        When jasper document is delete, delete the print action as well
         """
         if context is None:
             context = {}
+
         ###
         ## Unlink the button on the object before remove this reference
+        for id in ids:
+            jd = self.browse(cr, uid, id, context=context)
+            dom = [
+                ('name','=', jd.name),
+                ('key2','=', 'client_print_multi'),
+                ('model','=',jd.model_id.model)
+            ]
+            lnk_ids = self.pool.get('ir.values').search(cr, uid, dom, context=context)
+            if lnk_ids:
+                self.pool.get('ir.values').unlink(cr, uid, lnk_ids, context=context)
+                self.pool.get('ir.model.data')._unlink(cr, uid, 'ir.values', lnk_ids, direct=True)
 
         return super(jasper_document, self).unlink(cr, uid, ids)
 
