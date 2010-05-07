@@ -24,6 +24,9 @@
 
 from osv import osv
 from osv import fields
+from jasper_server.wizard.format_choice import format_choice
+import netsvc
+logger = netsvc.Logger()
 
 class jasper_document_extension(osv.osv):
     _name = 'jasper.document.extension'
@@ -80,6 +83,21 @@ class jasper_document(osv.osv):
         #'format': lambda *a: 'pdf',
     }
 
+    def _register_ref(self, cr, uid, res , ref_id, context=None):
+        """
+        Search reference on ir.model.data
+
+        :type  res: dict
+        :param res: resource to register
+        :type  ref_id: str
+        :param ref_id: unique reference
+        :rtype: integer
+        :return: ID for this reference
+        """
+        data_obj = self.pool.get('ir.model.data')
+        return data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, ref_id, noupdate=True)
+
+
     def make_action(self, cr, uid, id, context=None):
         """
         If action doesn't exists we must create it
@@ -96,23 +114,21 @@ class jasper_document(osv.osv):
         }
         xml_id = 'wizard_jasper_%s' % b.service
 
-        res_id = data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, xml_id, noupdate=True)
-        #self.write(cr, uid, [id], {'action': res_id})
+        #res_id = data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, xml_id, noupdate=True)
+        res_id = self._register_ref(cr, uid, res, xml_id, context=context)
 
         keyword = 'client_print_multi'
         value = 'ir.actions.wizard,%d' % res_id
-        # creation du bouton
+        # associate this to print action
         data_obj.ir_set(cr, uid, 'action', keyword, b.name, [b.model_id.model], value,
                         replace=True, isobject=True, xml_id=xml_id)
         ##
         # Automatic registration to be directly available
-        import netsvc
-        from jasper_server.wizard.format_choice import format_choice
-
         if netsvc.service_exist(wiz_name):
             if isinstance(netsvc.SERVICES[wiz_name], format_choice):
                 del netsvc.SERVICES[wiz_name]
             format_choice(wiz_name)
+        logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % b.name)
 
         return res_id
 
