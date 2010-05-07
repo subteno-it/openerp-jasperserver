@@ -32,6 +32,7 @@
             <field name="enabled" eval="0"/>
             <field name="report_unit">PartnerList</field>
             <field name="mode">sql</field>
+            <field name="service">partner_list</field>
         </record>
 
     </data>
