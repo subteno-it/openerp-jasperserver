@@ -127,7 +127,7 @@ class jasper_document(osv.osv):
         if netsvc.service_exist(wiz_name):
             if isinstance(netsvc.SERVICES[wiz_name], format_choice):
                 del netsvc.SERVICES[wiz_name]
-            format_choice(wiz_name)
+        format_choice(wiz_name)
         logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % b.name)
 
         return res_id
