@@ -76,8 +76,12 @@ class format_choice(wizard.interface):
         if not doc_ids:
             raise wizard.except_wizard(_('Error'), _('No report found!'))
         document = document_obj.browse(cr, uid, doc_ids[0], context=context)
+        option = {
+            'attachment': document.attachment,
+            'attachment_use': document.attachment_use,
+        }
         uri = '/openerp/bases/%s/%s' % (cr.dbname, document.report_unit)
-        data['form']['params'] = (document.format, uri, document.mode, document.depth)
+        data['form']['params'] = (document.format, uri, document.mode, document.depth, option)
         data['form']['ids'] = data['ids']
         return data['form']
 

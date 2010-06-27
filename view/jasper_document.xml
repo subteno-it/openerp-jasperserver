@@ -123,6 +123,9 @@
                             <separator string="Output format" colspan="4"/>
                             <field name="format_choice"/>
                             <field name="format"/>
+                            <separator string="Attachment" colspan="4"/>
+                            <field name="attachment"/>
+                            <field name="attachment_use"/>
                         </page>
                         <page string="Groups">
                             <field name="group_ids" nolabel="1" colspan="4"/>

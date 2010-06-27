@@ -23,14 +23,17 @@
 ##############################################################################
 
 import pooler
+import os
+import time
+import base64
+
 from report.render import render
 from httplib2 import Http, ServerNotFoundError ,HttpLib2Error
 from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG
 from tempfile import mkstemp
-import os
 from subprocess import call
-from parser import ParseHTML, ParseXML, ParseDIME
+from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from tools.misc import ustr
 
 ##
@@ -100,6 +103,7 @@ class Report(object):
         """Launch the report and return it"""
         ids = self.data['form']['ids']
         js_obj = self.pool.get('jasper.server')
+        doc_obj = self.pool.get('jasper.document')
         js_ids = js_obj.search(self.cr, self.uid, [('enable','=',True)])
         if not len(js_ids):
             raise Exception('Error, no JasperServer found!')
@@ -109,86 +113,116 @@ class Report(object):
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
 
+        att = self.data['form']['params'][4]
+        attach = att.get('attachment', '')
+        reload = att.get('attachment_use', False)
+
         ##
         # For each IDS, launch a query, and return only one result
         #
         pdf_list = []
         for ex in ids:
-            # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
-            # We cannot use $X{IN, field, Collection}
-            d_par = {'active_id': ex,
-                     'active_ids': ex,
-                     'model': self.model}
-
-            # If XML we must compose it
-            if self.data['form']['params'][2] == 'xml':
-                d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0], 
-                        self.data['form']['params'][3], context=self.context)
-                d_par['xml_data'] = d_xml
-
-            # Retrieve the company information and send them in parameter
-            user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
-            d_par['company_name'] = user.company_id.name
-            d_par['company_logo'] = user.company_id.name.encode('ascii','ignore').replace(' ','_')
-            d_par['company_hearder1'] = user.company_id.rml_header1 or ''
-            d_par['company_footer1'] = user.company_id.rml_footer1 or ''
-            d_par['company_footer2'] = user.company_id.rml_footer2 or ''
-            d_par['company_website'] = user.company_id.partner_id.website or ''
-            d_par['company_currency'] = user.company_id.currency_id.name or ''
-
-            # Search the default address for the company.
-            addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id],['default'])['default']
-            addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
-            d_par['company_street'] = addr.street or ''
-            d_par['company_street2'] = addr.street2 or ''
-            d_par['company_zip'] = addr.zip or ''
-            d_par['company_city'] = addr.city or ''
-            d_par['company_country'] = addr.country_id.name or ''
-            d_par['company_phone'] = addr.phone or ''
-            d_par['company_fax'] = addr.fax or ''
-            d_par['company_mail'] = addr.email or ''
-
-            par = self.parameter(self.data['form'], d_par)
-            body_args = {
-                'format': self.data['form']['params'][0],
-                'path': self.data['form']['params'][1],
-                'param': par,
-                'database': '/openerp/databases/%s' % self.cr.dbname,
-            }
-
-            ###
-            ## Execute the before query if it available
-            ##
-            if js.get('before'):
-                cr.execute(js['before'], {'id': ex})
-
-            body = BODY_TEMPLATE % body_args
-            log_debug('****\n%s\n****' % body)
-
-            headers = {'Content-type': 'text/xml', 'charset':'UTF-8',"SOAPAction":"runReport"}
-            h = Http()
-            h.add_credentials(js['user'], js['pass'])
-            try:
-                resp, content = h.request(uri, "POST", body, headers)
-            except ServerNotFoundError:
-                raise Exception('Error, Server not found !')
-            except HttpLib2Error, e:
-                raise Exception('Error: %r' % e)
-            except Exception, e:
-                raise Exception('Error: %s' % str(e))
-
-            log_debug('HTTP -> RESPONSE:')
-            log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
-            if resp.get('content-type').startswith('text/xml'):
-                log_debug('CONTENT: %r' % content)
-                raise Exception('Code: %s\nMessage: %s' % ParseXML(content))
-            elif resp.get('content-type').startswith('text/html'):
-                log_debug('CONTENT: %r' % content)
-                raise Exception ('Error: %s' % ParseHTML(content))
-            elif resp.get('content-type') == 'application/dime' :
-                ParseDIME(content, pdf_list)
+            ## Manage attachment
+            cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
+            aname = eval(attach, {'object': cur_obj, 'time': time})
+            if reload and aname:
+                aids = self.pool.get('ir.attachment').search(self.cr, self.uid, 
+                        [('datas_fname','=',aname+'.pdf'),('res_model','=',self.model),('res_id','=',ex)])
+                if aids:
+                    brow_rec = self.pool.get('ir.attachment').browse(self.cr, self.uid, aids[0])
+                    if brow_rec.datas:
+                        d = base64.decodestring(brow_rec.datas)
+                        WriteContent(d, pdf_list)
+                        content = d
             else:
-                raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
+                # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
+                # We cannot use $X{IN, field, Collection}
+                d_par = {'active_id': ex,
+                         'active_ids': ex,
+                         'model': self.model}
+
+                # If XML we must compose it
+                if self.data['form']['params'][2] == 'xml':
+                    d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0], 
+                            self.data['form']['params'][3], context=self.context)
+                    d_par['xml_data'] = d_xml
+
+                # Retrieve the company information and send them in parameter
+                user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
+                d_par['company_name'] = user.company_id.name
+                d_par['company_logo'] = user.company_id.name.encode('ascii','ignore').replace(' ','_')
+                d_par['company_hearder1'] = user.company_id.rml_header1 or ''
+                d_par['company_footer1'] = user.company_id.rml_footer1 or ''
+                d_par['company_footer2'] = user.company_id.rml_footer2 or ''
+                d_par['company_website'] = user.company_id.partner_id.website or ''
+                d_par['company_currency'] = user.company_id.currency_id.name or ''
+
+                # Search the default address for the company.
+                addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id],['default'])['default']
+                addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
+                d_par['company_street'] = addr.street or ''
+                d_par['company_street2'] = addr.street2 or ''
+                d_par['company_zip'] = addr.zip or ''
+                d_par['company_city'] = addr.city or ''
+                d_par['company_country'] = addr.country_id.name or ''
+                d_par['company_phone'] = addr.phone or ''
+                d_par['company_fax'] = addr.fax or ''
+                d_par['company_mail'] = addr.email or ''
+
+                par = self.parameter(self.data['form'], d_par)
+                body_args = {
+                    'format': self.data['form']['params'][0],
+                    'path': self.data['form']['params'][1],
+                    'param': par,
+                    'database': '/openerp/databases/%s' % self.cr.dbname,
+                }
+
+                ###
+                ## Execute the before query if it available
+                ##
+                if js.get('before'):
+                    cr.execute(js['before'], {'id': ex})
+
+                body = BODY_TEMPLATE % body_args
+                log_debug('****\n%s\n****' % body)
+
+                headers = {'Content-type': 'text/xml', 'charset':'UTF-8',"SOAPAction":"runReport"}
+                h = Http()
+                h.add_credentials(js['user'], js['pass'])
+                try:
+                    resp, content = h.request(uri, "POST", body, headers)
+                except ServerNotFoundError:
+                    raise Exception('Error, Server not found !')
+                except HttpLib2Error, e:
+                    raise Exception('Error: %r' % e)
+                except Exception, e:
+                    raise Exception('Error: %s' % str(e))
+
+                log_debug('HTTP -> RESPONSE:')
+                log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
+                if resp.get('content-type').startswith('text/xml'):
+                    log_debug('CONTENT: %r' % content)
+                    raise Exception('Code: %s\nMessage: %s' % ParseXML(content))
+                elif resp.get('content-type').startswith('text/html'):
+                    log_debug('CONTENT: %r' % content)
+                    raise Exception ('Error: %s' % ParseHTML(content))
+                elif resp.get('content-type') == 'application/dime' :
+                    ParseDIME(content, pdf_list)
+                else:
+                    raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
+
+                ###
+                ## Store the content in ir.attachment if ask
+                if aname:
+                    name = aname + '.pdf'
+                    self.pool.get('ir.attachment').create(self.cr, self.uid, {
+                                'name': aname,
+                                'datas': base64.encodestring(ParseContent(content)),
+                                'datas_fname': name,
+                                'res_model': self.model,
+                                'res_id': ex,
+                                }, context=self.context
+                    )
 
             ###
             ## Execute the before query if it available

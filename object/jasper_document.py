@@ -75,12 +75,15 @@ class jasper_document(osv.osv):
         'mode': fields.selection([('sql','SQL'),('xml','XML')], 'Mode', required=True),
         'before': fields.text('Before', help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),
         'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
+        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     }
 
     _defaults = {
         'format_choice': lambda *a: 'mono',
         'mode': lambda *a: 'sql',
         #'format': lambda *a: 'pdf',
+        'attachment': lambda *a: False,
     }
 
     def _register_ref(self, cr, uid, res , ref_id, context=None):

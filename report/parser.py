@@ -108,6 +108,29 @@ def ParseHTML(source):
     p.feed(source)
     return p.get_text()
 
+def ParseContent(source):
+    """
+    Parse the content and return a decode stream
+
+    """
+    fp = StringIO(source)
+    a = Message.load(fp)
+    content = ''
+    for x in a.records:
+        if x.type.value == 'application/pdf':
+            content = x.data
+    return content
+
+def WriteContent(content, list_file):
+    """
+    Write content in tempory file
+    """
+    __, f_name = mkstemp(suffix='.pdf', prefix='jasper')
+    list_file.append(f_name)
+    fpdf = open(f_name, 'w+b')
+    fpdf.write(content)
+    fpdf.close()
+
 if __name__ == '__main__':
     print ParseHTML("""<html><head><title>Apache Tomcat/5.5.20 - Rapport d'erreur</title>
 <style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} 
