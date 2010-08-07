@@ -88,13 +88,15 @@ class jasper_document(osv.osv):
         'before': fields.text('Before', help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),
         'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
-        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
+        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
+        'toolbar': fields.boolean('Hide in toolbar', help='Check this if you want to hide button in toolbar'),
     }
 
     _defaults = {
         'format_choice': lambda *a: 'mono',
         'mode': lambda *a: 'sql',
         'attachment': lambda *a: False,
+        'toolbar': lambda *a: True,
     }
 
     def __init__(self, pool, cr):

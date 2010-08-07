@@ -40,7 +40,7 @@ class IrValues(osv.osv):
             for e in jd_obj.browse(cr, uid, jd_ids, context=context):
                 d = {
                     'groups_id': [x.id for x in e.group_ids],
-                     'multi': False,
+                     'multi': e.toolbar,
                      'name': e.name,
                      'wiz_name': 'jasper.%s' % e.service,
                      'jasper': False,
