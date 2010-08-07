@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-27 21:41:51+0000\n"
-"PO-Revision-Date: 2010-06-27 21:41:51+0000\n"
+"POT-Creation-Date: 2010-08-07 13:46:15+0000\n"
+"PO-Revision-Date: 2010-08-07 13:46:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,9 +47,6 @@ msgid "Filename"
 msgstr ""
 
 #. module: jasper_server
-#: wizard_view:jasper.avoir_lpoi,format_choice:0
-#: wizard_view:jasper.facture_lpoi,format_choice:0
-#: wizard_view:jasper.facture_sql,format_choice:0
 #: wizard_view:jasper_server.document_print,format_choice:0
 msgid "Format choice"
 msgstr ""
@@ -57,6 +54,11 @@ msgstr ""
 #. module: jasper_server
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_test4kkkk
+msgid "test468"
 msgstr ""
 
 #. module: jasper_server
@@ -102,8 +104,9 @@ msgid "Indent the XML output ?"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_facture_lpoi
-msgid "Facture LPOI"
+#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_partner_list
+#: model:jasper.document,name:jasper_server.jasper_document_4
+msgid "Partner List2"
 msgstr ""
 
 #. module: jasper_server
@@ -112,9 +115,6 @@ msgid "Enter the username for JasperServer user, by default is jasperadmin"
 msgstr ""
 
 #. module: jasper_server
-#: wizard_button:jasper.avoir_lpoi,format_choice,create_wizard:0
-#: wizard_button:jasper.facture_lpoi,format_choice,create_wizard:0
-#: wizard_button:jasper.facture_sql,format_choice,create_wizard:0
 #: wizard_button:jasper_server.document_print,format_choice,create_wizard:0
 #: wizard_button:jasper_server.make_template,init,valid:0
 msgid "OK"
@@ -225,11 +225,6 @@ msgid "Configuration"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_avoir_lpoi
-msgid "Avoir LPOI"
-msgstr ""
-
-#. module: jasper_server
 #: view:jasper.document:0
 msgid "%(id)s"
 msgstr ""
@@ -260,6 +255,11 @@ msgid "Flash Viewer"
 msgstr ""
 
 #. module: jasper_server
+#: help:jasper.document,toolbar:0
+msgid "Check this if you want to hide button in toolbar"
+msgstr ""
+
+#. module: jasper_server
 #: field:jasper.document,before:0
 msgid "Before"
 msgstr ""
@@ -270,16 +270,16 @@ msgid "This module interface JasperServer For Reports."
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_facture_sql
-msgid "Facture SQL"
-msgstr ""
-
-#. module: jasper_server
 #: model:ir.actions.act_window,name:jasper_server.act_open_document_view
 #: model:ir.model,name:jasper_server.model_jasper_document
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_document
 #: view:jasper.document:0
 msgid "Jasper Document"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_toto
+msgid "test 3"
 msgstr ""
 
 #. module: jasper_server
@@ -334,6 +334,11 @@ msgid "Data"
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document,toolbar:0
+msgid "Hide in toolbar"
+msgstr ""
+
+#. module: jasper_server
 #: view:jasper.document:0
 #: selection:jasper.document,mode:0
 msgid "XML"
@@ -385,9 +390,6 @@ msgid "Done"
 msgstr ""
 
 #. module: jasper_server
-#: wizard_button:jasper.avoir_lpoi,format_choice,end:0
-#: wizard_button:jasper.facture_lpoi,format_choice,end:0
-#: wizard_button:jasper.facture_sql,format_choice,end:0
 #: wizard_button:jasper_server.document_print,format_choice,end:0
 #: wizard_button:jasper_server.make_template,init,end:0
 msgid "Cancel"
@@ -419,9 +421,6 @@ msgid "Execute SQL query after treatment"
 msgstr ""
 
 #. module: jasper_server
-#: wizard_field:jasper.avoir_lpoi,format_choice,format_choice:0
-#: wizard_field:jasper.facture_lpoi,format_choice,format_choice:0
-#: wizard_field:jasper.facture_sql,format_choice,format_choice:0
 #: wizard_field:jasper_server.document_print,format_choice,format_choice:0
 msgid "Format"
 msgstr ""

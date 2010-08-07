@@ -73,7 +73,7 @@ class jasper_document(osv.osv):
     # TODO: Add dynamic parameter to send to jasper report server
     # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
-        'name' : fields.char('Name', size=128, required=True), # button name
+        'name' : fields.char('Name', size=128, translate=True, required=True), # button name
         'service': fields.char('Service name', size=64, required=True, 
             help='Enter the service name register at start by OpenERP Server'),
         'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
