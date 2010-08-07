@@ -82,51 +82,17 @@ class jasper_document(osv.osv):
     _defaults = {
         'format_choice': lambda *a: 'mono',
         'mode': lambda *a: 'sql',
-        #'format': lambda *a: 'pdf',
         'attachment': lambda *a: False,
     }
-
-    def _register_ref(self, cr, uid, res , ref_id, context=None):
-        """
-        Search reference on ir.model.data
-
-        :type  res: dict
-        :param res: resource to register
-        :type  ref_id: str
-        :param ref_id: unique reference
-        :rtype: integer
-        :return: ID for this reference
-        """
-        data_obj = self.pool.get('ir.model.data')
-        return data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, ref_id, noupdate=False)
-
 
     def make_action(self, cr, uid, id, context=None):
         """
         If action doesn't exists we must create it
+        Automatic registration to be directly available
         """
-        data_obj = self.pool.get('ir.model.data')
         b = self.browse(cr, uid, id, context=context)
         wiz_name = 'jasper.%s' % b.service
-        res = {
-                'name': b.name,
-                'wiz_name': wiz_name,
-                'multi': False,
-                'model': b.model_id.model,
-                'jasper': True,
-        }
-        xml_id = 'wizard_jasper_%s' % b.service
 
-        #res_id = data_obj._update(cr, uid, 'ir.actions.wizard', 'jasper_server', res, xml_id, noupdate=True)
-        res_id = self._register_ref(cr, uid, res, xml_id, context=context)
-
-        keyword = 'client_print_multi'
-        value = 'ir.actions.wizard,%d' % res_id
-        # associate this to print action
-        data_obj.ir_set(cr, uid, 'action', keyword, b.name, [b.model_id.model], value,
-                        replace=True, isobject=True, xml_id=xml_id)
-        ##
-        # Automatic registration to be directly available
         if netsvc.service_exist(wiz_name):
             if isinstance(netsvc.SERVICES[wiz_name], format_choice):
                 del netsvc.SERVICES[wiz_name]
@@ -136,8 +102,6 @@ class jasper_document(osv.osv):
             pass
         logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % b.name)
 
-        return res_id
-
     def create(self, cr, uid, vals, context=None):
         """
         Dynamicaly declare the wizard for this document
@@ -145,7 +109,7 @@ class jasper_document(osv.osv):
         if context is None:
             context = {}
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
-        act_id = self.make_action(cr, uid, doc_id, context=context)
+        self.make_action(cr, uid, doc_id, context=context)
         return doc_id
 
 
@@ -159,30 +123,6 @@ class jasper_document(osv.osv):
             for id in ids:
                 self.make_action(cr, uid, id, context=context)
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
-
-
-    def unlink(self, cr, uid, ids, context=None):
-        """
-        When jasper document is delete, delete the print action as well
-        """
-        if context is None:
-            context = {}
-
-        ###
-        ## Unlink the button on the object before remove this reference
-        for id in ids:
-            jd = self.browse(cr, uid, id, context=context)
-            dom = [
-                ('name','=', jd.name),
-                ('key2','=', 'client_print_multi'),
-                ('model','=',jd.model_id.model)
-            ]
-            lnk_ids = self.pool.get('ir.values').search(cr, uid, dom, context=context)
-            if lnk_ids:
-                self.pool.get('ir.values').unlink(cr, uid, lnk_ids, context=context)
-                self.pool.get('ir.model.data')._unlink(cr, uid, 'ir.values', lnk_ids, direct=True)
-
-        return super(jasper_document, self).unlink(cr, uid, ids)
 
 jasper_document()
 
