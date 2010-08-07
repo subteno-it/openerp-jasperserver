@@ -117,34 +117,4 @@ class format_choice(wizard.interface):
 
 format_choice('jasper_server.document_print')
 
-import netsvc
-
-def registered_wizard(name):
-    """ Register dynamicaly the wizard """
-    gname = 'wizard.%s' % name
-    if netsvc.service_exist(gname):
-        if isinstance(netsvc.SERVICES[gname], format_choice):
-            return
-        del netsvc.SERVICES[gname]
-    format_choice(name)
-
-##
-# Ugly hack to load dynamicaly each jasper document
-#
-from osv import osv
-
-class ir_action_wizard(osv.osv):
-    _inherit = 'ir.actions.wizard'
-
-    def __init__(self, pool, cr):
-        cr.execute("""select wiz_name from ir_act_wizard where wiz_name like 'jasper.%'""")
-        records = cr.dictfetchall()
-
-        for rec in records:
-            registered_wizard(rec['wiz_name'])
-
-        super(ir_action_wizard, self).__init__(pool, cr)
-
-ir_action_wizard()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

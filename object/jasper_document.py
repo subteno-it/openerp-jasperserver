@@ -26,7 +26,19 @@ from osv import osv
 from osv import fields
 from jasper_server.wizard.format_choice import format_choice
 import netsvc
+import pooler
 logger = netsvc.Logger()
+
+def registered_wizard(name):
+    """ Register dynamicaly the wizard for each entry"""
+    gname = 'wizard.%s' % name
+    if netsvc.service_exist(gname):
+        if isinstance(netsvc.SERVICES[gname], format_choice):
+            return
+        del netsvc.SERVICES[gname]
+    format_choice(name)
+    logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % name)
+
 
 class jasper_document_extension(osv.osv):
     _name = 'jasper.document.extension'
@@ -85,6 +97,22 @@ class jasper_document(osv.osv):
         'attachment': lambda *a: False,
     }
 
+    def __init__(self, pool, cr):
+        """
+        Automaticaly registered service at server starts
+        """
+        try:
+            cr_new = pooler.get_db(cr.dbname).cursor()
+            cr_new.execute("""SELECT 'jasper.'||service AS wiz_name FROM jasper_document WHERE enabled=true""")
+            for rec in cr_new.dictfetchall():
+                registered_wizard(rec['wiz_name'])
+            cr_new.commit()
+            cr_new.close()
+        except Exception:
+            pass
+
+        super(jasper_document, self).__init__(pool, cr)
+
     def make_action(self, cr, uid, id, context=None):
         """
         If action doesn't exists we must create it
@@ -92,15 +120,16 @@ class jasper_document(osv.osv):
         """
         b = self.browse(cr, uid, id, context=context)
         wiz_name = 'jasper.%s' % b.service
+        registered_wizard(wiz_name)
 
-        if netsvc.service_exist(wiz_name):
-            if isinstance(netsvc.SERVICES[wiz_name], format_choice):
-                del netsvc.SERVICES[wiz_name]
-        try:
-            format_choice(wiz_name)
-        except AssertionError:
-            pass
-        logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % b.name)
+        #if netsvc.service_exist(wiz_name):
+        #    if isinstance(netsvc.SERVICES[wiz_name], format_choice):
+        #        del netsvc.SERVICES[wiz_name]
+        #try:
+        #    format_choice(wiz_name)
+        #except AssertionError:
+        #    pass
+        #logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % b.name)
 
     def create(self, cr, uid, vals, context=None):
         """

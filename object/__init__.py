@@ -26,6 +26,7 @@
 import wizard
 import oojasper
 import jasper_document
+import ir_values
 
 # Add report path to the python path
 import os
