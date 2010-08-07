@@ -124,7 +124,9 @@ class Report(object):
         for ex in ids:
             ## Manage attachment
             cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
-            aname = eval(attach, {'object': cur_obj, 'time': time})
+            aname = False
+            if attach:
+                aname = eval(attach, {'object': cur_obj, 'time': time})
             if reload and aname:
                 aids = self.pool.get('ir.attachment').search(self.cr, self.uid, 
                         [('datas_fname','=',aname+'.pdf'),('res_model','=',self.model),('res_id','=',ex)])
