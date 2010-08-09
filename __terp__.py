@@ -26,7 +26,13 @@
     'name': 'Jasper Server Interface',
     'version': '0.4.2',
     'category': 'Tools',
-    'description': """This module interface JasperServer For Reports.""",
+    'description': """This module interface JasperServer For Reports.
+
+This module required library to work properly
+
+# pip install httplib2
+
+    """,
     'author': 'Everlibre,SYLEAM',
     'website': 'http://everlibre.fr',
     'depends': [
