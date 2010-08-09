@@ -159,6 +159,7 @@
                             <field name="jasper_file" colspan="4"/>
                             <field name="mode"/>
                             <field name="toolbar" select="1"/>
+                            <field name="ctx" colspan="4"/>
                             <separator string="Output format" colspan="4"/>
                             <field name="format_choice"/>
                             <field name="format"/>

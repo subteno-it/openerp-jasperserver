@@ -90,6 +90,7 @@ class jasper_document(osv.osv):
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
         'toolbar': fields.boolean('Hide in toolbar', help='Check this if you want to hide button in toolbar'),
         'param_ids': fields.one2many('jasper.document.parameter', 'document_id', 'Parameters', ),
+        'ctx': fields.char('Context', size=128, help="Enter condition with context does match to see the print action\neg: context.get('foo') == 'bar'"),
     }
 
     _defaults = {

@@ -33,7 +33,7 @@ form  = """<?xml version="1.0" ?>
 
 def _get_formats(self, cr, uid, data, context=None):
     pool = pooler.get_pool(cr.dbname)
-    print 'data %r'%data
+    #print 'data %r'%data
     res = pool.get('jasper.document').get_formats(cr, uid, [])
     return res
 

@@ -38,6 +38,8 @@ class IrValues(osv.osv):
             model_id = self.pool.get('ir.model').search(cr, uid, [('model','=', models[0][0])], context=context)[0]
             jd_ids = jd_obj.search(cr, uid, [('model_id','=', model_id)], context=context)
             for e in jd_obj.browse(cr, uid, jd_ids, context=context):
+                if e.ctx and not eval(e.ctx, {'context': context}):
+                    continue
                 d = {
                     'groups_id': [x.id for x in e.group_ids],
                      'multi': e.toolbar,
