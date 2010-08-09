@@ -2,6 +2,8 @@
 "access_jasper_server_public","jasper_server public","model_jasper_server","",1,0,0,0
 "access_jasper_document_public","jasper_document public","model_jasper_document","",1,0,0,0
 "access_jasper_document_extension_public","jasper_document_extension public","model_jasper_document_extension","",1,0,0,0
+"access_jasper_document_parameter_public","jasper_document_parameter public","model_jasper_document_parameter","",1,0,0,0
 "access_jasper_server_manager","jasper_server Manager","model_jasper_server","group_jasper_manager",1,1,1,1
 "access_jasper_document_manager","jasper_document manager","model_jasper_document","group_jasper_manager",1,1,1,1
 "access_jasper_document_extension_manager","jasper_document_extension manager","model_jasper_document_extension","group_jasper_manager",1,1,1,1
+"access_jasper_document_parameter_manager","jasper_document_parameter manager","model_jasper_document_parameter","group_jasper_manager",1,1,1,1
