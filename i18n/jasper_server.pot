@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-07 13:46:15+0000\n"
-"PO-Revision-Date: 2010-08-07 13:46:15+0000\n"
+"POT-Creation-Date: 2010-08-09 08:42:04+0000\n"
+"PO-Revision-Date: 2010-08-09 08:42:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,6 +57,11 @@ msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document.parameter,document_id:0
+msgid "Document"
+msgstr ""
+
+#. module: jasper_server
 #: model:ir.actions.wizard,name:jasper_server.wizard_jasper_test4kkkk
 msgid "test468"
 msgstr ""
@@ -95,12 +100,23 @@ msgstr ""
 
 #. module: jasper_server
 #: view:jasper.document:0
+#: view:jasper.document.parameter:0
 msgid "Legend"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document.parameter,code:0
+msgid "Enter the code to retrieve data"
 msgstr ""
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,indent:0
 msgid "Indent the XML output ?"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "c: for user s company"
 msgstr ""
 
 #. module: jasper_server
@@ -170,6 +186,12 @@ msgid "Report Unit"
 msgstr ""
 
 #. module: jasper_server
+#: view:jasper.document:0
+#: field:jasper.document,param_ids:0
+msgid "Parameters"
+msgstr ""
+
+#. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_2
 msgid "PDF Viewer"
 msgstr ""
@@ -190,6 +212,11 @@ msgid "OpenOffice Writer"
 msgstr ""
 
 #. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Parameter"
+msgstr ""
+
+#. module: jasper_server
 #: help:jasper.document,report_unit:0
 msgid "Enter the name for report unit in Jasper Server"
 msgstr ""
@@ -207,6 +234,16 @@ msgstr ""
 #. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_5
 msgid "Microsoft® Excel 2007"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document.parameter,name:0
+msgid "Name of the jasper parameter, the prefix must be OERP_"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "t: for time module"
 msgstr ""
 
 #. module: jasper_server
@@ -245,6 +282,27 @@ msgid "Extension"
 msgstr ""
 
 #. module: jasper_server
+#: model:ir.module.module,description:jasper_server.module_meta_information
+msgid "This module interface JasperServer For Reports.\n"
+"\n"
+"This module required library to work properly\n"
+"\n"
+"# pip install httplib2\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.model,name:jasper_server.model_jasper_document_parameter
+msgid "Add parameter to send to jasper server"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "o: for object"
+msgstr ""
+
+#. module: jasper_server
 #: view:jasper.document:0
 msgid "Execute SQL query before treatment"
 msgstr ""
@@ -262,11 +320,6 @@ msgstr ""
 #. module: jasper_server
 #: field:jasper.document,before:0
 msgid "Before"
-msgstr ""
-
-#. module: jasper_server
-#: model:ir.module.module,description:jasper_server.module_meta_information
-msgid "This module interface JasperServer For Reports."
 msgstr ""
 
 #. module: jasper_server
@@ -355,8 +408,18 @@ msgid "Save As Attachment Prefix"
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document.parameter,enabled:0
+msgid "Enabled"
+msgstr ""
+
+#. module: jasper_server
 #: view:jasper.document:0
 msgid "Output format"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Use [[ o.name ]] to called browse object, see below for possibility"
 msgstr ""
 
 #. module: jasper_server
@@ -366,6 +429,7 @@ msgstr ""
 
 #. module: jasper_server
 #: field:jasper.document.extension,jasper_code:0
+#: field:jasper.document.parameter,code:0
 msgid "Code"
 msgstr ""
 
@@ -448,6 +512,7 @@ msgstr ""
 #. module: jasper_server
 #: field:jasper.document,name:0
 #: field:jasper.document.extension,name:0
+#: field:jasper.document.parameter,name:0
 msgid "Name"
 msgstr ""
 

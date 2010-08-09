@@ -171,6 +171,13 @@ class Report(object):
                 d_par['company_fax'] = addr.fax or ''
                 d_par['company_mail'] = addr.email or ''
 
+                doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
+                for p in doc.param_ids:
+                    if p.code and  p.code.startswith('[['):
+                        d_par[p.name.lower()] = eval(p.code.replace('[[','').replace(']]',''), {'o': cur_obj, 'c': user.company_id, 't': time}) or ''
+                    else:
+                        d_par[p.name] = p.code
+
                 par = self.parameter(self.data['form'], d_par)
                 body_args = {
                     'format': self.data['form']['params'][0],

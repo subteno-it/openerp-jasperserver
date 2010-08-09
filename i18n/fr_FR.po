@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-07 13:46:15+0000\n"
-"PO-Revision-Date: 2010-08-07 15:47+0100\n"
+"POT-Creation-Date: 2010-08-09 08:42:04+0000\n"
+"PO-Revision-Date: 2010-08-09 10:49+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,11 @@ msgid "Invalid model name in the action definition."
 msgstr "Nom du modèle invalide pour l'action définit."
 
 #. module: jasper_server
+#: field:jasper.document.parameter,document_id:0
+msgid "Document"
+msgstr "Document"
+
+#. module: jasper_server
 #: model:ir.actions.wizard,name:jasper_server.wizard_jasper_test4kkkk
 msgid "test468"
 msgstr ""
@@ -94,13 +99,24 @@ msgstr "Si vous cochez ceci, alors la seconde fois que l'utilisateur imprimera a
 
 #. module: jasper_server
 #: view:jasper.document:0
+#: view:jasper.document.parameter:0
 msgid "Legend"
 msgstr "Légende"
+
+#. module: jasper_server
+#: help:jasper.document.parameter,code:0
+msgid "Enter the code to retrieve data"
+msgstr "Entrer le code pour récupérer la donnée, voir la légende"
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,indent:0
 msgid "Indent the XML output ?"
 msgstr "Indenter le XML ?"
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "c: for user s company"
+msgstr "c: pour la companie de l'utilisateur"
 
 #. module: jasper_server
 #: model:ir.actions.wizard,name:jasper_server.wizard_jasper_partner_list
@@ -169,6 +185,12 @@ msgid "Report Unit"
 msgstr "Report Unit"
 
 #. module: jasper_server
+#: view:jasper.document:0
+#: field:jasper.document,param_ids:0
+msgid "Parameters"
+msgstr "Paramètres"
+
+#. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_2
 msgid "PDF Viewer"
 msgstr "Visionneuse PDF"
@@ -189,6 +211,11 @@ msgid "OpenOffice Writer"
 msgstr "OpenOffice Writer"
 
 #. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Parameter"
+msgstr "Paramètre"
+
+#. module: jasper_server
 #: help:jasper.document,report_unit:0
 msgid "Enter the name for report unit in Jasper Server"
 msgstr "Entrer le nom du Report Unit dans Jasper Server"
@@ -207,6 +234,16 @@ msgstr "Activé"
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_5
 msgid "Microsoft® Excel 2007"
 msgstr "Microsoft® Excel 2007"
+
+#. module: jasper_server
+#: help:jasper.document.parameter,name:0
+msgid "Name of the jasper parameter, the prefix must be OERP_"
+msgstr "Nom du paramètre jasper, le préfixe sera OERP_"
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "t: for time module"
+msgstr "t: pour le module time"
 
 #. module: jasper_server
 #: wizard_view:jasper_server.make_template,valid:0
@@ -244,6 +281,34 @@ msgid "Extension"
 msgstr "Extension"
 
 #. module: jasper_server
+#: model:ir.module.module,description:jasper_server.module_meta_information
+msgid ""
+"This module interface JasperServer For Reports.\n"
+"\n"
+"This module required library to work properly\n"
+"\n"
+"# pip install httplib2\n"
+"\n"
+"    "
+msgstr ""
+"Ce module est une interface JasperServer pour les rapports.\n"
+"\n"
+"Ce module requière des bibliothèques pour fonctionner correctement\n"
+"\n"
+"# pip install httplib2\n"
+"\n"
+
+#. module: jasper_server
+#: model:ir.model,name:jasper_server.model_jasper_document_parameter
+msgid "Add parameter to send to jasper server"
+msgstr "Ajouter des paramètres à envoyer à Jasper Server"
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "o: for object"
+msgstr "o: pour l'objet en cours"
+
+#. module: jasper_server
 #: view:jasper.document:0
 msgid "Execute SQL query before treatment"
 msgstr "Exécuter un requête SQL avant le traitement"
@@ -262,11 +327,6 @@ msgstr "Cocher ceci si vous souhaitez masquer le bouton dans la barre à droite"
 #: field:jasper.document,before:0
 msgid "Before"
 msgstr "Avant"
-
-#. module: jasper_server
-#: model:ir.module.module,description:jasper_server.module_meta_information
-msgid "This module interface JasperServer For Reports."
-msgstr "Ce module est une interface avec JasperServer pour la génération de rapport"
 
 #. module: jasper_server
 #: model:ir.actions.act_window,name:jasper_server.act_open_document_view
@@ -354,9 +414,19 @@ msgid "Save As Attachment Prefix"
 msgstr "Sauvegarder comme préfixe de pièce jointe "
 
 #. module: jasper_server
+#: field:jasper.document.parameter,enabled:0
+msgid "Enabled"
+msgstr "Activé"
+
+#. module: jasper_server
 #: view:jasper.document:0
 msgid "Output format"
 msgstr "Format de sortie"
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Use [[ o.name ]] to called browse object, see below for possibility"
+msgstr "Utiliser [[ o.name ]] pour appeller la methode browse de l'objet, voir ci dessous pour les possibilités"
 
 #. module: jasper_server
 #: field:jasper.document,format:0
@@ -365,6 +435,7 @@ msgstr "Formats"
 
 #. module: jasper_server
 #: field:jasper.document.extension,jasper_code:0
+#: field:jasper.document.parameter,code:0
 msgid "Code"
 msgstr "Code"
 
@@ -447,6 +518,7 @@ msgstr "Mot de passe"
 #. module: jasper_server
 #: field:jasper.document,name:0
 #: field:jasper.document.extension,name:0
+#: field:jasper.document.parameter,name:0
 msgid "Name"
 msgstr "Nom"
 
@@ -506,6 +578,8 @@ msgstr "Part"
 msgid "Indicates if this document is active or not"
 msgstr "Indique si ce document est actif ou pas"
 
+#~ msgid "This module interface JasperServer For Reports."
+#~ msgstr "Ce module est une interface avec JasperServer pour la génération de rapport"
 #~ msgid "Test"
 #~ msgstr "Test"
 

@@ -87,6 +87,44 @@
             action="act_open_document_extension_view"/>
 
         ##
+        # Document parameter
+        #
+        <record id="view_jasper_document_parameter_tree" model="ir.ui.view">
+            <field name="name">jasper.document.parameter.tree</field>
+            <field name="model">jasper.document.parameter</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Parameter">
+                    <field name="enabled"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_jasper_document_parameter_form" model="ir.ui.view">
+            <field name="name">jasper.document.parameter.form</field>
+            <field name="model">jasper.document.parameter</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Parameter">
+                    <field name="name" select="1"/>
+                    <field name="enabled" select="2"/>
+                    <field name="code" select="1" colspan="4"/>
+                    <separator string="Legend" colspan="4"/>
+                    <group colspan="4" col="2">
+                        <label align="0.0" string="Use [[ o.name ]] to called browse object, see below for possibility" colspan="4"/>
+                        <label align="0.0" string="c: for user s company" colspan="4"/>
+                        <label align="0.0" string="o: for object" colspan="4"/>
+                        <label align="0.0" string="t: for time module" colspan="4"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        ##
         # Document
         #
         <record id="view_document_tree" model="ir.ui.view">
@@ -144,6 +182,9 @@
                                 <label string="%%(id)s" colspan="2"/>
                                 <newline/>
                             </group>
+                        </page>
+                        <page string="Parameters">
+                            <field name="param_ids" nolabel="1" />
                         </page>
                     </notebook>
                 </form>

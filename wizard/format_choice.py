@@ -77,6 +77,7 @@ class format_choice(wizard.interface):
             raise wizard.except_wizard(_('Error'), _('No report found!'))
         document = document_obj.browse(cr, uid, doc_ids[0], context=context)
         option = {
+            'id': document.id,
             'attachment': document.attachment,
             'attachment_use': document.attachment_use,
         }

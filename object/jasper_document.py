@@ -70,7 +70,6 @@ class jasper_document(osv.osv):
         return extensions
 
     # TODO: Add One2many with model list and depth for each, use for ban process
-    # TODO: Add dynamic parameter to send to jasper report server
     # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
         'name' : fields.char('Name', size=128, translate=True, required=True), # button name
@@ -90,6 +89,7 @@ class jasper_document(osv.osv):
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
         'toolbar': fields.boolean('Hide in toolbar', help='Check this if you want to hide button in toolbar'),
+        'param_ids': fields.one2many('jasper.document.parameter', 'document_id', 'Parameters', ),
     }
 
     _defaults = {
@@ -124,15 +124,6 @@ class jasper_document(osv.osv):
         wiz_name = 'jasper.%s' % b.service
         registered_wizard(wiz_name)
 
-        #if netsvc.service_exist(wiz_name):
-        #    if isinstance(netsvc.SERVICES[wiz_name], format_choice):
-        #        del netsvc.SERVICES[wiz_name]
-        #try:
-        #    format_choice(wiz_name)
-        #except AssertionError:
-        #    pass
-        #logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % b.name)
-
     def create(self, cr, uid, vals, context=None):
         """
         Dynamicaly declare the wizard for this document
@@ -142,7 +133,6 @@ class jasper_document(osv.osv):
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         self.make_action(cr, uid, doc_id, context=context)
         return doc_id
-
 
     def write(self, cr, uid, ids, vals, context=None):
         """
@@ -156,5 +146,24 @@ class jasper_document(osv.osv):
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
 
 jasper_document()
+
+
+class jasper_document_parameter(osv.osv):
+    _name = 'jasper.document.parameter'
+    _description = 'Add parameter to send to jasper server'
+
+    _columns = {
+        'name': fields.char('Name', size=32, help='Name of the jasper parameter, the prefix must be OERP_', required=True),
+        'code': fields.char('Code', size=256, help='Enter the code to retrieve data', required=True),
+        'enabled': fields.boolean('Enabled'),
+        'document_id': fields.many2one('jasper.document', 'Document'),
+    }
+
+    _defaults = {
+        'enabled': lambda *a: True,
+    }
+
+jasper_document_parameter()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
