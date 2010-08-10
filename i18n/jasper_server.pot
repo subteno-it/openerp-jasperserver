@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-09 08:42:04+0000\n"
-"PO-Revision-Date: 2010-08-09 08:42:04+0000\n"
+"POT-Creation-Date: 2010-08-10 06:35:15+0000\n"
+"PO-Revision-Date: 2010-08-10 06:35:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -59,11 +59,6 @@ msgstr ""
 #. module: jasper_server
 #: field:jasper.document.parameter,document_id:0
 msgid "Document"
-msgstr ""
-
-#. module: jasper_server
-#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_test4kkkk
-msgid "test468"
 msgstr ""
 
 #. module: jasper_server
@@ -120,7 +115,6 @@ msgid "c: for user s company"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_partner_list
 #: model:jasper.document,name:jasper_server.jasper_document_4
 msgid "Partner List2"
 msgstr ""
@@ -331,11 +325,6 @@ msgid "Jasper Document"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_toto
-msgid "test 3"
-msgstr ""
-
-#. module: jasper_server
 #: model:ir.ui.menu,name:jasper_server.menu_jasper
 msgid "Jasper Report"
 msgstr ""
@@ -434,6 +423,12 @@ msgid "Code"
 msgstr ""
 
 #. module: jasper_server
+#: help:jasper.document,ctx:0
+msgid "Enter condition with context does match to see the print action\n"
+"eg: context.get('foo') == 'bar'"
+msgstr ""
+
+#. module: jasper_server
 #: field:jasper.document,jasper_file:0
 msgid "Jasper file"
 msgstr ""
@@ -525,6 +520,11 @@ msgstr ""
 #. module: jasper_server
 #: field:jasper.document,mode:0
 msgid "Mode"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,ctx:0
+msgid "Context"
 msgstr ""
 
 #. module: jasper_server
