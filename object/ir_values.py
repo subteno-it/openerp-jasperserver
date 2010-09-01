@@ -35,7 +35,10 @@ class IrValues(osv.osv):
         if key2 == 'client_print_multi':
             ## Add jasper report
             jd_obj = self.pool.get('jasper.document')
-            model_id = self.pool.get('ir.model').search(cr, uid, [('model','=', models[0][0])], context=context)[0]
+            mod_ids = self.pool.get('ir.model').search(cr, uid, [('model','=', models[0][0])], context=context)
+            if not mod_ids:
+                return res
+            model_id = mod_ids[0]
             jd_ids = jd_obj.search(cr, uid, [('model_id','=', model_id)], context=context)
             for e in jd_obj.browse(cr, uid, jd_ids, context=context):
                 if e.ctx and not eval(e.ctx, {'context': context}):
