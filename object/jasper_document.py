@@ -91,6 +91,7 @@ class jasper_document(osv.osv):
         'toolbar': fields.boolean('Hide in toolbar', help='Check this if you want to hide button in toolbar'),
         'param_ids': fields.one2many('jasper.document.parameter', 'document_id', 'Parameters', ),
         'ctx': fields.char('Context', size=128, help="Enter condition with context does match to see the print action\neg: context.get('foo') == 'bar'"),
+        'sql_view': fields.text('SQL View', help='Insert your SQL view, if the report is base on it'),
     }
 
     _defaults = {
@@ -133,6 +134,9 @@ class jasper_document(osv.osv):
             context = {}
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         self.make_action(cr, uid, doc_id, context=context)
+        # Check if view and create it in the database
+        if vals.get('sql_view'):
+            cr.execute(vals.get('sql_view'), (ids,))
         return doc_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -144,6 +148,8 @@ class jasper_document(osv.osv):
         if not context.get('action'):
             for id in ids:
                 self.make_action(cr, uid, id, context=context)
+        if vals.get('sql_view'):
+            cr.execute(vals.get('sql_view'), (ids,))
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
 
 jasper_document()

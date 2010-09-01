@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-10 06:35:15+0000\n"
-"PO-Revision-Date: 2010-08-10 06:35:15+0000\n"
+"POT-Creation-Date: 2010-09-01 21:04:06+0000\n"
+"PO-Revision-Date: 2010-09-01 21:04:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -330,6 +330,11 @@ msgid "Jasper Report"
 msgstr ""
 
 #. module: jasper_server
+#: view:jasper.document:0
+msgid "If report is base on SQL view, inert it here"
+msgstr ""
+
+#. module: jasper_server
 #: help:jasper.document,attachment:0
 msgid "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
 msgstr ""
@@ -426,6 +431,12 @@ msgstr ""
 #: help:jasper.document,ctx:0
 msgid "Enter condition with context does match to see the print action\n"
 "eg: context.get('foo') == 'bar'"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+#: field:jasper.document,sql_view:0
+msgid "SQL View"
 msgstr ""
 
 #. module: jasper_server
@@ -530,6 +541,11 @@ msgstr ""
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,model:0
 msgid "Model"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,sql_view:0
+msgid "Insert your SQL view, if the report is base on it"
 msgstr ""
 
 #. module: jasper_server

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-10 06:35:15+0000\n"
-"PO-Revision-Date: 2010-08-10 08:36+0100\n"
+"POT-Creation-Date: 2010-09-01 21:04:06+0000\n"
+"PO-Revision-Date: 2010-09-01 23:05+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -336,6 +336,11 @@ msgid "Jasper Report"
 msgstr "Jasper Report"
 
 #. module: jasper_server
+#: view:jasper.document:0
+msgid "If report is base on SQL view, inert it here"
+msgstr "SI le rapport est basé sur une vue SQL, inserer la ici"
+
+#. module: jasper_server
 #: help:jasper.document,attachment:0
 msgid "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
 msgstr "Ceci est le nom de la pièce jointe utiliser pour le stockage de l'impression produite, Laisser vide pour ne pas sauvegarder le rapport imprimé. Vous pouvez utiliser une expression python avec object et time comme variables."
@@ -436,6 +441,12 @@ msgid ""
 msgstr ""
 "Entrer la condition pour laquelle le contexte doit correspondre\n"
 "ex: context.get('foo') == 'bar'"
+
+#. module: jasper_server
+#: view:jasper.document:0
+#: field:jasper.document,sql_view:0
+msgid "SQL View"
+msgstr "Vue SQL"
 
 #. module: jasper_server
 #: field:jasper.document,jasper_file:0
@@ -540,6 +551,11 @@ msgstr "Contexte"
 #: wizard_field:jasper_server.make_template,init,model:0
 msgid "Model"
 msgstr "Modèle"
+
+#. module: jasper_server
+#: help:jasper.document,sql_view:0
+msgid "Insert your SQL view, if the report is base on it"
+msgstr "Inserer votre vue SQL, si le rapport est basé sur celle-ci "
 
 #. module: jasper_server
 #: field:jasper.document,attachment_use:0
