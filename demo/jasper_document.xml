@@ -27,12 +27,14 @@
             <field name="name">Partner List</field>
             <field name="depth">2</field>
             <field name="jasper_file">partner_list.jrxml</field>
-            <field name="format_choice">multi</field>
+            <field name="format_choice">mono</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="enabled" eval="0"/>
+            <field name="enabled" eval="1"/>
             <field name="report_unit">PartnerList</field>
             <field name="mode">sql</field>
             <field name="service">partner_list</field>
+            <field name="format">PDF</field>
+            <field name="toolbar" eval="0"/>
         </record>
 
     </data>
