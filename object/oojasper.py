@@ -57,6 +57,23 @@ class jasper_server(osv.osv):
         'sequence': lambda *a: 10,
     }
 
+    def __init__(self, pool, cr):
+        """
+        Check if analysis schema and temporal table is present in the database
+        if not, create it
+        """
+        cr.execute("""SELECT count(*) 
+                      FROM   pg_namespace 
+                      WHERE  nspname='analysis'""")
+        if not cr.fetchone()[0]:
+            print 'schema'
+            cr.execute("""CREATE SCHEMA analysis;
+                   COMMENT ON SCHEMA analysis 
+                   IS 'Schema use for customize view in Jasper BI';""")
+
+        super(jasper_server, self).__init__(pool, cr)
+
+
     ## ************************************************
     # These method can create an XML for Jasper Server
     # *************************************************
