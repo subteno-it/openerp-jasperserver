@@ -37,5 +37,13 @@
             <field name="toolbar" eval="0"/>
         </record>
 
+        <record id="jasper_server_1" model="jasper.server">
+            <field name="host">localhost</field>
+            <field name="port">8180</field>
+            <field name="user">jasperadmin</field>
+            <field name="pass">jasperadmin</field>
+            <field name="enable" eval="1"/>
+        </record>
+
     </data>
 </openerp>
