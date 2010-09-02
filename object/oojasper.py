@@ -24,11 +24,12 @@
 from osv import osv
 from osv import fields
 from lxml.etree import Element, tostring
-from netsvc import Logger, LOG_DEBUG, LOG_INFO, LOG_ERROR
 from tools import ustr
+import netsvc
+logger = netsvc.Logger()
 
 def log_error(message):
-    Logger().notifyChannel('jasper_server', LOG_ERROR, message)
+    logger.notifyChannel('jasper_server', netsvc.LOG_ERROR, message)
 
 class jasper_server(osv.osv):
     """
@@ -66,10 +67,33 @@ class jasper_server(osv.osv):
                       FROM   pg_namespace 
                       WHERE  nspname='analysis'""")
         if not cr.fetchone()[0]:
-            print 'schema'
+            logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis schema have been created !')
             cr.execute("""CREATE SCHEMA analysis;
                    COMMENT ON SCHEMA analysis 
                    IS 'Schema use for customize view in Jasper BI';""")
+
+        cr.execute("""SELECT count(*) 
+                      FROM   pg_tables 
+                      WHERE  schemaname = 'analysis' 
+                      AND    tablename='dimension_date'""")
+        if not cr.fetchone()[0]:
+            logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis temporal table have been created !')
+            cr.execute("""create table analysis.dimension_date as
+                          select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
+                                 to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
+                                 extract(year from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "year",
+                                 extract(month from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "month",
+                                 extract(day from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day",
+                                 extract(quarter from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "quarter",
+                                 extract(week from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "week",
+                                 extract(dow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_week",
+                                 extract(isodow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "iso_day_of_week",
+                                 extract(doy from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_year",
+                                 extract(century from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "century"
+                          from
+                          (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
+                           from   generate_series(0, 15000) m) x""")
+
 
         super(jasper_server, self).__init__(pool, cr)
 
