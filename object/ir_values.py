@@ -30,9 +30,9 @@ class IrValues(osv.osv):
 
     def get(self, cr, uid, key, key2, models, meta=False, context=None, res_id_req=False, without_user=True, key2_req=True):
         if context is None:
-            context={}
+            context = {}
         res = super(IrValues, self).get(cr, uid, key, key2, models, meta, context, res_id_req, without_user, key2_req)
-        if key2 == 'client_print_multi':
+        if key == 'action' and key2 == 'client_print_multi':
             ## Add jasper report
             jd_obj = self.pool.get('jasper.document')
             mod_ids = self.pool.get('ir.model').search(cr, uid, [('model','=', models[0][0])], context=context)
