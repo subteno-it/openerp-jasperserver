@@ -311,6 +311,13 @@ class Report(object):
             else:
                 e.text = val and ustr(val) or ''
             res += tostring(e) + '\n'
+
+        for key, val in [('REPORT_LOCALE','fr_FR')]:
+            e = Element('parameter')
+            e.set('name', key)
+            e.text = ustr(val)
+            res += tostring(e) + '\n'
+
         res = self.entities(res)
         if resource.get('xml_data'):
             res += '&lt;parameter class=&quot;java.lang.String&quot; name=&quot;XML_DATA&quot;&gt;'
