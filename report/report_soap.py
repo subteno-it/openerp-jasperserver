@@ -233,11 +233,17 @@ class Report(object):
                                 }, context=self.context
                     )
 
-            ###
-            ## Execute the before query if it available
-            ##
-            if js.get('after'):
-                cr.execute(js['after'], {'id': ex})
+                ###
+                ## Execute the before query if it available
+                ##
+                if js.get('after'):
+                    cr.execute(js['after'], {'id': ex})
+
+                ## Update the number of print on object
+                nbp = getattr(cur_obj, 'number_of_print', None)
+                if nbp:
+                    self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': nbp + 1}, context=self.context)
+
 
         ##
         # Create a global file for each PDF file, use Ghostscript to concatenate them
