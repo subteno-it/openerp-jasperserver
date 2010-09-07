@@ -63,36 +63,41 @@ class jasper_server(osv.osv):
         Check if analysis schema and temporal table is present in the database
         if not, create it
         """
-        cr.execute("""SELECT count(*) 
-                      FROM   pg_namespace 
-                      WHERE  nspname='analysis'""")
-        if not cr.fetchone()[0]:
-            logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis schema have been created !')
-            cr.execute("""CREATE SCHEMA analysis;
-                   COMMENT ON SCHEMA analysis 
-                   IS 'Schema use for customize view in Jasper BI';""")
+        cr.execute("""show server_version""")
+        pg_version = cr.fetchone()[0].split('.')
+        pg_version = tuple([int(x) for x in pg_version])
 
-        cr.execute("""SELECT count(*) 
-                      FROM   pg_tables 
-                      WHERE  schemaname = 'analysis' 
-                      AND    tablename='dimension_date'""")
-        if not cr.fetchone()[0]:
-            logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis temporal table have been created !')
-            cr.execute("""create table analysis.dimension_date as
-                          select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
-                                 to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
-                                 extract(year from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "year",
-                                 extract(month from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "month",
-                                 extract(day from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day",
-                                 extract(quarter from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "quarter",
-                                 extract(week from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "week",
-                                 extract(dow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_week",
-                                 extract(isodow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "iso_day_of_week",
-                                 extract(doy from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_year",
-                                 extract(century from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "century"
-                          from
-                          (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
-                           from   generate_series(0, 15000) m) x""")
+        if pg_version >= (8,3,0):
+            cr.execute("""SELECT count(*) 
+                          FROM   pg_namespace 
+                          WHERE  nspname='analysis'""")
+            if not cr.fetchone()[0]:
+                logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis schema have been created !')
+                cr.execute("""CREATE SCHEMA analysis;
+                       COMMENT ON SCHEMA analysis 
+                       IS 'Schema use for customize view in Jasper BI';""")
+
+            cr.execute("""SELECT count(*) 
+                          FROM   pg_tables 
+                          WHERE  schemaname = 'analysis' 
+                          AND    tablename='dimension_date'""")
+            if not cr.fetchone()[0]:
+                logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis temporal table have been created !')
+                cr.execute("""create table analysis.dimension_date as
+                              select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
+                                     to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
+                                     extract(year from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "year",
+                                     extract(month from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "month",
+                                     extract(day from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day",
+                                     extract(quarter from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "quarter",
+                                     extract(week from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "week",
+                                     extract(dow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_week",
+                                     extract(isodow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "iso_day_of_week",
+                                     extract(doy from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_year",
+                                     extract(century from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "century"
+                              from
+                              (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
+                               from   generate_series(0, 15000) m) x""")
 
 
         super(jasper_server, self).__init__(pool, cr)
