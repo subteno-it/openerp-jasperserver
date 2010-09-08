@@ -25,6 +25,7 @@
 from osv import osv
 from osv import fields
 from jasper_server.wizard.format_choice import format_choice
+from tools.sql import drop_view_if_exists
 import netsvc
 import pooler
 logger = netsvc.Logger()
@@ -92,6 +93,7 @@ class jasper_document(osv.osv):
         'param_ids': fields.one2many('jasper.document.parameter', 'document_id', 'Parameters', ),
         'ctx': fields.char('Context', size=128, help="Enter condition with context does match to see the print action\neg: context.get('foo') == 'bar'"),
         'sql_view': fields.text('SQL View', help='Insert your SQL view, if the report is base on it'),
+        'sql_name': fields.char('Name of view', size=128, ),
     }
 
     _defaults = {
@@ -135,8 +137,10 @@ class jasper_document(osv.osv):
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         self.make_action(cr, uid, doc_id, context=context)
         # Check if view and create it in the database
-        if vals.get('sql_view'):
-            cr.execute(vals.get('sql_view'), (ids,))
+        if vals.get('sql_name') and vals.get('sql_view'):
+            drop_view_if_exists(cr, sql_name)
+            sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (vals['sql_name'], vals['sql_view'])
+            cr.execute(sql_query, (ids,))
         return doc_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -148,8 +152,10 @@ class jasper_document(osv.osv):
         if not context.get('action'):
             for id in ids:
                 self.make_action(cr, uid, id, context=context)
-        if vals.get('sql_view'):
-            cr.execute(vals.get('sql_view'), (ids,))
+        if vals.get('sql_name') and vals.get('sql_view'):
+            drop_view_if_exists(cr, sql_name)
+            sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (vals['sql_name'], vals['sql_view'])
+            cr.execute(sql_query, (ids,))
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
 
 jasper_document()

@@ -174,8 +174,10 @@
                             <field name="depth"/>
                         </page>
                         <page string="SQL View">
-                            <separator string="If report is base on SQL view, inert it here" colspan="4"/>
-                            <field name="sql_view" colspan="4" nolabel="1"/>
+                            <separator string="Enter the name of the view" colspan="4"/>
+                            <field name="sql_name" colspan="4" nolabel="1"/>
+                            <separator string="Enter the select query of the view only" colspan="4"/>
+                            <field name="sql_view" colspan="4" nolabel="1" attrs="{'required': [('sql_name','!=', False)]}"/>
                         </page>
                         <page string="Processes">
                             <separator string="Execute SQL query before treatment" colspan="4"/>
