@@ -74,7 +74,7 @@ class jasper_document(osv.osv):
     # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
         'name' : fields.char('Name', size=128, translate=True, required=True), # button name
-        'service': fields.char('Service name', size=64, required=True, 
+        'service': fields.char('Service name', size=64, required=True,
             help='Enter the service name register at start by OpenERP Server'),
         'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
         'model_id' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
@@ -138,7 +138,7 @@ class jasper_document(osv.osv):
         self.make_action(cr, uid, doc_id, context=context)
         # Check if view and create it in the database
         if vals.get('sql_name') and vals.get('sql_view'):
-            drop_view_if_exists(cr, sql_name)
+            drop_view_if_exists(cr, vals.get('sql_name'))
             sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (vals['sql_name'], vals['sql_view'])
             cr.execute(sql_query, (ids,))
         return doc_id
@@ -153,7 +153,7 @@ class jasper_document(osv.osv):
             for id in ids:
                 self.make_action(cr, uid, id, context=context)
         if vals.get('sql_name') and vals.get('sql_view'):
-            drop_view_if_exists(cr, sql_name)
+            drop_view_if_exists(cr, vals.get('sql_name'))
             sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (vals['sql_name'], vals['sql_view'])
             cr.execute(sql_query, (ids,))
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
