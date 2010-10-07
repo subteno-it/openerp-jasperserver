@@ -140,7 +140,7 @@ class jasper_document(osv.osv):
         if vals.get('sql_name') and vals.get('sql_view'):
             drop_view_if_exists(cr, vals.get('sql_name'))
             sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (vals['sql_name'], vals['sql_view'])
-            cr.execute(sql_query, (ids,))
+            cr.execute(sql_query)
         return doc_id
 
     def write(self, cr, uid, ids, vals, context=None):
