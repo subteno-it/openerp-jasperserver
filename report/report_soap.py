@@ -240,7 +240,7 @@ class Report(object):
                     cr.execute(js['after'], {'id': ex})
 
                 ## Update the number of print on object
-                nbp = getattr(cur_obj, 'number_of_print', None)
+                nbp = hasattr(cur_obj, 'number_of_print')
                 if nbp:
                     self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': nbp + 1}, context=self.context)
 
