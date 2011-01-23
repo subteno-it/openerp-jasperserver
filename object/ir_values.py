@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP, Management module for Jasper Server
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>) 
+#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>)
 #              Christophe CHAUVET
 #
 #    This file is a part of jasper_server
@@ -25,6 +25,7 @@
 from osv import osv
 from osv import fields
 
+
 class IrValues(osv.osv):
     _inherit = 'ir.values'
 
@@ -35,11 +36,11 @@ class IrValues(osv.osv):
         if key == 'action' and key2 == 'client_print_multi':
             ## Add jasper report
             jd_obj = self.pool.get('jasper.document')
-            mod_ids = self.pool.get('ir.model').search(cr, uid, [('model','=', models[0][0])], context=context)
+            mod_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', models[0][0])], context=context)
             if not mod_ids:
                 return res
             model_id = mod_ids[0]
-            jd_ids = jd_obj.search(cr, uid, [('model_id','=', model_id)], context=context)
+            jd_ids = jd_obj.search(cr, uid, [('model_id', '=', model_id), ('enabled', '=', True)], context=context)
             for e in jd_obj.browse(cr, uid, jd_ids, context=context):
                 if e.ctx and not eval(e.ctx, {'context': context}):
                     continue
