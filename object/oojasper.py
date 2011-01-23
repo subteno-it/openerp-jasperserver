@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
+#    jasper_server module for OpenERP,
 #    Copyright (C) 2009 SYLEAM Info Services (<http://www.syleam.fr/>) Christophe CHAUVET
 #
 #    This file is a part of jasper_server
@@ -28,8 +28,10 @@ from tools import ustr
 import netsvc
 logger = netsvc.Logger()
 
+
 def log_error(message):
     logger.notifyChannel('jasper_server', netsvc.LOG_ERROR, message)
+
 
 class jasper_server(osv.osv):
     """
@@ -67,19 +69,19 @@ class jasper_server(osv.osv):
         pg_version = cr.fetchone()[0].split('.')
         pg_version = tuple([int(x) for x in pg_version])
 
-        if pg_version >= (8,3,0):
-            cr.execute("""SELECT count(*) 
-                          FROM   pg_namespace 
+        if pg_version >= (8, 3, 0):
+            cr.execute("""SELECT count(*)
+                          FROM   pg_namespace
                           WHERE  nspname='analysis'""")
             if not cr.fetchone()[0]:
                 logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis schema have been created !')
                 cr.execute("""CREATE SCHEMA analysis;
-                       COMMENT ON SCHEMA analysis 
+                       COMMENT ON SCHEMA analysis
                        IS 'Schema use for customize view in Jasper BI';""")
 
-            cr.execute("""SELECT count(*) 
-                          FROM   pg_tables 
-                          WHERE  schemaname = 'analysis' 
+            cr.execute("""SELECT count(*)
+                          FROM   pg_tables
+                          WHERE  schemaname = 'analysis'
                           AND    tablename='dimension_date'""")
             if not cr.fetchone()[0]:
                 logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis temporal table have been created !')
@@ -99,20 +101,18 @@ class jasper_server(osv.osv):
                               (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
                                from   generate_series(0, 15000) m) x""")
 
-
         super(jasper_server, self).__init__(pool, cr)
-
 
     ## ************************************************
     # These method can create an XML for Jasper Server
     # *************************************************
     # TODO: ban element per level
     ban = (
-        'res.company','ir.model','ir.model.fields','res.groups','ir.model.data',
-        'ir.model.grid','ir.model.access','ir.ui.menu','ir.actions.act_window',
-        'ir.action.wizard','ir.attachment','ir.cron','ir.rule','ir.rule.group',
-        'ir.actions.actions','ir.actions.report.custom','ir.actions.report.xml',
-        'ir.actions.url','ir.ui.view','ir.sequence','res.partner.event',
+        'res.company', 'ir.model', 'ir.model.fields', 'res.groups', 'ir.model.data',
+        'ir.model.grid', 'ir.model.access', 'ir.ui.menu', 'ir.actions.act_window',
+        'ir.action.wizard', 'ir.attachment', 'ir.cron', 'ir.rule', 'ir.rule.group',
+        'ir.actions.actions', 'ir.actions.report.custom', 'ir.actions.report.xml',
+        'ir.actions.url', 'ir.ui.view', 'ir.sequence', 'res.partner.event',
     )
 
     @staticmethod
@@ -120,14 +120,14 @@ class jasper_server(osv.osv):
         """
         convert element in lowercase and replace space per _
         """
-        return ustr(element).lower().replace(' ','_')
+        return ustr(element).lower().replace(' ', '_')
 
     def generate_context(self, cr, uid, context=None):
         """
         generate xml with context header
         """
         f_list = (
-            'context_tz','context_lang','name', 'signature','company_id',
+            'context_tz', 'context_lang', 'name', 'signature', 'company_id',
         )
 
         # TODO: Use browse to add the address of the company
@@ -158,7 +158,7 @@ class jasper_server(osv.osv):
         if isinstance(relation, int):
             irm_ids = [relation]
         else:
-            irm_ids = irm.search(cr, uid, [('model','=',relation)])
+            irm_ids = irm.search(cr, uid, [('model', '=', relation)])
 
         if not irm_ids:
             log_error('Model %s not found !' % relation)
@@ -167,11 +167,11 @@ class jasper_server(osv.osv):
         # We must ban many model
         #
         ban = (
-            'res.company','ir.model','ir.model.fields','res.groups','ir.model.data',
-            'ir.model.grid','ir.model.access','ir.ui.menu','ir.actions.act_window',
-            'ir.action.wizard','ir.attachment','ir.cron','ir.rule','ir.rule.group',
-            'ir.actions.actions','ir.actions.report.custom','ir.actions.report.xml',
-            'ir.actions.url','ir.ui.view','ir.sequence',
+            'res.company', 'ir.model', 'ir.model.fields', 'res.groups', 'ir.model.data',
+            'ir.model.grid', 'ir.model.access', 'ir.ui.menu', 'ir.actions.act_window',
+            'ir.action.wizard', 'ir.attachment', 'ir.cron', 'ir.rule', 'ir.rule.group',
+            'ir.actions.actions', 'ir.actions.report.custom', 'ir.actions.report.xml',
+            'ir.actions.url', 'ir.ui.view', 'ir.sequence',
         )
 
         ##
@@ -203,17 +203,17 @@ class jasper_server(osv.osv):
                 type = mod_fields[f]['type']
                 value = mod[f]
                 e = Element(field, label='%s' % self.format_element(name))
-                if type in ('char','text','selection'):
+                if type in ('char', 'text', 'selection'):
                     e.text = value and unicode(value) or ''
                 elif type == 'integer':
                     e .text = value and str(value) or '0'
                 elif type == 'float':
                     e.text = value and str(value) or '0.0'
                 elif type == 'date':
-                    e.set('format','YYYY-mm-dd')
+                    e.set('format', 'YYYY-mm-dd')
                     e.text = value or ''
                 elif type == 'datetime':
-                    e.set('format','YYYY-mm-dd HH:MM:SS')
+                    e.set('format', 'YYYY-mm-dd HH:MM:SS')
                     e.text = value or ''
                 elif type == 'boolean':
                     e.text = str(value)
@@ -227,14 +227,14 @@ class jasper_server(osv.osv):
                         e.set('id', '%r' % value or 0)
                         if not isinstance(value, int):
                             e.text = str(mod[f][1])
-                elif type in ('one2many','many2many'):
+                elif type in ('one2many', 'many2many'):
                     if depth > 0 and value and mod_fields[f]['relation'] not in ban:
                         for v in value:
                             x.append(self.generate_xml(cr, uid, mod_fields[f]['relation'], v, depth - 1, relation, field))
                         continue
                     else:
-                        e.set('id','%r' % value)
-                elif type in ('binary','reference'):
+                        e.set('id', '%r' % value)
+                elif type in ('binary', 'reference'):
                     e.text = 'Not supported'
                 else:
                     log_error('OUPS un oubli %s: %s(%s)' % (field, name, type))
@@ -245,7 +245,7 @@ class jasper_server(osv.osv):
         root = Element('data')
         root.append(self.generate_context(cr, uid, context=context))
         root.append(self.generate_xml(cr, uid, model, id, depth, context=context))
-        return tostring(root, pretty_print=context.get('indent',False))
+        return tostring(root, pretty_print=context.get('indent', False))
 
 jasper_server()
 
