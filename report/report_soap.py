@@ -190,7 +190,7 @@ class Report(object):
                 ## Execute the before query if it available
                 ##
                 if js.get('before'):
-                    cr.execute(js['before'], {'id': ex})
+                    self.cr.execute(js['before'], {'id': ex})
 
                 body = BODY_TEMPLATE % body_args
                 log_debug('****\n%s\n****' % body)
@@ -237,7 +237,7 @@ class Report(object):
                 ## Execute the before query if it available
                 ##
                 if js.get('after'):
-                    cr.execute(js['after'], {'id': ex})
+                    self.cr.execute(js['after'], {'id': ex})
 
                 ## Update the number of print on object
                 if hasattr(cur_obj, 'number_of_print'):
