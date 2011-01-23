@@ -164,7 +164,7 @@
                             <field name="format_choice"/>
                             <field name="format"/>
                             <separator string="Attachment" colspan="4"/>
-                            <field name="attachment"/>
+                            <field name="attachment" colspan="4"/>
                             <field name="attachment_use"/>
                         </page>
                         <page string="Groups">
