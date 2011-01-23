@@ -30,6 +30,7 @@ import netsvc
 import pooler
 logger = netsvc.Logger()
 
+
 def registered_wizard(name):
     """ Register dynamicaly the wizard for each entry"""
     gname = 'wizard.%s' % name
@@ -46,9 +47,9 @@ class jasper_document_extension(osv.osv):
     _description = 'Jasper Document Extension'
 
     _columns = {
-        'name' : fields.char('Name', size=128, translate=True),
-        'jasper_code' : fields.char('Code', size=32, required=True),
-        'extension' : fields.char('Extension', size=10, required=True),
+        'name': fields.char('Name', size=128, translate=True),
+        'jasper_code': fields.char('Code', size=32, required=True),
+        'extension': fields.char('Extension', size=10, required=True),
     }
 
 jasper_document_extension()
@@ -67,24 +68,24 @@ class jasper_document(osv.osv):
         extension_obj = self.pool.get('jasper.document.extension')
         ext_ids = extension_obj.search(cr, uid, [])
         extensions = self.pool.get('jasper.document.extension').read(cr, uid, ext_ids)
-        extensions = [(extension['jasper_code'], extension['name']+" (*."+extension['extension']+")") for extension in extensions]
+        extensions = [(extension['jasper_code'], extension['name'] + " (*." + extension['extension'] + ")") for extension in extensions]
         return extensions
 
     # TODO: Add One2many with model list and depth for each, use for ban process
     # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
-        'name' : fields.char('Name', size=128, translate=True, required=True), # button name
+        'name': fields.char('Name', size=128, translate=True, required=True),  # button name
         'service': fields.char('Service name', size=64, required=True,
             help='Enter the service name register at start by OpenERP Server'),
-        'enabled' : fields.boolean('Active', help="Indicates if this document is active or not"),
-        'model_id' : fields.many2one('ir.model', 'Object Model', required=True), #object model in ir.model
-        'jasper_file' : fields.char('Jasper file', size=128, required=True), # jasper filename
+        'enabled': fields.boolean('Active', help="Indicates if this document is active or not"),
+        'model_id': fields.many2one('ir.model', 'Object Model', required=True),  # object model in ir.model
+        'jasper_file': fields.char('Jasper file', size=128, required=True),  # jasper filename
         'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
-        'depth' : fields.integer('Depth', required=True),
-        'format_choice' : fields.selection([('mono', 'Single Format'),('multi','Multi Format')], 'Format Choice', required=True),
-        'format' : fields.selection(_get_formats, 'Formats'),
+        'depth': fields.integer('Depth', required=True),
+        'format_choice': fields.selection([('mono', 'Single Format'), ('multi', 'Multi Format')], 'Format Choice', required=True),
+        'format': fields.selection(_get_formats, 'Formats'),
         'report_unit': fields.char('Report Unit', size=128, help='Enter the name for report unit in Jasper Server', required=True),
-        'mode': fields.selection([('sql','SQL'),('xml','XML')], 'Mode', required=True),
+        'mode': fields.selection([('sql', 'SQL'), ('xml', 'XML')], 'Mode', required=True),
         'before': fields.text('Before', help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),
         'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
         'attachment': fields.char('Save As Attachment Prefix', size=255, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
@@ -101,6 +102,7 @@ class jasper_document(osv.osv):
         'mode': lambda *a: 'sql',
         'attachment': lambda *a: False,
         'toolbar': lambda *a: True,
+        'depth': lambda *a: 0,
     }
 
     def __init__(self, pool, cr):
