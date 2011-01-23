@@ -240,7 +240,8 @@ class Report(object):
                     self.cr.execute(js['after'], {'id': ex})
 
                 ## Update the number of print on object
-                if hasattr(cur_obj, 'number_of_print'):
+                fld = self.pool.get(self.model).fields_get(self.cr, self.uid)
+                if 'number_of_print' in fld:
                     self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print':  (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
 
 
