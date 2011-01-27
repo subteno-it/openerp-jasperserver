@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
+#    jasper_server module for OpenERP,
 #    Copyright (C) 2009 SYLEAM Info Services (<http://www.syleam.fr/>)
 #                  Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
@@ -24,9 +24,10 @@
 
 from report.interface import report_int
 from report_soap import Report
+import netsvc
 
-# TODO: use netsvc to debug
-#from netsvc import
+logger = netsvc.Logger()
+
 
 class report_jasper(report_int):
     """
@@ -36,8 +37,8 @@ class report_jasper(report_int):
         if not context:
             context = {}
 
-        r = Report(self.name, cr, uid, ids, data, context)
-        return r.execute()
+        logger.notifyChannel('jasper_server', netsvc.LOG_DEBUG, 'Call %s' % (self.name,))
+        return Report(self.name, cr, uid, ids, data, context).execute()
 
 report_jasper('report.print.jasper.server')
 
