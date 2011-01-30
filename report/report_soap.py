@@ -85,7 +85,9 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
 </SOAP-ENV:Envelope>"""
 
 class Report(object):
-    """compose the SOAP Query, launch the query and return the value"""
+    """
+    compose the SOAP Query, launch the query and return the value
+    """
     def __init__(self, name, cr, uid, ids, data, context):
         """Initialise the report"""
         self.name = name
