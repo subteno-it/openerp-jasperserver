@@ -25,6 +25,7 @@ from osv import osv
 from osv import fields
 from lxml.etree import Element, tostring
 from tools import ustr
+from tools.translate import _
 import netsvc
 logger = netsvc.Logger()
 
@@ -100,6 +101,12 @@ class jasper_server(osv.osv):
                               from
                               (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
                                from   generate_series(0, 15000) m) x""")
+
+        # Check if plpgsql language is installed, if not raise an error
+        cr.execute("""select count(*) as "installed" from pg_language where lanname='plpgsql';""")
+        if not cr.fetchone()[0]:
+            logger.notifyChannel('jasper_server', netsvc.LOG_ERROR, 'Please installed plpgsql in your database, before update your OpenERP server!') 
+            raise osv.except_osv(_('Error'), _('Please installed plpgsql in your database, before update your OpenERP server!'))
 
         super(jasper_server, self).__init__(pool, cr)
 
