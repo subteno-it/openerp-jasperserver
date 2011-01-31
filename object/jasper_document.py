@@ -151,12 +151,16 @@ class jasper_document(osv.osv):
         """
         if context is None:
             context = {}
+
         if not context.get('action'):
             for id in ids:
                 self.make_action(cr, uid, id, context=context)
-        if vals.get('sql_name') and vals.get('sql_view'):
-            drop_view_if_exists(cr, vals.get('sql_name'))
-            sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (vals['sql_name'], vals['sql_view'])
+
+        if vals.get('sql_name') or vals.get('sql_view'):
+            sql_name = vals.get('sql_name', self.browse(cr, uid, ids[0]).sql_name)
+            sql_view = vals.get('sql_view', self.browse(cr, uid, ids[0]).sql_view)
+            drop_view_if_exists(cr, sql_name)
+            sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (sql_name, sql_view)
             cr.execute(sql_query, (ids,))
         return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
 
