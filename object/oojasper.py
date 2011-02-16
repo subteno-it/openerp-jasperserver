@@ -106,7 +106,7 @@ class jasper_server(osv.osv):
         cr.execute("""select count(*) as "installed" from pg_language where lanname='plpgsql';""")
         if not cr.fetchone()[0]:
             logger.notifyChannel('jasper_server', netsvc.LOG_ERROR, 'Please installed plpgsql in your database, before update your OpenERP server!') 
-            raise osv.except_osv(_('Error'), _('Please installed plpgsql in your database, before update your OpenERP server!'))
+            #raise osv.except_osv(_('Error'), _('Please installed plpgsql in your database, before update your OpenERP server!'))
 
         super(jasper_server, self).__init__(pool, cr)
 
