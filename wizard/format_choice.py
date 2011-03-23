@@ -103,7 +103,7 @@ class format_choice(wizard.interface):
                     'arch': form,
                     'fields': fields,
                     'state': (
-                            ('end', 'Cancel'),
+                            ('end', 'Cancel', 'gtk-cancel'),
                             ('create_wizard', 'OK', 'gtk-ok', True),
                         )
                 }
