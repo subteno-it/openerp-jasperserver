@@ -320,7 +320,7 @@ class Report(object):
                 e.text = val and ustr(val) or ''
             res += tostring(e) + '\n'
 
-        for key, val in [('REPORT_LOCALE','fr_FR')]:
+        for key, val in [('REPORT_LOCALE', 'fr_FR'), ('IS_JASPERSERVER', 'yes')]:
             e = Element('parameter')
             e.set('name', key)
             e.text = ustr(val)
