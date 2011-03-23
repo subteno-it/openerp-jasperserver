@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
+#    jasper_server module for OpenERP,
 #    Copyright (C) 2010 SYLEAM Info Services (<http://www.Syleam.fr/>) Damien CRIER
 #
 #    This file is a part of jasper_server
@@ -25,11 +25,12 @@ import wizard
 import pooler
 from tools.translate import _
 
-form  = """<?xml version="1.0" ?>
+form = """<?xml version="1.0" ?>
 <form string="Format choice">
   <field name="format_choice" colspan="4" width="300"/>
 </form>
 """
+
 
 def _get_formats(self, cr, uid, data, context=None):
     pool = pooler.get_pool(cr.dbname)
@@ -38,8 +39,9 @@ def _get_formats(self, cr, uid, data, context=None):
     return res
 
 fields = {
-    'format_choice' : {'string': 'Format', 'type': 'selection', 'selection': _get_formats, 'required': True},
+    'format_choice': {'string': 'Format', 'type': 'selection', 'selection': _get_formats, 'required': True},
 }
+
 
 class format_choice(wizard.interface):
     """
@@ -48,16 +50,16 @@ class format_choice(wizard.interface):
     """
 
     def _select_format(self, cr, uid, data, context=None):
-        if not context:
-            context={}
-        wiz_name = self.wiz_name.replace('jasper.','')
+        if context is None:
+            context = {}
+        wiz_name = self.wiz_name.replace('jasper.', '')
         pool = pooler.get_pool(cr.dbname)
         document_obj = pool.get('jasper.document')
-        doc_ids = document_obj.search(cr, uid, [('service','=', wiz_name)])
+        doc_ids = document_obj.search(cr, uid, [('service', '=', wiz_name)])
         if not doc_ids:
             raise wizard.except_wizard(_('Error'), _('No report found!'))
         document = document_obj.browse(cr, uid, doc_ids[0], context=context)
-        if document.id :
+        if document.id:
             if document.format_choice == 'mono':
                 action = 'create_wizard'
             elif document.format_choice == 'multi':
@@ -69,10 +71,10 @@ class format_choice(wizard.interface):
         return action
 
     def _create_wizard(self, cr, uid, data, context=None):
-        wiz_name = self.wiz_name.replace('jasper.','')
+        wiz_name = self.wiz_name.replace('jasper.', '')
         pool = pooler.get_pool(cr.dbname)
         document_obj = pool.get('jasper.document')
-        doc_ids = document_obj.search(cr, uid, [('service','=', wiz_name)])
+        doc_ids = document_obj.search(cr, uid, [('service', '=', wiz_name)])
         if not doc_ids:
             raise wizard.except_wizard(_('Error'), _('No report found!'))
         document = document_obj.browse(cr, uid, doc_ids[0], context=context)
@@ -87,29 +89,29 @@ class format_choice(wizard.interface):
         return data['form']
 
     states = {
-        'init':{
+        'init': {
             'actions': [],
             'result': {
                     'type': 'choice',
                     'next_state': _select_format,
                 }
             },
-        'format_choice':{
+        'format_choice': {
             'actions': [],
             'result': {
                     'type': 'form',
                     'arch': form,
                     'fields': fields,
-                    'state' : (
-                            ('end','Cancel'),
+                    'state': (
+                            ('end', 'Cancel'),
                             ('create_wizard', 'OK', 'gtk-ok', True),
                         )
                 }
             },
-        'create_wizard':{
+        'create_wizard': {
             'actions': [_create_wizard],
-            'result' : {
-                'type': 'print', 
+            'result': {
+                'type': 'print',
                 'report': 'print.jasper.server',
                 'state': 'end'
                 }

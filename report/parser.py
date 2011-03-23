@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>) 
+#    jasper_server module for OpenERP,
+#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>)
 #              Christophe CHAUVET
 #
 #    This file is a part of jasper_server
@@ -27,6 +27,7 @@ from HTMLParser import HTMLParser
 from lxml.etree import parse
 from tempfile import mkstemp
 from dime import Message
+
 
 class HTML2Text(HTMLParser):
     """
@@ -67,6 +68,7 @@ class HTML2Text(HTMLParser):
         elif tag.startswith('h'):
             self.is_title = True
 
+
 def ParseDIME(source, list_file):
     """
     We must decompose the dime record to return the PDF only
@@ -82,6 +84,7 @@ def ParseDIME(source, list_file):
             fpdf = open(f_name, 'w+b')
             fpdf.write(content)
             fpdf.close()
+
 
 def ParseXML(source):
     """
@@ -100,6 +103,7 @@ def ParseXML(source):
     return (tree.xpath('//returnCode')[0].text,
             tree.xpath('//returnMessage')[0].text)
 
+
 def ParseHTML(source):
     """
     Read the HTML content return by an authentification error
@@ -107,6 +111,7 @@ def ParseHTML(source):
     p = HTML2Text()
     p.feed(source)
     return p.get_text()
+
 
 def ParseContent(source):
     """
@@ -121,6 +126,7 @@ def ParseContent(source):
             content = x.data
     return content
 
+
 def WriteContent(content, list_file):
     """
     Write content in tempory file
@@ -133,17 +139,17 @@ def WriteContent(content, list_file):
 
 if __name__ == '__main__':
     print ParseHTML("""<html><head><title>Apache Tomcat/5.5.20 - Rapport d'erreur</title>
-<style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} 
-           H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} 
-           H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} 
-           BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} 
-           B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} 
+<style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;}
+           H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;}
+           H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;}
+           BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;}
+           B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;}
            P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}
-           A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style> 
+           A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style>
 </head><body>
 <h1>Etat HTTP 401 - Bad credentials</h1>
 <HR size="1" noshade="noshade"><p><b>type</b> Rapport d'état</p>
-<p><b>message</b> <u>Bad credentials</u></p><p><b>description</b> 
+<p><b>message</b> <u>Bad credentials</u></p><p><b>description</b>
 <u>La requête nécessite une authentification HTTP (Bad credentials).</u></p>
 <HR size="1" noshade="noshade"><h3>Apache Tomcat/5.5.20</h3>
 </body></html>""")

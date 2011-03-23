@@ -25,6 +25,7 @@
 
 __name__ = "Add get_trad functions in PostgreSQL Database"
 
+
 def migrate(cr, v):
     """
     Add translation function get_trad to retrieve translation from OpenERP
@@ -33,7 +34,7 @@ def migrate(cr, v):
     :param v: version number
     """
     cr.execute("""
-        CREATE OR REPLACE FUNCTION get_trad(langue varchar, typ varchar, nom varchar, texte varchar) RETURNS varchar AS 
+        CREATE OR REPLACE FUNCTION get_trad(langue varchar, typ varchar, nom varchar, texte varchar) RETURNS varchar AS
         $$
             DECLARE
               resultat varchar;

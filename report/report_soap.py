@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
+#    jasper_server module for OpenERP,
 #    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>)
 #                  Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
@@ -28,7 +28,7 @@ import time
 import base64
 
 from report.render import render
-from httplib2 import Http, ServerNotFoundError ,HttpLib2Error
+from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG
 from tempfile import mkstemp
@@ -43,15 +43,19 @@ try:
 except ImportError:
     from StringIO import StringIO
 
+
 class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
-        self.output_type='pdf'
+        self.output_type = 'pdf'
+
     def _render(self):
         return self.pdf
 
 logger = Logger()
+
+
 def log_debug(message):
     logger.notifyChannel('jasper_server', LOG_DEBUG, ' %s' % message)
 
@@ -84,6 +88,7 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
 </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>"""
 
+
 class Report(object):
     """
     compose the SOAP Query, launch the query and return the value
@@ -106,7 +111,7 @@ class Report(object):
         ids = self.data['form']['ids']
         js_obj = self.pool.get('jasper.server')
         doc_obj = self.pool.get('jasper.document')
-        js_ids = js_obj.search(self.cr, self.uid, [('enable','=',True)])
+        js_ids = js_obj.search(self.cr, self.uid, [('enable', '=', True)])
         if not len(js_ids):
             raise Exception('Error, no JasperServer found!')
 
@@ -130,8 +135,8 @@ class Report(object):
             if attach:
                 aname = eval(attach, {'object': cur_obj, 'time': time})
             if reload and aname:
-                aids = self.pool.get('ir.attachment').search(self.cr, self.uid, 
-                        [('datas_fname','=',aname+'.pdf'),('res_model','=',self.model),('res_id','=',ex)])
+                aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
+                        [('datas_fname', '=', aname + '.pdf'), ('res_model', '=', self.model), ('res_id', '=', ex)])
                 if aids:
                     brow_rec = self.pool.get('ir.attachment').browse(self.cr, self.uid, aids[0])
                     if brow_rec.datas:
@@ -147,14 +152,14 @@ class Report(object):
 
                 # If XML we must compose it
                 if self.data['form']['params'][2] == 'xml':
-                    d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0], 
+                    d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
                             self.data['form']['params'][3], context=self.context)
                     d_par['xml_data'] = d_xml
 
                 # Retrieve the company information and send them in parameter
                 user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
                 d_par['company_name'] = user.company_id.name
-                d_par['company_logo'] = user.company_id.name.encode('ascii','ignore').replace(' ','_')
+                d_par['company_logo'] = user.company_id.name.encode('ascii', 'ignore').replace(' ', '_')
                 d_par['company_hearder1'] = user.company_id.rml_header1 or ''
                 d_par['company_footer1'] = user.company_id.rml_footer1 or ''
                 d_par['company_footer2'] = user.company_id.rml_footer2 or ''
@@ -162,7 +167,7 @@ class Report(object):
                 d_par['company_currency'] = user.company_id.currency_id.name or ''
 
                 # Search the default address for the company.
-                addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id],['default'])['default']
+                addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id], ['default'])['default']
                 addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
                 d_par['company_street'] = addr.street or ''
                 d_par['company_street2'] = addr.street2 or ''
@@ -176,7 +181,7 @@ class Report(object):
                 doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
                 for p in doc.param_ids:
                     if p.code and  p.code.startswith('[['):
-                        d_par[p.name.lower()] = eval(p.code.replace('[[','').replace(']]',''), {'o': cur_obj, 'c': user.company_id, 't': time}) or ''
+                        d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': user.company_id, 't': time}) or ''
                     else:
                         d_par[p.name] = p.code
 
@@ -197,7 +202,7 @@ class Report(object):
                 body = BODY_TEMPLATE % body_args
                 log_debug('****\n%s\n****' % body)
 
-                headers = {'Content-type': 'text/xml', 'charset':'UTF-8',"SOAPAction":"runReport"}
+                headers = {'Content-type': 'text/xml', 'charset': 'UTF-8', 'SOAPAction': 'runReport'}
                 h = Http()
                 h.add_credentials(js['user'], js['pass'])
                 try:
@@ -216,8 +221,8 @@ class Report(object):
                     raise Exception('Code: %s\nMessage: %s' % ParseXML(content))
                 elif resp.get('content-type').startswith('text/html'):
                     log_debug('CONTENT: %r' % content)
-                    raise Exception ('Error: %s' % ParseHTML(content))
-                elif resp.get('content-type') == 'application/dime' :
+                    raise Exception('Error: %s' % ParseHTML(content))
+                elif resp.get('content-type') == 'application/dime':
                     ParseDIME(content, pdf_list)
                 else:
                     raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
@@ -244,8 +249,7 @@ class Report(object):
                 ## Update the number of print on object
                 fld = self.pool.get(self.model).fields_get(self.cr, self.uid)
                 if 'number_of_print' in fld:
-                    self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print':  (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
-
+                    self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
 
         ##
         # Create a global file for each PDF file, use Ghostscript to concatenate them
@@ -263,24 +267,24 @@ class Report(object):
             os.remove(f_name)
             for f in pdf_list:
                 os.remove(f)
-        self.obj=external_pdf(content)
+        self.obj = external_pdf(content)
         return (self.obj.pdf, 'pdf')
 
     @staticmethod
     def entities(data):
         """
-        Convert XML string to XML entities 
+        Convert XML string to XML entities
 
         @type  data: str
         @param data: XML String
         @rtype: str
         @return: XML string converted
         """
-        data = data.replace('&','&amp;')
-        data = data.replace('<','&lt;')
-        data = data.replace('>','&gt;')
-        data = data.replace('"','&quot;')
-        data = data.replace("'","&apos;")
+        data = data.replace('&', '&amp;')
+        data = data.replace('<', '&lt;')
+        data = data.replace('>', '&gt;')
+        data = data.replace('"', '&quot;')
+        data = data.replace("'", "&apos;")
         return data
 
     def parameter(self, dico, resource):
@@ -300,7 +304,7 @@ class Report(object):
             if key in 'xml_data':
                 continue
             e = Element('parameter')
-            e.set('name','OERP_%s' % key.upper())
+            e.set('name', 'OERP_%s' % key.upper())
             e.text = ustr(resource[key])
             res += tostring(e) + '\n'
 
@@ -310,7 +314,7 @@ class Report(object):
                 continue
             val = dico[key]
             e = Element('parameter')
-            e.set('name','WIZARD_%s' % key.upper())
+            e.set('name', 'WIZARD_%s' % key.upper())
             if isinstance(val, list):
                 if isinstance(val[0], tuple):
                     e.text = ','.join(map(str, val[0][2]))

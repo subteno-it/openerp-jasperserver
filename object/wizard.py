@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>) 
+#    jasper_server module for OpenERP,
+#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>)
 #                  Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
 #    This file is a part of jasper_server
@@ -24,6 +24,7 @@
 
 from osv import osv
 from osv import fields
+
 
 class ir_actions_wizard(osv.osv):
     """

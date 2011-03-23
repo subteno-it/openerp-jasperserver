@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP, Management module for Jasper Server
-
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>) 
+#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>)
 #              Christophe CHAUVET
 #
 #    This file is a part of jasper_server
@@ -25,6 +24,7 @@
 
 __name__ = "Remove old wizard entry"
 
+
 def migrate(cr, v):
     """
     Put your explanation here
@@ -33,11 +33,11 @@ def migrate(cr, v):
     :param v: version number
     """
     cr.execute("""DELETE
-                  FROM   ir_act_wizard 
+                  FROM   ir_act_wizard
                   WHERE id IN (
-                      SELECT res_id 
-                      FROM   ir_model_data 
-                      WHERE  module='jasper_server' 
+                      SELECT res_id
+                      FROM   ir_model_data
+                      WHERE  module='jasper_server'
                       AND    model = 'ir.actions.wizard')
                   AND model NOT IN ('jasper.document','ir.model')""")
 
