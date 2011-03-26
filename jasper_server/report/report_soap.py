@@ -26,15 +26,18 @@ import pooler
 import os
 import time
 import base64
+import logging
 
 from report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 from lxml.etree import Element, tostring
-from netsvc import Logger, LOG_DEBUG
+#from netsvc import Logger, LOG_DEBUG
 from tempfile import mkstemp
 from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from tools.misc import ustr
+
+_logger = logging.getLogger('jasper_server')
 
 ##
 # If cStringIO is available, we use it
@@ -53,11 +56,10 @@ class external_pdf(render):
     def _render(self):
         return self.pdf
 
-logger = Logger()
 
 
 def log_debug(message):
-    logger.notifyChannel('jasper_server', LOG_DEBUG, ' %s' % message)
+    _logger.debug(' %s' % message)
 
 ##
 # Construct the body template for SOAP

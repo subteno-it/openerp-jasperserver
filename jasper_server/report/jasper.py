@@ -24,9 +24,11 @@
 
 from report.interface import report_int
 from report_soap import Report
-import netsvc
+from osv.osv import except_osv
+from tools.translate import _
+import logging
 
-logger = netsvc.Logger()
+_logger = logging.getLogger('jasper_server')
 
 
 class report_jasper(report_int):
@@ -34,11 +36,14 @@ class report_jasper(report_int):
     Extend report_int to use Jasper Server
     """
     def create(self, cr, uid, ids, data, context=None):
-        if not context:
+        if context is None:
             context = {}
 
-        logger.notifyChannel('jasper_server', netsvc.LOG_DEBUG, 'Call %s' % (self.name,))
-        return Report(self.name, cr, uid, ids, data, context).execute()
+        _logger.debug('Call %s' % self.name)
+        try:
+            return Report(self.name, cr, uid, ids, data, context).execute()
+        except Exception, e:
+            raise except_osv(_('Error'), '%s' % str(e))
 
 report_jasper('report.print.jasper.server')
 

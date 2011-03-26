@@ -28,18 +28,18 @@ from jasper_server.wizard.format_choice import format_choice
 from tools.sql import drop_view_if_exists
 import netsvc
 import pooler
-logger = netsvc.Logger()
+import logging
+
+_logger = logging.getLogger('jasper_server')
 
 
 def registered_wizard(name):
     """ Register dynamicaly the wizard for each entry"""
     gname = 'wizard.%s' % name
-    if netsvc.service_exist(gname):
-        if isinstance(netsvc.SERVICES[gname], format_choice):
-            return
-        del netsvc.SERVICES[gname]
+    if gname in netsvc.Service._services:
+        return
     format_choice(name)
-    logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % name)
+    _logger.info('Register the jasper service [%s]' % name)
 
 
 class jasper_document_extension(osv.osv):
@@ -127,8 +127,7 @@ class jasper_document(osv.osv):
         Automatic registration to be directly available
         """
         b = self.browse(cr, uid, id, context=context)
-        wiz_name = 'jasper.%s' % b.service
-        registered_wizard(wiz_name)
+        registered_wizard('jasper.%s' % b.service)
 
     def create(self, cr, uid, vals, context=None):
         """

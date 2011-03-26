@@ -26,12 +26,13 @@ from osv import fields
 from lxml.etree import Element, tostring
 from tools import ustr
 from tools.translate import _
-import netsvc
-logger = netsvc.Logger()
+#import netsvc
+import logging
+_logger = logging.getLogger('jasper_server')
 
 
 def log_error(message):
-    logger.notifyChannel('jasper_server', netsvc.LOG_ERROR, message)
+    _logger.error(message)
 
 
 class jasper_server(osv.osv):
@@ -75,7 +76,7 @@ class jasper_server(osv.osv):
                           FROM   pg_namespace
                           WHERE  nspname='analysis'""")
             if not cr.fetchone()[0]:
-                logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis schema have been created !')
+                _logger.info('Analysis schema have been created !')
                 cr.execute("""CREATE SCHEMA analysis;
                        COMMENT ON SCHEMA analysis
                        IS 'Schema use for customize view in Jasper BI';""")
@@ -85,7 +86,7 @@ class jasper_server(osv.osv):
                           WHERE  schemaname = 'analysis'
                           AND    tablename='dimension_date'""")
             if not cr.fetchone()[0]:
-                logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis temporal table have been created !')
+                _logger.info('Analysis temporal table have been created !')
                 cr.execute("""create table analysis.dimension_date as
                               select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
                                      to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
@@ -105,7 +106,7 @@ class jasper_server(osv.osv):
         # Check if plpgsql language is installed, if not raise an error
         cr.execute("""select count(*) as "installed" from pg_language where lanname='plpgsql';""")
         if not cr.fetchone()[0]:
-            logger.notifyChannel('jasper_server', netsvc.LOG_WARNING, 'Please installed plpgsql in your database, before update your OpenERP server!\nused for translation')
+            _logger.warn('Please installed plpgsql in your database, before update your OpenERP server!\nused for translation')
 
         super(jasper_server, self).__init__(pool, cr)
 
