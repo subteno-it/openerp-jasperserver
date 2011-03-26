@@ -36,6 +36,7 @@ from tempfile import mkstemp
 from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from tools.misc import ustr
+from pyPdf import PdfFileWriter, PdfFileReader
 
 _logger = logging.getLogger('jasper_server')
 
@@ -254,21 +255,22 @@ class Report(object):
                     self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
 
         ##
-        # Create a global file for each PDF file, use Ghostscript to concatenate them
-        # Retrieve the global if there is a multiple file
+        # We use pyPdf to marge all PDF in unique file
+        #
         if len(ids) > 1:
-            # -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=firstANDsecond.pdf -dBATCH
-            __, f_name = mkstemp(suffix='.pdf', prefix='jasper-global')
-            cmd = ['gs', '-dNOPAUSE', '-sDEVICE=pdfwrite', '-sOUTPUTFILE=%s' % f_name, '-dBATCH']
-            cmd.extend(pdf_list)
-            retcode = call(cmd)
-            log_debug('PDF -> RETCODE: %r' % retcode)
-            if retcode != 0:
-                raise Exception('Error: cannot concatenate the PDF file!')
-            content = open(f_name, 'r').read()
-            os.remove(f_name)
+            tmp_content = PdfFileWriter()
+            for pdf in pdf_list:
+                print 'pdf ', pdf
+                tmp_pdf = PdfFileReader(open(pdf, 'r'))
+                for page in range(tmp_pdf.getNumPages()):
+                    tmp_content.addPage(tmp_pdf.getPage(page))
+                c = StringIO()
+                tmp_content.write(c)
+                content = c.getvalue()
+
             for f in pdf_list:
                 os.remove(f)
+
         self.obj = external_pdf(content)
         return (self.obj.pdf, 'pdf')
 
