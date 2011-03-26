@@ -23,15 +23,15 @@
 ##############################################################################
 
 {
-    'name': 'Jasper Server Interface',
-    'version': '6.5.4',
+    'name': 'JasperReport Server Interface',
+    'version': '6.5.5',
     'category': 'Tools',
-    'description': """This module interface JasperServer For Reports.
+    'description': """This module interface JasperReport Server
 
 This module required library to work properly
 
-# pip install httplib2
-# pip install pyPdf
+# pip install httplib2 (>= 0.6.0)
+# pip install pyPdf (>= 1.13)
 
     """,
     'author': 'Everlibre,SYLEAM',
