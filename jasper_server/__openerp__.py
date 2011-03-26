@@ -31,6 +31,7 @@
 This module required library to work properly
 
 # pip install httplib2
+# pip install pyPdf
 
     """,
     'author': 'Everlibre,SYLEAM',
@@ -53,6 +54,7 @@ This module required library to work properly
         'demo/jasper_document.xml',
     ],
     'installable': True,
+    'external_dependencies': {'python': ['httplib2','pyPdf']},
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
