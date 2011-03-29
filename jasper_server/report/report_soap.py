@@ -32,8 +32,8 @@ from report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 from lxml.etree import Element, tostring
 #from netsvc import Logger, LOG_DEBUG
-from tempfile import mkstemp
-from subprocess import call
+#from tempfile import mkstemp
+#from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from tools.misc import ustr
 from pyPdf import PdfFileWriter, PdfFileReader
