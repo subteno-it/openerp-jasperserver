@@ -107,6 +107,7 @@ class jasper_document(osv.osv):
         'toolbar': lambda *a: True,
         'depth': lambda *a: 0,
         'sequence': lambda *a: 100,
+        'format': lambda *a: 'PDF',
     }
 
     def __init__(self, pool, cr):
