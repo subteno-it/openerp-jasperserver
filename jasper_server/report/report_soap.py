@@ -94,6 +94,139 @@ class Report(object):
         self.obj = None
         self.outputFormat = 'pdf'
 
+    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, attachment='', reload=False, context=None):
+        """
+        After retrieve datas to launch report, execute it and return the content
+        """
+        if context is None:
+            context = {}
+
+        js_obj = self.pool.get('jasper.server')
+        cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
+        aname = False
+        if attachment:
+            aname = eval(attachment, {'object': cur_obj, 'time': time})
+        if reload and aname:
+            aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
+                    [('datas_fname', '=', aname + '.pdf'), ('res_model', '=', self.model), ('res_id', '=', ex)])
+            if aids:
+                brow_rec = self.pool.get('ir.attachment').browse(self.cr, self.uid, aids[0])
+                if brow_rec.datas:
+                    d = base64.decodestring(brow_rec.datas)
+                    WriteContent(d, pdf_list)
+                    content = d
+        else:
+            # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
+            # We cannot use $X{IN, field, Collection}
+            d_par = {'active_id': ex,
+                     'active_ids': ex,
+                     'model': self.model}
+
+            # If XML we must compose it
+            if self.data['form']['params'][2] == 'xml':
+                d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
+                        self.data['form']['params'][3], context=self.context)
+                d_par['xml_data'] = d_xml
+
+            # Retrieve the company information and send them in parameter
+            user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
+            d_par['company_name'] = user.company_id.name
+            d_par['company_logo'] = user.company_id.name.encode('ascii', 'ignore').replace(' ', '_')
+            d_par['company_hearder1'] = user.company_id.rml_header1 or ''
+            d_par['company_footer1'] = user.company_id.rml_footer1 or ''
+            d_par['company_footer2'] = user.company_id.rml_footer2 or ''
+            d_par['company_website'] = user.company_id.partner_id.website or ''
+            d_par['company_currency'] = user.company_id.currency_id.name or ''
+
+            # Search the default address for the company.
+            addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id], ['default'])['default']
+            addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
+            d_par['company_street'] = addr.street or ''
+            d_par['company_street2'] = addr.street2 or ''
+            d_par['company_zip'] = addr.zip or ''
+            d_par['company_city'] = addr.city or ''
+            d_par['company_country'] = addr.country_id.name or ''
+            d_par['company_phone'] = addr.phone or ''
+            d_par['company_fax'] = addr.fax or ''
+            d_par['company_mail'] = addr.email or ''
+
+            for p in current_document.param_ids:
+                if p.code and  p.code.startswith('[['):
+                        d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': user.company_id, 't': time}) or ''
+                else:
+                        d_par[p.name] = p.code
+
+            self.outputFormat = current_document.format.lower()
+
+            par = parameter(self.data['form'], d_par)
+            body_args = {
+                'format': self.data['form']['params'][0],
+                'path': self.data['form']['params'][1],
+                'param': par,
+                'database': '/openerp/databases/%s' % self.cr.dbname,
+            }
+
+            ###
+            ## Execute the before query if it available
+            ##
+            if js_conf.get('before'):
+                self.cr.execute(js_conf['before'], {'id': ex})
+
+            body = BODY_TEMPLATE % body_args
+            log_debug('****\n%s\n****' % body)
+
+            headers = {'Content-type': 'text/xml', 'charset': 'UTF-8', 'SOAPAction': 'runReport'}
+            h = Http()
+            h.add_credentials(js_conf['user'], js_conf['pass'])
+            try:
+                uri = 'http://%s:%d%s' % (js_conf['host'], js_conf['port'], js_conf['repo'])
+                resp, content = h.request(uri, "POST", body, headers)
+            except ServerNotFoundError:
+                raise Exception('Error, Server not found !')
+            except HttpLib2Error, e:
+                raise Exception('Error: %r' % e)
+            except Exception, e:
+                raise Exception('Error: %s' % str(e))
+
+            log_debug('HTTP -> RESPONSE:')
+            log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
+            if resp.get('content-type').startswith('text/xml'):
+                log_debug('CONTENT: %r' % content)
+                raise Exception('Code: %s\nMessage: %s' % ParseXML(content))
+            elif resp.get('content-type').startswith('text/html'):
+                log_debug('CONTENT: %r' % content)
+                raise Exception('Error: %s' % ParseHTML(content))
+            elif resp.get('content-type') == 'application/dime':
+                ParseDIME(content, pdf_list)
+            else:
+                raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
+
+            ###
+            ## Store the content in ir.attachment if ask
+            if aname:
+                name = aname + self.outputFormat
+                self.pool.get('ir.attachment').create(self.cr, self.uid, {
+                            'name': aname,
+                            'datas': base64.encodestring(ParseContent(content)),
+                            'datas_fname': name,
+                            'res_model': self.model,
+                            'res_id': ex,
+                            }, context=self.context
+                )
+
+            ###
+            ## Execute the before query if it available
+            ##
+            if js_conf.get('after'):
+                self.cr.execute(js_conf['after'], {'id': ex})
+
+            ## Update the number of print on object
+            fld = self.pool.get(self.model).fields_get(self.cr, self.uid)
+            if 'number_of_print' in fld:
+                self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
+
+        return content
+
     def execute(self):
         """Launch the report and return it"""
         ids = self.data['form']['ids']
@@ -104,7 +237,6 @@ class Report(object):
             raise Exception('Error, no JasperServer found!')
 
         js = js_obj.read(self.cr, self.uid, js_ids, context=self.context)[0]
-        uri = 'http://%s:%d%s' % (js['host'], js['port'], js['repo'])
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
 
@@ -116,130 +248,9 @@ class Report(object):
         # For each IDS, launch a query, and return only one result
         #
         pdf_list = []
+        doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
         for ex in ids:
-            ## Manage attachment
-            cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
-            aname = False
-            if attach:
-                aname = eval(attach, {'object': cur_obj, 'time': time})
-            if reload and aname:
-                aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
-                        [('datas_fname', '=', aname + '.pdf'), ('res_model', '=', self.model), ('res_id', '=', ex)])
-                if aids:
-                    brow_rec = self.pool.get('ir.attachment').browse(self.cr, self.uid, aids[0])
-                    if brow_rec.datas:
-                        d = base64.decodestring(brow_rec.datas)
-                        WriteContent(d, pdf_list)
-                        content = d
-            else:
-                # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
-                # We cannot use $X{IN, field, Collection}
-                d_par = {'active_id': ex,
-                         'active_ids': ex,
-                         'model': self.model}
-
-                # If XML we must compose it
-                if self.data['form']['params'][2] == 'xml':
-                    d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
-                            self.data['form']['params'][3], context=self.context)
-                    d_par['xml_data'] = d_xml
-
-                # Retrieve the company information and send them in parameter
-                user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
-                d_par['company_name'] = user.company_id.name
-                d_par['company_logo'] = user.company_id.name.encode('ascii', 'ignore').replace(' ', '_')
-                d_par['company_hearder1'] = user.company_id.rml_header1 or ''
-                d_par['company_footer1'] = user.company_id.rml_footer1 or ''
-                d_par['company_footer2'] = user.company_id.rml_footer2 or ''
-                d_par['company_website'] = user.company_id.partner_id.website or ''
-                d_par['company_currency'] = user.company_id.currency_id.name or ''
-
-                # Search the default address for the company.
-                addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id], ['default'])['default']
-                addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
-                d_par['company_street'] = addr.street or ''
-                d_par['company_street2'] = addr.street2 or ''
-                d_par['company_zip'] = addr.zip or ''
-                d_par['company_city'] = addr.city or ''
-                d_par['company_country'] = addr.country_id.name or ''
-                d_par['company_phone'] = addr.phone or ''
-                d_par['company_fax'] = addr.fax or ''
-                d_par['company_mail'] = addr.email or ''
-
-                doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
-                for p in doc.param_ids:
-                    if p.code and  p.code.startswith('[['):
-                        d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': user.company_id, 't': time}) or ''
-                    else:
-                        d_par[p.name] = p.code
-
-                self.outputFormat = doc.format.lower()
-
-                par = parameter(self.data['form'], d_par)
-                body_args = {
-                    'format': self.data['form']['params'][0],
-                    'path': self.data['form']['params'][1],
-                    'param': par,
-                    'database': '/openerp/databases/%s' % self.cr.dbname,
-                }
-
-                ###
-                ## Execute the before query if it available
-                ##
-                if js.get('before'):
-                    self.cr.execute(js['before'], {'id': ex})
-
-                body = BODY_TEMPLATE % body_args
-                log_debug('****\n%s\n****' % body)
-
-                headers = {'Content-type': 'text/xml', 'charset': 'UTF-8', 'SOAPAction': 'runReport'}
-                h = Http()
-                h.add_credentials(js['user'], js['pass'])
-                try:
-                    resp, content = h.request(uri, "POST", body, headers)
-                except ServerNotFoundError:
-                    raise Exception('Error, Server not found !')
-                except HttpLib2Error, e:
-                    raise Exception('Error: %r' % e)
-                except Exception, e:
-                    raise Exception('Error: %s' % str(e))
-
-                log_debug('HTTP -> RESPONSE:')
-                log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
-                if resp.get('content-type').startswith('text/xml'):
-                    log_debug('CONTENT: %r' % content)
-                    raise Exception('Code: %s\nMessage: %s' % ParseXML(content))
-                elif resp.get('content-type').startswith('text/html'):
-                    log_debug('CONTENT: %r' % content)
-                    raise Exception('Error: %s' % ParseHTML(content))
-                elif resp.get('content-type') == 'application/dime':
-                    ParseDIME(content, pdf_list)
-                else:
-                    raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
-
-                ###
-                ## Store the content in ir.attachment if ask
-                if aname:
-                    name = aname + '.pdf'
-                    self.pool.get('ir.attachment').create(self.cr, self.uid, {
-                                'name': aname,
-                                'datas': base64.encodestring(ParseContent(content)),
-                                'datas_fname': name,
-                                'res_model': self.model,
-                                'res_id': ex,
-                                }, context=self.context
-                    )
-
-                ###
-                ## Execute the before query if it available
-                ##
-                if js.get('after'):
-                    self.cr.execute(js['after'], {'id': ex})
-
-                ## Update the number of print on object
-                fld = self.pool.get(self.model).fields_get(self.cr, self.uid)
-                if 'number_of_print' in fld:
-                    self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
+            content = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, context=self.context)
 
         ##
         # We use pyPdf to marge all PDF in unique file
