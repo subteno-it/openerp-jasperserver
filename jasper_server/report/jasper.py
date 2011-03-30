@@ -34,7 +34,7 @@ class report_jasper(report_int):
     Extend report_int to use Jasper Server
     """
     def create(self, cr, uid, ids, data, context=None):
-        if not context:
+        if context is None:
             context = {}
 
         logger.notifyChannel('jasper_server', netsvc.LOG_DEBUG, 'Call %s' % (self.name,))
