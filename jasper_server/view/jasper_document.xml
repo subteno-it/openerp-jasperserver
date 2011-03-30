@@ -137,6 +137,7 @@
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="enabled"/>
+                    <field name="sequence"/>
                     <field name="jasper_file"/>
                 </tree>
             </field>
@@ -155,8 +156,9 @@
                         <page string="General">
                             <field name="model_id" select="1"/>
                             <field name="service" select="1"/>
-                            <field name="report_unit" select="1"/>
-                            <field name="jasper_file" colspan="4"/>
+                            <field name="report_unit" select="1" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
+                            <field name="sequence"/>
+                            <field name="jasper_file" colspan="4" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
                             <field name="mode"/>
                             <field name="toolbar" select="1"/>
                             <field name="ctx" colspan="4"/>
@@ -173,13 +175,13 @@
                         <page string="XML" attrs="{'invisible': [('mode','!=','xml')]}">
                             <field name="depth"/>
                         </page>
-                        <page string="SQL View">
+                        <page string="SQL View" attrs="{'invisible': [('mode','!=','sql')]}">
                             <separator string="Enter the name of the view" colspan="4"/>
                             <field name="sql_name" colspan="4" nolabel="1"/>
                             <separator string="Enter the select query of the view only" colspan="4"/>
                             <field name="sql_view" colspan="4" nolabel="1" attrs="{'required': [('sql_name','!=', False)]}"/>
                         </page>
-                        <page string="Processes">
+                        <page string="Processes" attrs="{'invisible': [('mode','=','multi')]}">
                             <separator string="Execute SQL query before treatment" colspan="4"/>
                             <field name="before" colspan="4" nolabel="1"/>
                             <separator string="Execute SQL query after treatment" colspan="4"/>
@@ -190,8 +192,12 @@
                                 <newline/>
                             </group>
                         </page>
-                        <page string="Parameters">
+                        <page string="Parameters" attrs="{'invisible': [('mode','=','multi')]}">
                             <field name="param_ids" nolabel="1" />
+                        </page>
+                        <page string="Reports" attrs="{'invisible': [('mode','!=','multi')]}">
+                            <separator string="Select report to launch when this report is launched" colspan="4"/>
+                            <field name="child_ids" nolabel="1" domain="[('mode','!=', 'multi'),('model_id','=',model_id),('active','=',True)]"/>
                         </page>
                     </notebook>
                 </form>

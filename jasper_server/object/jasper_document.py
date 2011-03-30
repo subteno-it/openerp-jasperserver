@@ -58,6 +58,7 @@ jasper_document_extension()
 class jasper_document(osv.osv):
     _name = 'jasper.document'
     _description = 'Jasper Document'
+    _order = 'sequence'
 
     def _get_formats(self, cr, uid, context=None):
         """
@@ -79,13 +80,13 @@ class jasper_document(osv.osv):
             help='Enter the service name register at start by OpenERP Server'),
         'enabled': fields.boolean('Active', help="Indicates if this document is active or not"),
         'model_id': fields.many2one('ir.model', 'Object Model', required=True),  # object model in ir.model
-        'jasper_file': fields.char('Jasper file', size=128, required=True),  # jasper filename
+        'jasper_file': fields.char('Jasper file', size=128),  # jasper filename
         'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
         'depth': fields.integer('Depth', required=True),
         'format_choice': fields.selection([('mono', 'Single Format'), ('multi', 'Multi Format')], 'Format Choice', required=True),
         'format': fields.selection(_get_formats, 'Formats'),
-        'report_unit': fields.char('Report Unit', size=128, help='Enter the name for report unit in Jasper Server', required=True),
-        'mode': fields.selection([('sql', 'SQL'), ('xml', 'XML')], 'Mode', required=True),
+        'report_unit': fields.char('Report Unit', size=128, help='Enter the name for report unit in Jasper Server'),
+        'mode': fields.selection([('sql', 'SQL'), ('xml', 'XML'), ('multi', 'Multiple Report')], 'Mode', required=True),
         'before': fields.text('Before', help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),
         'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
         'attachment': fields.char('Save As Attachment Prefix', size=255, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
@@ -95,6 +96,8 @@ class jasper_document(osv.osv):
         'ctx': fields.char('Context', size=128, help="Enter condition with context does match to see the print action\neg: context.get('foo') == 'bar'"),
         'sql_view': fields.text('SQL View', help='Insert your SQL view, if the report is base on it'),
         'sql_name': fields.char('Name of view', size=128, ),
+        'child_ids': fields.many2many('jasper.document', 'jasper_document_multi_rel', 'source_id', 'destin_id', 'Child report', help='Select reports to launch when this report is called'),
+        'sequence': fields.integer('Sequence', help='The sequence is used when launch a multple report, to select the order to launch'),
     }
 
     _defaults = {
@@ -103,6 +106,7 @@ class jasper_document(osv.osv):
         'attachment': lambda *a: False,
         'toolbar': lambda *a: True,
         'depth': lambda *a: 0,
+        'sequence': lambda *a: 100,
     }
 
     def __init__(self, pool, cr):

@@ -93,6 +93,7 @@ class Report(object):
         self.pool = pooler.get_pool(cr.dbname)
         self.obj = None
         self.outputFormat = 'pdf'
+        self.path = None
 
     def _jasper_execute(self, ex, current_document, js_conf, pdf_list, attachment='', reload=False, context=None):
         """
@@ -161,7 +162,7 @@ class Report(object):
             par = parameter(self.data['form'], d_par)
             body_args = {
                 'format': self.data['form']['params'][0],
-                'path': self.data['form']['params'][1],
+                'path': self.path or self.data['form']['params'][1],
                 'param': par,
                 'database': '/openerp/databases/%s' % self.cr.dbname,
             }
@@ -250,15 +251,20 @@ class Report(object):
         pdf_list = []
         doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
         for ex in ids:
-            content = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, context=self.context)
+            if doc.mode == 'multi':
+                for d in doc.child_ids:
+                    print 'd: ', d.name
+                    self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
+                    content = self._jasper_execute(ex, d, js, pdf_list, attach, reload, context=self.context)
+            else:
+                content = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, context=self.context)
 
         ##
         # We use pyPdf to marge all PDF in unique file
         #
-        if len(ids) > 1:
+        if len(pdf_list) > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
-                print 'pdf ', pdf
                 tmp_pdf = PdfFileReader(open(pdf, 'r'))
                 for page in range(tmp_pdf.getNumPages()):
                     tmp_content.addPage(tmp_pdf.getPage(page))
