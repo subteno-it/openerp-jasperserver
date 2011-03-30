@@ -29,12 +29,13 @@ import base64
 
 from report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
-from lxml.etree import Element, tostring
+#from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG
-from tempfile import mkstemp
-from subprocess import call
+from common import BODY_TEMPLATE, parameter
+#from tempfile import mkstemp
+#from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
-from tools.misc import ustr
+#from tools.misc import ustr
 from pyPdf import PdfFileWriter, PdfFileReader
 
 ##
@@ -59,35 +60,6 @@ logger = Logger()
 
 def log_debug(message):
     logger.notifyChannel('jasper_server', LOG_DEBUG, ' %s' % message)
-
-##
-# Construct the body template for SOAP
-#
-BODY_TEMPLATE = """<SOAP-ENV:Envelope
- xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
- xmlns:xsd="http://www.w3.org/2001/XMLSchema"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
- xmlns:ns4="http://www.jaspersoft.com/client"
- SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-<SOAP-ENV:Body>
-<ns4:runReport>
-<request xsi:type="xsd:string">
-    &lt;request operationName=&quot;runReport&quot;&gt;
-        &lt;argument name=&quot;RUN_OUTPUT_FORMAT&quot;&gt;%(format)s&lt;/argument&gt;
-        &lt;argument name=&quot;PAGE&quot;&gt;0&lt;/argument&gt;
-        &lt;argument name=&quot;REPORT_LOCALE&quot;&gt;&lt;![CDATA[fr]]&gt;&lt;/argument&gt;
-        &lt;argument name=&quot;USE_DIME_ATTACHMENTS&quot;&gt;
-            &lt;![CDATA[1]]&gt;
-        &lt;/argument&gt;
-        &lt;resourceDescriptor name=&quot;&quot; wsType=&quot;reportUnit&quot; uriString=&quot;%(path)s&quot; isNew=&quot;false&quot;&gt;
-            &lt;label&gt;&lt;/label&gt;
-            %(param)s
-        &lt;/resourceDescriptor&gt;
-    &lt;/request&gt;
-</request></ns4:runReport>
-</SOAP-ENV:Body>
-</SOAP-ENV:Envelope>"""
 
 
 class Report(object):
@@ -186,7 +158,7 @@ class Report(object):
                     else:
                         d_par[p.name] = p.code
 
-                par = self.parameter(self.data['form'], d_par)
+                par = parameter(self.data['form'], d_par)
                 body_args = {
                     'format': self.data['form']['params'][0],
                     'path': self.data['form']['params'][1],
@@ -271,71 +243,5 @@ class Report(object):
 
         self.obj = external_pdf(content)
         return (self.obj.pdf, 'pdf')
-
-    @staticmethod
-    def entities(data):
-        """
-        Convert XML string to XML entities
-
-        @type  data: str
-        @param data: XML String
-        @rtype: str
-        @return: XML string converted
-        """
-        data = data.replace('&', '&amp;')
-        data = data.replace('<', '&lt;')
-        data = data.replace('>', '&gt;')
-        data = data.replace('"', '&quot;')
-        data = data.replace("'", "&apos;")
-        return data
-
-    def parameter(self, dico, resource):
-        """
-        Convert value to a parameter for SOAP query
-
-        @type  dico: dict
-        @param dico: Contain parameter starts with OERP_
-        @type  resource: dict
-        @param resource: Contain parameter starts with WIZARD_
-        @rtype: xmlstring
-        @return: XML String representation
-        """
-        res = ''
-        for key in resource:
-            log_debug('PARAMETER -> RESOURCE: %s' % key)
-            if key in 'xml_data':
-                continue
-            e = Element('parameter')
-            e.set('name', 'OERP_%s' % key.upper())
-            e.text = ustr(resource[key])
-            res += tostring(e) + '\n'
-
-        for key in dico:
-            log_debug('PARAMETER -> DICO: %s' % key)
-            if key in 'params':
-                continue
-            val = dico[key]
-            e = Element('parameter')
-            e.set('name', 'WIZARD_%s' % key.upper())
-            if isinstance(val, list):
-                if isinstance(val[0], tuple):
-                    e.text = ','.join(map(str, val[0][2]))
-                else:
-                    e.text = ','.join(map(str, val))
-            else:
-                e.text = val and ustr(val) or ''
-            res += tostring(e) + '\n'
-
-        for key, val in [('REPORT_LOCALE', 'fr_FR'), ('IS_JASPERSERVER', 'yes')]:
-            e = Element('parameter')
-            e.set('name', key)
-            e.text = ustr(val)
-            res += tostring(e) + '\n'
-
-        res = self.entities(res)
-        if resource.get('xml_data'):
-            res += '&lt;parameter class=&quot;java.lang.String&quot; name=&quot;XML_DATA&quot;&gt;'
-            res += '&lt;![CDATA[&quot;%s&quot;]]&gt;&lt;/parameter&gt;' % resource['xml_data']
-        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
