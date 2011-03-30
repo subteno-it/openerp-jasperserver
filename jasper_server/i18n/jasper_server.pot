@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-09-01 21:04:06+0000\n"
-"PO-Revision-Date: 2010-09-01 21:04:06+0000\n"
+"POT-Creation-Date: 2011-03-30 17:30:10+0000\n"
+"PO-Revision-Date: 2011-03-30 17:30:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -67,6 +67,11 @@ msgid "Enter the address of the repository"
 msgstr ""
 
 #. module: jasper_server
+#: help:jasper.document,child_ids:0
+msgid "Select reports to launch when this report is called"
+msgstr ""
+
+#. module: jasper_server
 #: model:ir.actions.act_window,name:jasper_server.act_open_document_extension_view
 #: model:ir.model,name:jasper_server.model_jasper_document_extension
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_document_extension
@@ -115,8 +120,14 @@ msgid "c: for user s company"
 msgstr ""
 
 #. module: jasper_server
-#: model:jasper.document,name:jasper_server.jasper_document_4
-msgid "Partner List2"
+#: view:jasper.document:0
+msgid "Enter the name of the view"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.actions.act_window,name:jasper_server.action_jasper_server
+#: model:ir.ui.menu,name:jasper_server.menu_jasper_server
+msgid "Jasper Server configuration"
 msgstr ""
 
 #. module: jasper_server
@@ -131,9 +142,8 @@ msgid "OK"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.actions.act_window,name:jasper_server.action_jasper_server
-#: model:ir.ui.menu,name:jasper_server.menu_jasper_server
-msgid "Jasper Server configuration"
+#: selection:jasper.document,mode:0
+msgid "Multiple Report"
 msgstr ""
 
 #. module: jasper_server
@@ -145,6 +155,11 @@ msgstr ""
 #: code:addons/jasper_server/wizard/format_choice.py:0
 #, python-format
 msgid "No report found!"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,attachment:0
+msgid "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
 msgstr ""
 
 #. module: jasper_server
@@ -169,14 +184,19 @@ msgid "Service name"
 msgstr ""
 
 #. module: jasper_server
+#: view:jasper.document:0
+msgid "Select report to launch when this report is launched"
+msgstr ""
+
+#. module: jasper_server
 #: code:addons/jasper_server/wizard/format_choice.py:0
 #, python-format
 msgid "No implemented yet!"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.document,report_unit:0
-msgid "Report Unit"
+#: field:jasper.document,sql_name:0
+msgid "Name of view"
 msgstr ""
 
 #. module: jasper_server
@@ -226,8 +246,8 @@ msgid "Enable"
 msgstr ""
 
 #. module: jasper_server
-#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_5
-msgid "Microsoft® Excel 2007"
+#: field:jasper.document,child_ids:0
+msgid "Child report"
 msgstr ""
 
 #. module: jasper_server
@@ -273,6 +293,11 @@ msgstr ""
 #. module: jasper_server
 #: field:jasper.document.extension,extension:0
 msgid "Extension"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,sequence:0
+msgid "The sequence is used when launch a multple report, to select the order to launch"
 msgstr ""
 
 #. module: jasper_server
@@ -330,13 +355,8 @@ msgid "Jasper Report"
 msgstr ""
 
 #. module: jasper_server
-#: view:jasper.document:0
-msgid "If report is base on SQL view, inert it here"
-msgstr ""
-
-#. module: jasper_server
-#: help:jasper.document,attachment:0
-msgid "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
+#: field:jasper.document,report_unit:0
+msgid "Report Unit"
 msgstr ""
 
 #. module: jasper_server
@@ -481,6 +501,11 @@ msgid "Jasper Server"
 msgstr ""
 
 #. module: jasper_server
+#: model:jasper.document,name:jasper_server.jasper_document_4
+msgid "Partner List"
+msgstr ""
+
+#. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_6
 msgid "Microsoft® Excel (97 -> 2003)"
 msgstr ""
@@ -516,10 +541,20 @@ msgid "Password"
 msgstr ""
 
 #. module: jasper_server
+#: view:jasper.document:0
+msgid "Enter the select query of the view only"
+msgstr ""
+
+#. module: jasper_server
 #: field:jasper.document,name:0
 #: field:jasper.document.extension,name:0
 #: field:jasper.document.parameter,name:0
 msgid "Name"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Reports"
 msgstr ""
 
 #. module: jasper_server
@@ -539,6 +574,11 @@ msgid "Context"
 msgstr ""
 
 #. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_5
+msgid "Microsoft® Excel 2007"
+msgstr ""
+
+#. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,model:0
 msgid "Model"
 msgstr ""
@@ -554,6 +594,7 @@ msgid "Reload from Attachment"
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document,sequence:0
 #: field:jasper.server,sequence:0
 msgid "Sequence"
 msgstr ""
@@ -564,8 +605,8 @@ msgid "Jasper Server Interface"
 msgstr ""
 
 #. module: jasper_server
-#: wizard_field:jasper_server.make_template,init,model_id:0
-msgid "Id"
+#: field:jasper.server,port:0
+msgid "Port"
 msgstr ""
 
 #. module: jasper_server
@@ -579,8 +620,8 @@ msgid "Enter the service name register at start by OpenERP Server"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.server,port:0
-msgid "Port"
+#: wizard_field:jasper_server.make_template,init,model_id:0
+msgid "Id"
 msgstr ""
 
 #. module: jasper_server
