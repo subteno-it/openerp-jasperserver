@@ -52,11 +52,26 @@ except ImportError:
 class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
-        self.pdf = pdf
+        self.content = pdf
         self.output_type = 'pdf'
 
     def _render(self):
-        return self.pdf
+        return self.content
+
+    def set_output_type(self, format):
+        """
+        Change the format of the file
+
+        :param format: file format (eg: pdf)
+        :type  format: str
+        """
+        self.output_type = format
+
+    def get_output_type(self,):
+        """
+        Retrieve the format of the attachment
+        """
+        return self.output_type
 
 
 def log_debug(message):
@@ -159,6 +174,8 @@ class Report(object):
                     else:
                         d_par[p.name] = p.code
 
+                self.outputFormat = doc.format.lower()
+
                 par = parameter(self.data['form'], d_par)
                 body_args = {
                     'format': self.data['form']['params'][0],
@@ -243,6 +260,7 @@ class Report(object):
                 os.remove(f)
 
         self.obj = external_pdf(content)
-        return (self.obj.pdf, 'pdf')
+        self.obj.set_output_type(self.outputFormat)
+        return (self.obj.content, self.outputFormat)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
