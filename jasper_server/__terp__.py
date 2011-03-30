@@ -34,7 +34,7 @@ This module required library to work properly
 
     """,
     'author': 'Everlibre,SYLEAM',
-    'website': 'http://everlibre.fr',
+    'website': 'http://www.syleam.fr',
     'depends': [
         'base',
     ],
