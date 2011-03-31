@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-03-30 17:30:10+0000\n"
-"PO-Revision-Date: 2011-03-30 17:30:10+0000\n"
+"POT-Creation-Date: 2011-03-31 10:06:59+0000\n"
+"PO-Revision-Date: 2011-03-31 10:06:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -370,6 +370,11 @@ msgid "Save template"
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document,only_one:0
+msgid "Launch one time for all ids"
+msgstr ""
+
+#. module: jasper_server
 #: field:jasper.server,repo:0
 msgid "Repository"
 msgstr ""
@@ -414,6 +419,11 @@ msgstr ""
 #. module: jasper_server
 #: view:jasper.document:0
 msgid "Processes"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,only_one:0
+msgid "Launch the report only one time on multiple id"
 msgstr ""
 
 #. module: jasper_server

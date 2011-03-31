@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-03-30 17:30:10+0000\n"
-"PO-Revision-Date: 2011-03-30 19:33+0100\n"
+"POT-Creation-Date: 2011-03-31 10:06:59+0000\n"
+"PO-Revision-Date: 2011-03-31 12:08+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -376,6 +376,11 @@ msgid "Save template"
 msgstr "Sauvegarder modèle"
 
 #. module: jasper_server
+#: field:jasper.document,only_one:0
+msgid "Launch one time for all ids"
+msgstr "Lancer une seule fois pour tous les IDS"
+
+#. module: jasper_server
 #: field:jasper.server,repo:0
 msgid "Repository"
 msgstr "Dépôt"
@@ -421,6 +426,11 @@ msgstr "XML"
 #: view:jasper.document:0
 msgid "Processes"
 msgstr "Processus"
+
+#. module: jasper_server
+#: help:jasper.document,only_one:0
+msgid "Launch the report only one time on multiple id"
+msgstr "Lancer le rapport une seule fois pour les ID passés"
 
 #. module: jasper_server
 #: field:jasper.document,attachment:0
