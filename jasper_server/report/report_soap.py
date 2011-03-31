@@ -250,14 +250,21 @@ class Report(object):
         #
         pdf_list = []
         doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
+        one_check = {}
+        one_check[doc.id] = True
         for ex in ids:
             if doc.mode == 'multi':
                 for d in doc.child_ids:
-                    print 'd: ', d.name
+                    if d.only_one and one_check.get(d.id, False):
+                        continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
                     content = self._jasper_execute(ex, d, js, pdf_list, attach, reload, context=self.context)
+                    one_check[d.id] = True
             else:
+                if doc.only_one and one_check.get(doc.id, False):
+                    continue
                 content = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, context=self.context)
+                one_check[doc.id] = True
 
         ##
         # We use pyPdf to marge all PDF in unique file

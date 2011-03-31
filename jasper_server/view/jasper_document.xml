@@ -197,7 +197,7 @@
                         </page>
                         <page string="Reports" attrs="{'invisible': [('mode','!=','multi')]}">
                             <separator string="Select report to launch when this report is launched" colspan="4"/>
-                            <field name="child_ids" nolabel="1" domain="[('mode','!=', 'multi'),('model_id','=',model_id),('active','=',True)]"/>
+                            <field name="child_ids" nolabel="1" domain="[('mode','!=', 'multi'),('model_id','=',model_id),('enabled','=',True)]"/>
                         </page>
                     </notebook>
                 </form>
