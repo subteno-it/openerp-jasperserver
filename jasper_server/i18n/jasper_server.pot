@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-03-30 17:39+0000\n"
-"PO-Revision-Date: 2011-03-30 17:39+0000\n"
+"POT-Creation-Date: 2011-03-31 07:16+0000\n"
+"PO-Revision-Date: 2011-03-31 07:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -120,6 +120,27 @@ msgstr ""
 #. module: jasper_server
 #: view:jasper.document.parameter:0
 msgid "c: for user s company"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.module.module,description:jasper_server.module_meta_information
+msgid "This module interface JasperReport Server with OpenERP\n"
+"Features:\n"
+"- Document source must be in CSV, XML\n"
+"- Save document as attachment on object\n"
+"- Retrieve attachment if present\n"
+"- Launch multiple reports and merge in one printing action\n"
+"- Add additionnals parameters (ex from fields function)\n"
+"- Affect group on report\n"
+"- Use context to display or not the print button (eg: in stock.picking separate per type)\n"
+"- Execute SQL query before and after treatement\n"
+"- Launch report based on SQL View\n"
+"\n"
+"This module required library to work properly\n"
+"\n"
+"# pip install httplib2 (>= 0.6.0)\n"
+"# pip install pyPdf (>= 1.13)\n"
+""
 msgstr ""
 
 #. module: jasper_server
@@ -543,18 +564,6 @@ msgstr ""
 #: field:jasper.document.extension,name:0
 #: field:jasper.document.parameter,name:0
 msgid "Name"
-msgstr ""
-
-#. module: jasper_server
-#: model:ir.module.module,description:jasper_server.module_meta_information
-msgid "This module interface JasperReport Server\n"
-"\n"
-"This module required library to work properly\n"
-"\n"
-"# pip install httplib2 (>= 0.6.0)\n"
-"# pip install pyPdf (>= 1.13)\n"
-"\n"
-"    "
 msgstr ""
 
 #. module: jasper_server
