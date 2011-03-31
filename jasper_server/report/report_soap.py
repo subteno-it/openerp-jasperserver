@@ -38,6 +38,7 @@ from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from common import BODY_TEMPLATE, parameter
 #from tools.misc import ustr
 from pyPdf import PdfFileWriter, PdfFileReader
+from tools.translate import _
 
 _logger = logging.getLogger('jasper_server')
 
@@ -142,6 +143,8 @@ class Report(object):
 
             # Search the default address for the company.
             addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id], ['default'])['default']
+            if not addr_id:
+                raise Exception(_('Error\nmain company have no address defined on the partner!'))
             addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
             d_par['company_street'] = addr.street or ''
             d_par['company_street2'] = addr.street2 or ''
