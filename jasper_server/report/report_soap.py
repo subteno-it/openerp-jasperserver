@@ -252,6 +252,7 @@ class Report(object):
         doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
         one_check = {}
         one_check[doc.id] = True
+        content = ''
         for ex in ids:
             if doc.mode == 'multi':
                 for d in doc.child_ids:
