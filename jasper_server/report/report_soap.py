@@ -141,6 +141,8 @@ class Report(object):
 
             # Search the default address for the company.
             addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id], ['default'])['default']
+            if not addr_id:
+                raise Exception('Error\nmain company have no address defined on the partner!')
             addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
             d_par['company_street'] = addr.street or ''
             d_par['company_street2'] = addr.street2 or ''
