@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-03-31 10:06:59+0000\n"
-"PO-Revision-Date: 2011-03-31 12:08+0100\n"
+"POT-Creation-Date: 2011-03-31 16:25:00+0000\n"
+"PO-Revision-Date: 2011-03-31 18:26+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -117,6 +117,16 @@ msgstr "Indenter le XML ?"
 #: view:jasper.document.parameter:0
 msgid "c: for user s company"
 msgstr "c: pour la companie de l'utilisateur"
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:0
+#, python-format
+msgid ""
+"Error\n"
+"main company have no address defined on the partner!"
+msgstr ""
+"Erreur\n"
+"La société principale n'a pas d'adresse de définit sur son partenaire!"
 
 #. module: jasper_server
 #: view:jasper.document:0
