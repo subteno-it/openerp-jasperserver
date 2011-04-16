@@ -99,6 +99,7 @@ class jasper_document(osv.osv):
         'child_ids': fields.many2many('jasper.document', 'jasper_document_multi_rel', 'source_id', 'destin_id', 'Child report', help='Select reports to launch when this report is called'),
         'sequence': fields.integer('Sequence', help='The sequence is used when launch a multple report, to select the order to launch'),
         'only_one': fields.boolean('Launch one time for all ids', help='Launch the report only one time on multiple id'),
+        'duplicate': fields.char('Duplicate', size=256, help="Indicate the number of duplicate copie, use o as object to evaluate\neg: o.partner_id.copy\nor\n'1'", ),
     }
 
     _defaults = {
@@ -109,6 +110,7 @@ class jasper_document(osv.osv):
         'depth': lambda *a: 0,
         'sequence': lambda *a: 100,
         'format': lambda *a: 'PDF',
+        'duplicate': lambda *a: "'1'",
     }
 
     def __init__(self, pool, cr):
