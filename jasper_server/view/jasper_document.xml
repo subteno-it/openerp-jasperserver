@@ -162,6 +162,7 @@
                             <field name="mode"/>
                             <field name="toolbar" select="1"/>
                             <field name="ctx" colspan="4"/>
+                            <field name="only_one" attrs="{'readonly': [('mode','=', 'multi')]}"/>
                             <separator string="Output format" colspan="4"/>
                             <field name="format_choice"/>
                             <field name="format"/>

@@ -98,6 +98,7 @@ class jasper_document(osv.osv):
         'sql_name': fields.char('Name of view', size=128, ),
         'child_ids': fields.many2many('jasper.document', 'jasper_document_multi_rel', 'source_id', 'destin_id', 'Child report', help='Select reports to launch when this report is called'),
         'sequence': fields.integer('Sequence', help='The sequence is used when launch a multple report, to select the order to launch'),
+        'only_one': fields.boolean('Launch one time for all ids', help='Launch the report only one time on multiple id'),
     }
 
     _defaults = {
