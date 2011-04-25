@@ -169,6 +169,8 @@
                             <separator string="Attachment" colspan="4"/>
                             <field name="attachment" colspan="4"/>
                             <field name="attachment_use"/>
+                            <separator string="Expression for duplicate the number of copie" colspan="4"/>
+                            <field name="duplicate" colspan="4"/>
                         </page>
                         <page string="Groups">
                             <field name="group_ids" nolabel="1" colspan="4"/>

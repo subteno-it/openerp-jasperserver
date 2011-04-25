@@ -109,6 +109,16 @@ class Report(object):
         aname = False
         if attachment:
             aname = eval(attachment, {'object': cur_obj, 'time': time})
+
+        duplicate = 1
+        if current_document.duplicate:
+            try:
+                duplicate = int(eval(current_document.duplicate, {'o': cur_obj,}))
+            except SyntaxError, e:
+                _logger.warning('Erreur %s' % str(e))
+
+        log_debug('Number of duplicate copy: %d' % int(duplicate))
+
         if reload and aname:
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
                     [('datas_fname', '=', aname + '.pdf'), ('res_model', '=', self.model), ('res_id', '=', ex)])
@@ -230,7 +240,7 @@ class Report(object):
             if 'number_of_print' in fld:
                 self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
 
-        return content
+        return (content, duplicate)
 
     def execute(self):
         """Launch the report and return it"""
@@ -256,32 +266,35 @@ class Report(object):
         doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
         one_check = {}
         one_check[doc.id] = True
+        content = ''
+        duplicate = 1
         for ex in ids:
             if doc.mode == 'multi':
                 for d in doc.child_ids:
                     if d.only_one and one_check.get(d.id, False):
                         continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
-                    content = self._jasper_execute(ex, d, js, pdf_list, attach, reload, context=self.context)
+                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, attach, reload, context=self.context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                content = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, context=self.context)
+                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, context=self.context)
                 one_check[doc.id] = True
 
         ##
         # We use pyPdf to marge all PDF in unique file
         #
-        if len(pdf_list) > 1:
+        if len(pdf_list) > 1 or duplicate > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
-                tmp_pdf = PdfFileReader(open(pdf, 'r'))
-                for page in range(tmp_pdf.getNumPages()):
-                    tmp_content.addPage(tmp_pdf.getPage(page))
-                c = StringIO()
-                tmp_content.write(c)
-                content = c.getvalue()
+                for x in range(0, duplicate):
+                    tmp_pdf = PdfFileReader(open(pdf, 'r'))
+                    for page in range(tmp_pdf.getNumPages()):
+                        tmp_content.addPage(tmp_pdf.getPage(page))
+                    c = StringIO()
+                    tmp_content.write(c)
+                    content = c.getvalue()
 
             for f in pdf_list:
                 os.remove(f)
