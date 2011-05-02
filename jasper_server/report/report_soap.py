@@ -96,12 +96,19 @@ class Report(object):
         self.outputFormat = 'pdf'
         self.path = None
 
-    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, attachment='', reload=False, context=None):
+    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, attachment='', reload=False,
+                        ids=None, attrs=None, context=None):
         """
         After retrieve datas to launch report, execute it and return the content
         """
         if context is None:
             context = {}
+
+        if ids is None:
+            ids = []
+
+        if attrs is None:
+            attrs = {}
 
         js_obj = self.pool.get('jasper.server')
         cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
@@ -112,7 +119,7 @@ class Report(object):
         duplicate = 1
         if current_document.duplicate:
             try:
-                duplicate = int(eval(current_document.duplicate, {'o': cur_obj,}))
+                duplicate = int(eval(current_document.duplicate, {'o': cur_obj}))
             except SyntaxError, e:
                 logger.notifyChannel('jasper_server', LOG_WARNING, 'Erreur %s' % str(e))
 
@@ -130,9 +137,13 @@ class Report(object):
         else:
             # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
             # We cannot use $X{IN, field, Collection}
-            d_par = {'active_id': ex,
-                     'active_ids': ex,
-                     'model': self.model}
+            # use $P!{OERP_ACTIVE_IDS} indeed as
+            # ids in ($P!{OERP_ACTIVE_IDS} (exclamation mark)
+            d_par = {
+                'active_id': ex,
+                'active_ids': ','.join(ids),
+                'model': self.model,
+            }
 
             # If XML we must compose it
             if self.data['form']['params'][2] == 'xml':
@@ -273,12 +284,12 @@ class Report(object):
                     if d.only_one and one_check.get(d.id, False):
                         continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
-                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, attach, reload, context=self.context)
+                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, attach, reload, ids, att, context=self.context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, context=self.context)
+                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, ids, att, context=self.context)
                 one_check[doc.id] = True
 
         ##
