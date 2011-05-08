@@ -1,4 +1,7 @@
-﻿CREATE OR REPLACE FUNCTION get_trad(langue varchar, typ varchar, nom varchar, texte varchar) RETURNS varchar AS $$
+--
+-- Query to translate term in SQL query
+--
+CREATE OR REPLACE FUNCTION get_trad(langue varchar, typ varchar, nom varchar, texte varchar) RETURNS varchar AS $$
 	DECLARE
 	  resultat varchar;
 	  resultat1 varchar;
