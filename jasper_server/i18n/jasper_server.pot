@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.1\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-03-31 07:16+0000\n"
-"PO-Revision-Date: 2011-03-31 07:16+0000\n"
+"POT-Creation-Date: 2011-05-08 09:49+0000\n"
+"PO-Revision-Date: 2011-05-08 09:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -123,24 +123,8 @@ msgid "c: for user s company"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.module.module,description:jasper_server.module_meta_information
-msgid "This module interface JasperReport Server with OpenERP\n"
-"Features:\n"
-"- Document source must be in CSV, XML\n"
-"- Save document as attachment on object\n"
-"- Retrieve attachment if present\n"
-"- Launch multiple reports and merge in one printing action\n"
-"- Add additionnals parameters (ex from fields function)\n"
-"- Affect group on report\n"
-"- Use context to display or not the print button (eg: in stock.picking separate per type)\n"
-"- Execute SQL query before and after treatement\n"
-"- Launch report based on SQL View\n"
-"\n"
-"This module required library to work properly\n"
-"\n"
-"# pip install httplib2 (>= 0.6.0)\n"
-"# pip install pyPdf (>= 1.13)\n"
-""
+#: view:jasper.document:0
+msgid "Expression for duplicate the number of copie"
 msgstr ""
 
 #. module: jasper_server
@@ -346,6 +330,13 @@ msgid "Check this if you want to hide button in toolbar"
 msgstr ""
 
 #. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:157
+#, python-format
+msgid "Error\n"
+"main company have no address defined on the partner!"
+msgstr ""
+
+#. module: jasper_server
 #: field:jasper.document,before:0
 msgid "Before"
 msgstr ""
@@ -364,6 +355,11 @@ msgid "Jasper Report"
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document,duplicate:0
+msgid "Duplicate"
+msgstr ""
+
+#. module: jasper_server
 #: field:jasper.document,report_unit:0
 msgid "Report Unit"
 msgstr ""
@@ -376,6 +372,11 @@ msgstr ""
 #. module: jasper_server
 #: wizard_view:jasper_server.make_template,valid:0
 msgid "Save template"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,only_one:0
+msgid "Launch one time for all ids"
 msgstr ""
 
 #. module: jasper_server
@@ -423,6 +424,11 @@ msgstr ""
 #. module: jasper_server
 #: view:jasper.document:0
 msgid "Processes"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,only_one:0
+msgid "Launch the report only one time on multiple id"
 msgstr ""
 
 #. module: jasper_server
@@ -505,11 +511,6 @@ msgid "Jasper Server"
 msgstr ""
 
 #. module: jasper_server
-#: model:jasper.document,name:jasper_server.jasper_document_4
-msgid "Partner List"
-msgstr ""
-
-#. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_6
 msgid "Microsoft® Excel (97 -> 2003)"
 msgstr ""
@@ -555,15 +556,18 @@ msgid "Enter the select query of the view only"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.module.module,shortdesc:jasper_server.module_meta_information
-msgid "JasperReport Server Interface"
-msgstr ""
-
-#. module: jasper_server
 #: field:jasper.document,name:0
 #: field:jasper.document.extension,name:0
 #: field:jasper.document.parameter,name:0
 msgid "Name"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,duplicate:0
+msgid "Indicate the number of duplicate copie, use o as object to evaluate\n"
+"eg: o.partner_id.copy\n"
+"or\n"
+"'1'"
 msgstr ""
 
 #. module: jasper_server
@@ -614,8 +618,8 @@ msgid "Sequence"
 msgstr ""
 
 #. module: jasper_server
-#: wizard_field:jasper_server.make_template,init,model_id:0
-msgid "Id"
+#: field:jasper.server,port:0
+msgid "Port"
 msgstr ""
 
 #. module: jasper_server
@@ -629,8 +633,8 @@ msgid "Enter the service name register at start by OpenERP Server"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.server,port:0
-msgid "Port"
+#: wizard_field:jasper_server.make_template,init,model_id:0
+msgid "Id"
 msgstr ""
 
 #. module: jasper_server
