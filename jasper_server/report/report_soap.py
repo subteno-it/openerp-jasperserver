@@ -122,9 +122,16 @@ class Report(object):
             try:
                 duplicate = int(eval(current_document.duplicate, {'o': cur_obj}))
             except SyntaxError, e:
-                _logger.warning('Erreur %s' % str(e))
+                _logger.warning('Error %s' % str(e))
 
         log_debug('Number of duplicate copy: %d' % int(duplicate))
+
+        language = self.context.get('lang', 'en_US')
+        if current_document.lang:
+            try:
+                language = eval(current_document.lang, {'o': cur_obj})
+            except SyntaxError, e:
+                _logger.warning('Error %s' % str(e))
 
         if reload and aname:
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
@@ -142,11 +149,12 @@ class Report(object):
             # ids in ($P!{OERP_ACTIVE_IDS} (exclamation mark)
             d_par = {
                 'active_id': ex,
-                'active_ids': ','.join(ids),
+                'active_ids': ','.join(str(i) for i in ids),
                 'model': self.model,
                 'sql_query': attrs.get('query', "SELECT 'NO QUERY' as nothing"),
                 'sql_query_where': attrs.get('query_where', '1 = 1'),
-                'report_name': attrs.get('report_name', _('No report name'))
+                'report_name': attrs.get('report_name', _('No report name')),
+                'lang': language or 'en_US',
             }
 
             # If XML we must compose it
