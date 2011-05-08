@@ -144,6 +144,9 @@ class Report(object):
                 'active_id': ex,
                 'active_ids': ','.join(ids),
                 'model': self.model,
+                'sql_query': attrs.get('query', "SELECT 'NO QUERY' as nothing"),
+                'sql_query_where': attrs.get('query_where', '1 = 1'),
+                'report_name': attrs.get('report_name', _('No report name'))
             }
 
             # If XML we must compose it
