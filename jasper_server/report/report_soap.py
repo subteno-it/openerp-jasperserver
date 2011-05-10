@@ -287,7 +287,7 @@ class Report(object):
         pdf_list = []
         doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
         one_check = {}
-        one_check[doc.id] = True
+        one_check[doc.id] = False
         content = ''
         duplicate = 1
         for ex in ids:
