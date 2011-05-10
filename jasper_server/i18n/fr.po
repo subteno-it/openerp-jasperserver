@@ -5,15 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-03-31 07:16+0000\n"
-"PO-Revision-Date: 2011-03-31 22:22+0000\n"
+"POT-Creation-Date: 2011-05-08 13:36+0000\n"
+"PO-Revision-Date: 2011-05-08 13:45+0000\n"
 "Last-Translator: Christophe Chauvet - http://www.syleam.fr/ <Unknown>\n"
 "Language-Team: french\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-26 06:04+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-05-09 05:59+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: jasper_server
 #: selection:jasper.document,format_choice:0
@@ -35,7 +35,10 @@ msgstr ""
 "le rapport d'édition"
 
 #. module: jasper_server
-#: code:addons/jasper_server/wizard/format_choice.py:0
+#: code:addons/jasper_server/report/jasper.py:46
+#: code:addons/jasper_server/wizard/format_choice.py:60
+#: code:addons/jasper_server/wizard/format_choice.py:67
+#: code:addons/jasper_server/wizard/format_choice.py:79
 #, python-format
 msgid "Error"
 msgstr "Erreur"
@@ -132,42 +135,9 @@ msgid "c: for user s company"
 msgstr "c: pour la companie de l'utilisateur"
 
 #. module: jasper_server
-#: model:ir.module.module,description:jasper_server.module_meta_information
-msgid ""
-"This module interface JasperReport Server with OpenERP\n"
-"Features:\n"
-"- Document source must be in CSV, XML\n"
-"- Save document as attachment on object\n"
-"- Retrieve attachment if present\n"
-"- Launch multiple reports and merge in one printing action\n"
-"- Add additionnals parameters (ex from fields function)\n"
-"- Affect group on report\n"
-"- Use context to display or not the print button (eg: in stock.picking "
-"separate per type)\n"
-"- Execute SQL query before and after treatement\n"
-"- Launch report based on SQL View\n"
-"\n"
-"This module required library to work properly\n"
-"\n"
-"# pip install httplib2 (>= 0.6.0)\n"
-"# pip install pyPdf (>= 1.13)\n"
-msgstr ""
-"Ce module realise l'interconnexion en JasperReport Server et OpenERP\n"
-"Fonctionnalitées:- La source de données peut être de type CSV, XML\n"
-"- Sauvegarder les documents comme pièce jointe de l'objet\n"
-"- Reimprimer depuis la pièce jointe si présente\n"
-"- Lancer de multiple rapport en une fois et les fusionnés\n"
-"- Ajout de paramètres additionnels (ex champs fonction)\n"
-"- Affecter des groupes au rapports\n"
-"- Utiliser le contexte pour afficher ou pas le bouton d'impression (ex: "
-"séparation par type sur les stock.picking)\n"
-"- Exécuter une requête SQL avant et après un traitement\n"
-"- Lancer un rapport basé sur une vue SQL\n"
-"\n"
-"Ce module nécessite des librairies Python pour fonctionner correctement\n"
-"\n"
-"# pip install httplib2 (>= 0.6.0)\n"
-"# pip install pyPdf (>= 1.13)\n"
+#: view:jasper.document:0
+msgid "Expression for duplicate the number of copie"
+msgstr "Expression poru dupliquer le nombre de copie"
 
 #. module: jasper_server
 #: view:jasper.document:0
@@ -203,7 +173,8 @@ msgid "Documents extensions"
 msgstr "Extensions des documents"
 
 #. module: jasper_server
-#: code:addons/jasper_server/wizard/format_choice.py:0
+#: code:addons/jasper_server/wizard/format_choice.py:60
+#: code:addons/jasper_server/wizard/format_choice.py:79
 #, python-format
 msgid "No report found!"
 msgstr "Pas de rapport trouvé!"
@@ -246,7 +217,7 @@ msgid "Select report to launch when this report is launched"
 msgstr "Sélectionner les rapports à lancer lorsque le rapport est lancé"
 
 #. module: jasper_server
-#: code:addons/jasper_server/wizard/format_choice.py:0
+#: code:addons/jasper_server/wizard/format_choice.py:67
 #, python-format
 msgid "No implemented yet!"
 msgstr "Pas encore implémenté!"
@@ -328,6 +299,12 @@ msgid "Rich Text Format"
 msgstr "Format Texte Enrichi"
 
 #. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:156
+#, python-format
+msgid "No report name"
+msgstr "Pas de nom de rapport"
+
+#. module: jasper_server
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_configuration
 msgid "Configuration"
 msgstr "Configuration"
@@ -383,6 +360,16 @@ msgstr ""
 "Cocher ceci si vous souhaitez masquer le bouton dans la barre à droite"
 
 #. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:179
+#, python-format
+msgid ""
+"Error\n"
+"main company have no address defined on the partner!"
+msgstr ""
+"Erreur\n"
+"La société principale n'a pas d'adresse définit sur le partenaire!"
+
+#. module: jasper_server
 #: field:jasper.document,before:0
 msgid "Before"
 msgstr "Avant"
@@ -401,6 +388,11 @@ msgid "Jasper Report"
 msgstr "Jasper Report"
 
 #. module: jasper_server
+#: field:jasper.document,duplicate:0
+msgid "Duplicate"
+msgstr "Duplicata"
+
+#. module: jasper_server
 #: field:jasper.document,report_unit:0
 msgid "Report Unit"
 msgstr "Report Unit"
@@ -414,6 +406,11 @@ msgstr "Pièce jointe"
 #: wizard_view:jasper_server.make_template,valid:0
 msgid "Save template"
 msgstr "Sauvegarder modèle"
+
+#. module: jasper_server
+#: field:jasper.document,only_one:0
+msgid "Launch one time for all ids"
+msgstr "Lancer une fois pour tous les IDS"
 
 #. module: jasper_server
 #: field:jasper.server,repo:0
@@ -453,15 +450,19 @@ msgid "Hide in toolbar"
 msgstr "Masque de la barre"
 
 #. module: jasper_server
-#: view:jasper.document:0
-#: selection:jasper.document,mode:0
-msgid "XML"
-msgstr "XML"
+#: field:jasper.document,lang:0
+msgid "Lang"
+msgstr "Langue"
 
 #. module: jasper_server
 #: view:jasper.document:0
 msgid "Processes"
 msgstr "Processus"
+
+#. module: jasper_server
+#: help:jasper.document,only_one:0
+msgid "Launch the report only one time on multiple id"
+msgstr "Lancer le rapport une seule fois sur de multiple ID"
 
 #. module: jasper_server
 #: field:jasper.document,attachment:0
@@ -543,14 +544,31 @@ msgid "Document extensions"
 msgstr "Extensions des documents"
 
 #. module: jasper_server
+#: view:jasper.document:0
+#: selection:jasper.document,mode:0
+msgid "XML"
+msgstr "XML"
+
+#. module: jasper_server
 #: view:jasper.server:0
 msgid "Jasper Server"
 msgstr "Jasper Server"
 
 #. module: jasper_server
-#: model:jasper.document,name:jasper_server.jasper_document_4
-msgid "Partner List"
-msgstr "Liste des partenaires"
+#: help:jasper.document,lang:0
+msgid ""
+"Indicate the lang to use for this report, use o as object to evaluate\n"
+"eg: o.partner_id.lang\n"
+"or\n"
+"'fr_FR'\n"
+"default use user's lang"
+msgstr ""
+"Indiquer la langue a utilisée pour ce rapport, utilisez o pour l'objet a "
+"évalué\n"
+"ex: o.partner_id.lang\n"
+"or\n"
+"'fr_FR'\n"
+"par defaut la langue est celle de l'utilisateur"
 
 #. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_6
@@ -598,16 +616,24 @@ msgid "Enter the select query of the view only"
 msgstr "Entrer la requête SELECT de la vue seulement"
 
 #. module: jasper_server
-#: model:ir.module.module,shortdesc:jasper_server.module_meta_information
-msgid "JasperReport Server Interface"
-msgstr "Interface JasperReport Server"
-
-#. module: jasper_server
 #: field:jasper.document,name:0
 #: field:jasper.document.extension,name:0
 #: field:jasper.document.parameter,name:0
 msgid "Name"
 msgstr "Nom"
+
+#. module: jasper_server
+#: help:jasper.document,duplicate:0
+msgid ""
+"Indicate the number of duplicate copie, use o as object to evaluate\n"
+"eg: o.partner_id.copy\n"
+"or\n"
+"'1'"
+msgstr ""
+"Indiquer le nombre de copie, utiliser o comme objet à évaluer\n"
+"ex: o.partner_id.copy\n"
+"ou\n"
+"'1'"
 
 #. module: jasper_server
 #: view:jasper.document:0
@@ -657,9 +683,9 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: jasper_server
-#: wizard_field:jasper_server.make_template,init,model_id:0
-msgid "Id"
-msgstr "Id"
+#: field:jasper.server,port:0
+msgid "Port"
+msgstr "Part"
 
 #. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_3
@@ -672,9 +698,9 @@ msgid "Enter the service name register at start by OpenERP Server"
 msgstr "Entrer le nom du service enregistré au démarrage de OpenERP Server"
 
 #. module: jasper_server
-#: field:jasper.server,port:0
-msgid "Port"
-msgstr "Part"
+#: wizard_field:jasper_server.make_template,init,model_id:0
+msgid "Id"
+msgstr "Id"
 
 #. module: jasper_server
 #: help:jasper.document,enabled:0
@@ -719,3 +745,45 @@ msgstr "Indique si ce document est actif ou pas"
 #~ msgid "This module interface JasperServer For Reports."
 #~ msgstr ""
 #~ "Ce module est une interface avec JasperServer pour la génération de rapport"
+
+#~ msgid "Partner List"
+#~ msgstr "Liste des partenaires"
+
+#~ msgid "JasperReport Server Interface"
+#~ msgstr "Interface JasperReport Server"
+
+#~ msgid ""
+#~ "This module interface JasperReport Server with OpenERP\n"
+#~ "Features:\n"
+#~ "- Document source must be in CSV, XML\n"
+#~ "- Save document as attachment on object\n"
+#~ "- Retrieve attachment if present\n"
+#~ "- Launch multiple reports and merge in one printing action\n"
+#~ "- Add additionnals parameters (ex from fields function)\n"
+#~ "- Affect group on report\n"
+#~ "- Use context to display or not the print button (eg: in stock.picking "
+#~ "separate per type)\n"
+#~ "- Execute SQL query before and after treatement\n"
+#~ "- Launch report based on SQL View\n"
+#~ "\n"
+#~ "This module required library to work properly\n"
+#~ "\n"
+#~ "# pip install httplib2 (>= 0.6.0)\n"
+#~ "# pip install pyPdf (>= 1.13)\n"
+#~ msgstr ""
+#~ "Ce module realise l'interconnexion en JasperReport Server et OpenERP\n"
+#~ "Fonctionnalitées:- La source de données peut être de type CSV, XML\n"
+#~ "- Sauvegarder les documents comme pièce jointe de l'objet\n"
+#~ "- Reimprimer depuis la pièce jointe si présente\n"
+#~ "- Lancer de multiple rapport en une fois et les fusionnés\n"
+#~ "- Ajout de paramètres additionnels (ex champs fonction)\n"
+#~ "- Affecter des groupes au rapports\n"
+#~ "- Utiliser le contexte pour afficher ou pas le bouton d'impression (ex: "
+#~ "séparation par type sur les stock.picking)\n"
+#~ "- Exécuter une requête SQL avant et après un traitement\n"
+#~ "- Lancer un rapport basé sur une vue SQL\n"
+#~ "\n"
+#~ "Ce module nécessite des librairies Python pour fonctionner correctement\n"
+#~ "\n"
+#~ "# pip install httplib2 (>= 0.6.0)\n"
+#~ "# pip install pyPdf (>= 1.13)\n"
