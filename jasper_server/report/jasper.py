@@ -33,6 +33,10 @@ class report_jasper(report_int):
     """
     Extend report_int to use Jasper Server
     """
+    def __init__(self, name):
+        super(report_jasper, self).__init__(name)
+        logger.notifyChannel('jasper_server', netsvc.LOG_DEBUG, 'Init report %s' % (self.name,))
+
     def create(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
