@@ -141,7 +141,7 @@ class Report(object):
             # ids in ($P!{OERP_ACTIVE_IDS} (exclamation mark)
             d_par = {
                 'active_id': ex,
-                'active_ids': ','.join(ids),
+                'active_ids': ','.join(str(i) for i in ids),
                 'model': self.model,
                 'sql_query': attrs.get('query', "SELECT 'NO QUERY' as nothing"),
                 'sql_query_where': attrs.get('query_where', '1 = 1'),
