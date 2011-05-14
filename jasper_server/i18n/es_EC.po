@@ -1,0 +1,689 @@
+# Spanish (Ecuador) translation for openerp-jasperserver
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openerp-jasperserver package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openerp-jasperserver\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-05-08 13:36+0000\n"
+"PO-Revision-Date: 2011-05-13 14:59+0000\n"
+"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
+"Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-05-14 05:53+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
+
+#. module: jasper_server
+#: selection:jasper.document,format_choice:0
+msgid "Single Format"
+msgstr "Formato Simple"
+
+#. module: jasper_server
+#: field:jasper.document,model_id:0
+msgid "Object Model"
+msgstr "Modelo de Objeto"
+
+#. module: jasper_server
+#: help:jasper.document,after:0
+msgid ""
+"This field must be filled with a valid SQL request and will be executed "
+"AFTER the report edition"
+msgstr ""
+"Este campo debe ser llenado con un SQL válido y será ejecutado DESPUES de la "
+"edición del reporte"
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/jasper.py:46
+#: code:addons/jasper_server/wizard/format_choice.py:60
+#: code:addons/jasper_server/wizard/format_choice.py:67
+#: code:addons/jasper_server/wizard/format_choice.py:79
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: jasper_server
+#: wizard_view:jasper_server.make_template,init:0
+msgid "Make template"
+msgstr "Crear Plantilla"
+
+#. module: jasper_server
+#: wizard_field:jasper_server.make_template,valid,filename:0
+msgid "Filename"
+msgstr "Nombre de Archivo"
+
+#. module: jasper_server
+#: wizard_view:jasper_server.document_print,format_choice:0
+msgid "Format choice"
+msgstr "Formato de Elección"
+
+#. module: jasper_server
+#: model:ir.model,name:jasper_server.model_ir_actions_wizard
+msgid "ir.actions.wizard"
+msgstr "ir.actions.wizard"
+
+#. module: jasper_server
+#: field:jasper.document.parameter,document_id:0
+msgid "Document"
+msgstr "Documento"
+
+#. module: jasper_server
+#: help:jasper.server,repo:0
+msgid "Enter the address of the repository"
+msgstr "Ingrese la dirección del repositorio"
+
+#. module: jasper_server
+#: help:jasper.document,child_ids:0
+msgid "Select reports to launch when this report is called"
+msgstr "Seleccionar reportes a lanzar cuando este reporte es llamado"
+
+#. module: jasper_server
+#: model:ir.actions.act_window,name:jasper_server.act_open_document_extension_view
+#: model:ir.model,name:jasper_server.model_jasper_document_extension
+#: model:ir.ui.menu,name:jasper_server.menu_jasper_document_extension
+msgid "Jasper Document Extension"
+msgstr "Extensión de Documento Jasper"
+
+#. module: jasper_server
+#: help:jasper.document,before:0
+msgid ""
+"This field must be filled with a valid SQL request and will be executed "
+"BEFORE the report edition"
+msgstr ""
+"Este campo debe ser llenado con un SQL válido y será ejecutado ANTES de la "
+"edición del reporte"
+
+#. module: jasper_server
+#: field:jasper.server,host:0
+msgid "Host"
+msgstr "Host"
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_7
+msgid "Text Editor"
+msgstr "Editor de Texto"
+
+#. module: jasper_server
+#: help:jasper.document,attachment_use:0
+msgid ""
+"If you check this, then the second time the user prints with same attachment "
+"name, it returns the previous report."
+msgstr ""
+"Si marca esta opción, entonces la segunda ves el usuario imprime el mismo "
+"nombre de adjunto, esto devuelve el reporte anterior."
+
+#. module: jasper_server
+#: view:jasper.document:0
+#: view:jasper.document.parameter:0
+msgid "Legend"
+msgstr "Leyenda"
+
+#. module: jasper_server
+#: help:jasper.document.parameter,code:0
+msgid "Enter the code to retrieve data"
+msgstr "Ingrese el código para obtener datos"
+
+#. module: jasper_server
+#: wizard_field:jasper_server.make_template,init,indent:0
+msgid "Indent the XML output ?"
+msgstr "Identar la salida XML ?"
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "c: for user s company"
+msgstr "c: para usuario de la compañia s"
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Expression for duplicate the number of copie"
+msgstr "Expresión para duplicar en número de copia"
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Enter the name of the view"
+msgstr "Ingrese el nombre de la vista"
+
+#. module: jasper_server
+#: model:ir.actions.act_window,name:jasper_server.action_jasper_server
+#: model:ir.ui.menu,name:jasper_server.menu_jasper_server
+msgid "Jasper Server configuration"
+msgstr "Configuración de Jasper Server"
+
+#. module: jasper_server
+#: help:jasper.server,user:0
+msgid "Enter the username for JasperServer user, by default is jasperadmin"
+msgstr "Ingrese el usuario para JasperServer, por defecto jasperadmin"
+
+#. module: jasper_server
+#: wizard_button:jasper_server.document_print,format_choice,create_wizard:0
+#: wizard_button:jasper_server.make_template,init,valid:0
+msgid "OK"
+msgstr "OK"
+
+#. module: jasper_server
+#: selection:jasper.document,mode:0
+msgid "Multiple Report"
+msgstr "Multiple Reporte"
+
+#. module: jasper_server
+#: view:jasper.document.extension:0
+msgid "Documents extensions"
+msgstr "Extensiones de Documentos"
+
+#. module: jasper_server
+#: code:addons/jasper_server/wizard/format_choice.py:60
+#: code:addons/jasper_server/wizard/format_choice.py:79
+#, python-format
+msgid "No report found!"
+msgstr "Reporte no encontrado !"
+
+#. module: jasper_server
+#: help:jasper.document,attachment:0
+msgid ""
+"This is the filename of the attachment used to store the printing result. "
+"Keep empty to not save the printed reports. You can use a python expression "
+"with the object and time variables."
+msgstr ""
+"Éste es el nombre del archivo del adjunto utilizado para almacenar el "
+"resultado de impresión. Déjelo vacío para no guardar los informes impresos. "
+"Puede utilizar una expresión Python con las variables objeto y fecha/hora."
+
+#. module: jasper_server
+#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_make_template
+#: model:ir.ui.menu,name:jasper_server.menu_jasper_make_template
+msgid "Make XML Template"
+msgstr "Crear Plantilla XML"
+
+#. module: jasper_server
+#: field:ir.actions.wizard,jasper:0
+msgid "Jasper"
+msgstr ""
+
+#. module: jasper_server
+#: selection:jasper.document,mode:0
+msgid "SQL"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,service:0
+msgid "Service name"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Select report to launch when this report is launched"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/wizard/format_choice.py:67
+#, python-format
+msgid "No implemented yet!"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,sql_name:0
+msgid "Name of view"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+#: field:jasper.document,param_ids:0
+msgid "Parameters"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_2
+msgid "PDF Viewer"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.server,enable:0
+msgid "Check this, if the server is available"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_4
+msgid "Microsoft® Word 2007"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_1
+msgid "OpenOffice Writer"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Parameter"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,report_unit:0
+msgid "Enter the name for report unit in Jasper Server"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.server,user:0
+msgid "Username"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.server,enable:0
+msgid "Enable"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,child_ids:0
+msgid "Child report"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document.parameter,name:0
+msgid "Name of the jasper parameter, the prefix must be OERP_"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "t: for time module"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_view:jasper_server.make_template,valid:0
+msgid "Select the location to save the data file"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_8
+msgid "Rich Text Format"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:156
+#, python-format
+msgid "No report name"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.ui.menu,name:jasper_server.menu_jasper_configuration
+msgid "Configuration"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "%(id)s"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.model,name:jasper_server.model_jasper_server
+msgid "Jasper server configuration"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document.extension,extension:0
+msgid "Extension"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,sequence:0
+msgid ""
+"The sequence is used when launch a multple report, to select the order to "
+"launch"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.model,name:jasper_server.model_jasper_document_parameter
+msgid "Add parameter to send to jasper server"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "o: for object"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Execute SQL query before treatment"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_9
+msgid "Flash Viewer"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,toolbar:0
+msgid "Check this if you want to hide button in toolbar"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:179
+#, python-format
+msgid ""
+"Error\n"
+"main company have no address defined on the partner!"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,before:0
+msgid "Before"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.actions.act_window,name:jasper_server.act_open_document_view
+#: model:ir.model,name:jasper_server.model_jasper_document
+#: model:ir.ui.menu,name:jasper_server.menu_jasper_document
+#: view:jasper.document:0
+msgid "Jasper Document"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.ui.menu,name:jasper_server.menu_jasper
+msgid "Jasper Report"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,duplicate:0
+msgid "Duplicate"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,report_unit:0
+msgid "Report Unit"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Attachment"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_view:jasper_server.make_template,valid:0
+msgid "Save template"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,only_one:0
+msgid "Launch one time for all ids"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.server,repo:0
+msgid "Repository"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.server,pass:0
+msgid "Enter the password for the user, by defaul is jasperadmin"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.server,host:0
+msgid "Enter hostname or IP address"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+#: field:jasper.document,group_ids:0
+msgid "Groups"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,enabled:0
+msgid "Active"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_field:jasper_server.make_template,valid,datas:0
+msgid "Data"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,toolbar:0
+msgid "Hide in toolbar"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,lang:0
+msgid "Lang"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Processes"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,only_one:0
+msgid "Launch the report only one time on multiple id"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,attachment:0
+msgid "Save As Attachment Prefix"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document.parameter,enabled:0
+msgid "Enabled"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Output format"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Use [[ o.name ]] to called browse object, see below for possibility"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,format:0
+msgid "Formats"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document.extension,jasper_code:0
+#: field:jasper.document.parameter,code:0
+msgid "Code"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,ctx:0
+msgid ""
+"Enter condition with context does match to see the print action\n"
+"eg: context.get('foo') == 'bar'"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+#: field:jasper.document,sql_view:0
+msgid "SQL View"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,jasper_file:0
+msgid "Jasper file"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "General"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,format_choice:0
+msgid "Format Choice"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_button:jasper_server.make_template,valid,end:0
+msgid "Done"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_button:jasper_server.document_print,format_choice,end:0
+#: wizard_button:jasper_server.make_template,init,end:0
+msgid "Cancel"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.extension:0
+msgid "Document extensions"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+#: selection:jasper.document,mode:0
+msgid "XML"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.server:0
+msgid "Jasper Server"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,lang:0
+msgid ""
+"Indicate the lang to use for this report, use o as object to evaluate\n"
+"eg: o.partner_id.lang\n"
+"or\n"
+"'fr_FR'\n"
+"default use user's lang"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_6
+msgid "Microsoft® Excel (97 -> 2003)"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Execute SQL query after treatment"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_field:jasper_server.document_print,format_choice,format_choice:0
+msgid "Format"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,after:0
+msgid "After"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.model,name:jasper_server.model_ir_values
+msgid "ir.values"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.actions.wizard,name:jasper_server.wizard_jasper_document_print
+msgid "Document Print"
+msgstr ""
+
+#. module: jasper_server
+#: selection:jasper.document,format_choice:0
+msgid "Multi Format"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.server,pass:0
+msgid "Password"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Enter the select query of the view only"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,name:0
+#: field:jasper.document.extension,name:0
+#: field:jasper.document.parameter,name:0
+msgid "Name"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,duplicate:0
+msgid ""
+"Indicate the number of duplicate copie, use o as object to evaluate\n"
+"eg: o.partner_id.copy\n"
+"or\n"
+"'1'"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Reports"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,depth:0
+#: wizard_field:jasper_server.make_template,init,depth:0
+msgid "Depth"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,mode:0
+msgid "Mode"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,ctx:0
+msgid "Context"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_5
+msgid "Microsoft® Excel 2007"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_field:jasper_server.make_template,init,model:0
+msgid "Model"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,sql_view:0
+msgid "Insert your SQL view, if the report is base on it"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,attachment_use:0
+msgid "Reload from Attachment"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,sequence:0
+#: field:jasper.server,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.server,port:0
+msgid "Port"
+msgstr ""
+
+#. module: jasper_server
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_3
+msgid "OpenOffice Calc"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,service:0
+msgid "Enter the service name register at start by OpenERP Server"
+msgstr ""
+
+#. module: jasper_server
+#: wizard_field:jasper_server.make_template,init,model_id:0
+msgid "Id"
+msgstr ""
+
+#. module: jasper_server
+#: help:jasper.document,enabled:0
+msgid "Indicates if this document is active or not"
+msgstr ""
