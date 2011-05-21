@@ -37,7 +37,12 @@ class JasperException(Exception):
     def __repr__(self):
         return self.__str__()
 
+
 class AuthError(JasperException):
+    pass
+
+
+class EvalError(JasperException):
     pass
 
 if __name__ == '__main__':
