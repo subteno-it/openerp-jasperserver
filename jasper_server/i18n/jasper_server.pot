@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-05-08 13:36+0000\n"
-"PO-Revision-Date: 2011-05-08 13:36+0000\n"
+"POT-Creation-Date: 2011-05-21 09:19+0000\n"
+"PO-Revision-Date: 2011-05-21 09:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,12 @@ msgid "This field must be filled with a valid SQL request and will be executed A
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/jasper.py:46
+#: code:addons/jasper_server/report/report_soap.py:180
+#: code:addons/jasper_server/report/report_soap.py:223
+#: code:addons/jasper_server/report/report_soap.py:225
+#: code:addons/jasper_server/report/report_soap.py:227
+#: code:addons/jasper_server/report/report_soap.py:233
+#: code:addons/jasper_server/report/report_soap.py:239
 #: code:addons/jasper_server/wizard/format_choice.py:60
 #: code:addons/jasper_server/wizard/format_choice.py:67
 #: code:addons/jasper_server/wizard/format_choice.py:79
@@ -52,6 +57,11 @@ msgstr ""
 #. module: jasper_server
 #: wizard_view:jasper_server.document_print,format_choice:0
 msgid "Format choice"
+msgstr ""
+
+#. module: jasper_server
+#: model:ir.model,name:jasper_server.model_ir_values
+msgid "ir.values"
 msgstr ""
 
 #. module: jasper_server
@@ -198,14 +208,14 @@ msgid "Select report to launch when this report is launched"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/wizard/format_choice.py:67
-#, python-format
-msgid "No implemented yet!"
+#: field:jasper.document,before:0
+msgid "Before"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.document,sql_name:0
-msgid "Name of view"
+#: code:addons/jasper_server/report/report_soap.py:237
+#, python-format
+msgid "Authentification Error"
 msgstr ""
 
 #. module: jasper_server
@@ -255,8 +265,8 @@ msgid "Enable"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.document,child_ids:0
-msgid "Child report"
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_5
+msgid "Microsoft® Excel 2007"
 msgstr ""
 
 #. module: jasper_server
@@ -280,7 +290,7 @@ msgid "Rich Text Format"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:156
+#: code:addons/jasper_server/report/report_soap.py:157
 #, python-format
 msgid "No report name"
 msgstr ""
@@ -311,6 +321,18 @@ msgid "The sequence is used when launch a multple report, to select the order to
 msgstr ""
 
 #. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:278
+#, python-format
+msgid "Configuration Error"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:237
+#, python-format
+msgid "Invalid login or password"
+msgstr ""
+
+#. module: jasper_server
 #: model:ir.model,name:jasper_server.model_jasper_document_parameter
 msgid "Add parameter to send to jasper server"
 msgstr ""
@@ -336,15 +358,15 @@ msgid "Check this if you want to hide button in toolbar"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:179
+#: code:addons/jasper_server/report/report_soap.py:223
 #, python-format
-msgid "Error\n"
-"main company have no address defined on the partner!"
+msgid "Server not found !"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.document,before:0
-msgid "Before"
+#: code:addons/jasper_server/wizard/format_choice.py:67
+#, python-format
+msgid "No implemented yet!"
 msgstr ""
 
 #. module: jasper_server
@@ -366,8 +388,8 @@ msgid "Duplicate"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.document,report_unit:0
-msgid "Report Unit"
+#: field:jasper.document,sql_name:0
+msgid "Name of view"
 msgstr ""
 
 #. module: jasper_server
@@ -398,6 +420,13 @@ msgstr ""
 #. module: jasper_server
 #: help:jasper.server,host:0
 msgid "Enter hostname or IP address"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:233
+#, python-format
+msgid "Code: %s\n"
+"Message: %s"
 msgstr ""
 
 #. module: jasper_server
@@ -432,6 +461,12 @@ msgid "Processes"
 msgstr ""
 
 #. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:243
+#, python-format
+msgid "Unknown Error"
+msgstr ""
+
+#. module: jasper_server
 #: help:jasper.document,only_one:0
 msgid "Launch the report only one time on multiple id"
 msgstr ""
@@ -459,6 +494,12 @@ msgstr ""
 #. module: jasper_server
 #: field:jasper.document,format:0
 msgid "Formats"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:278
+#, python-format
+msgid "No JasperServer configuration found!"
 msgstr ""
 
 #. module: jasper_server
@@ -536,6 +577,11 @@ msgid "Microsoft® Excel (97 -> 2003)"
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document,report_unit:0
+msgid "Report Unit"
+msgstr ""
+
+#. module: jasper_server
 #: view:jasper.document:0
 msgid "Execute SQL query after treatment"
 msgstr ""
@@ -551,8 +597,10 @@ msgid "After"
 msgstr ""
 
 #. module: jasper_server
-#: model:ir.model,name:jasper_server.model_ir_values
-msgid "ir.values"
+#: code:addons/jasper_server/report/report_soap.py:243
+#, python-format
+msgid "Content-type: %s\n"
+"Message:%s"
 msgstr ""
 
 #. module: jasper_server
@@ -612,8 +660,8 @@ msgid "Context"
 msgstr ""
 
 #. module: jasper_server
-#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_5
-msgid "Microsoft® Excel 2007"
+#: field:jasper.document,child_ids:0
+msgid "Child report"
 msgstr ""
 
 #. module: jasper_server
@@ -635,6 +683,12 @@ msgstr ""
 #: field:jasper.document,sequence:0
 #: field:jasper.server,sequence:0
 msgid "Sequence"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:180
+#, python-format
+msgid "Main company have no address defined on the partner!"
 msgstr ""
 
 #. module: jasper_server
