@@ -36,7 +36,7 @@ from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 #from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from common import BODY_TEMPLATE, parameter
-from report_exception import JasperException, AuthError
+from report_exception import JasperException, AuthError, EvalError
 #from tools.misc import ustr
 from pyPdf import PdfFileWriter, PdfFileReader
 from tools.translate import _
@@ -133,6 +133,17 @@ class Report(object):
                 language = eval(current_document.lang, {'o': cur_obj})
             except SyntaxError, e:
                 _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Language Error'), _('Syntax error when evaluate language\n\nMessage: "%s"') % str(e))
+            except NameError, e:
+                _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Language Error'), _('Error when evaluate language\n\nMessage: "%s"') % str(e))
+            except AttributeError, e:
+                _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Language Error'), _('Attribute error when evaluate language\nVerify if specify field exists or valid\n\nMessage: "%s"') % str(e))
+            except Exception, e:
+                _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))
+
 
         if reload and aname:
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
