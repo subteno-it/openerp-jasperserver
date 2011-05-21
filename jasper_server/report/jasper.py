@@ -26,6 +26,7 @@ from report.interface import report_int
 from report_soap import Report
 from osv.osv import except_osv
 from tools.translate import _
+from report_exception import JasperException
 import logging
 
 _logger = logging.getLogger('jasper_server')
@@ -42,8 +43,8 @@ class report_jasper(report_int):
         _logger.debug('Call %s' % self.name)
         try:
             return Report(self.name, cr, uid, ids, data, context).execute()
-        except Exception, e:
-            raise except_osv(_('Error'), '%s' % str(e))
+        except JasperException, e:
+            raise except_osv(e.title, e.message)
 
 report_jasper('report.print.jasper.server')
 

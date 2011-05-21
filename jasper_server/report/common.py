@@ -74,6 +74,7 @@ def entities(data):
     data = data.replace("'", "&apos;")
     return data
 
+
 def parameter(dico, resource):
     """
     Convert value to a parameter for SOAP query

@@ -36,6 +36,7 @@ from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 #from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from common import BODY_TEMPLATE, parameter
+from report_exception import JasperException, AuthError
 #from tools.misc import ustr
 from pyPdf import PdfFileWriter, PdfFileReader
 from tools.translate import _
@@ -176,7 +177,7 @@ class Report(object):
             # Search the default address for the company.
             addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id], ['default'])['default']
             if not addr_id:
-                raise Exception(_('Error\nmain company have no address defined on the partner!'))
+                raise JasperException(_('Error'), _('Main company have no address defined on the partner!'))
             addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
             d_par['company_street'] = addr.street or ''
             d_par['company_street2'] = addr.street2 or ''
@@ -219,24 +220,27 @@ class Report(object):
                 uri = 'http://%s:%d%s' % (js_conf['host'], js_conf['port'], js_conf['repo'])
                 resp, content = h.request(uri, "POST", body, headers)
             except ServerNotFoundError:
-                raise Exception('Error, Server not found !')
+                raise JasperException(_('Error'), _('Server not found !'))
             except HttpLib2Error, e:
-                raise Exception('Error: %r' % e)
+                raise JasperException(_('Error'), '%s' % str(e))
             except Exception, e:
-                raise Exception('Error: %s' % str(e))
+                raise JasperException(_('Error'), '%s' % str(e))
 
             log_debug('HTTP -> RESPONSE:')
             log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
             if resp.get('content-type').startswith('text/xml'):
                 log_debug('CONTENT: %r' % content)
-                raise Exception('Code: %s\nMessage: %s' % ParseXML(content))
+                raise JasperException(_('Error'), _('Code: %s\nMessage: %s') % ParseXML(content))
             elif resp.get('content-type').startswith('text/html'):
                 log_debug('CONTENT: %r' % content)
-                raise Exception('Error: %s' % ParseHTML(content))
+                if ParseHTML(content).find('Bad credentials'):
+                    raise AuthError(_('Authentification Error'), _('Invalid login or password'))
+                else:
+                    raise JasperException(_('Error'), '%s' % ParseHTML(content))
             elif resp.get('content-type') == 'application/dime':
                 ParseDIME(content, pdf_list)
             else:
-                raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
+                raise JasperException(_('Unknown Error'), _('Content-type: %s\nMessage:%s') % (resp.get('content-type'), content))
 
             ###
             ## Store the content in ir.attachment if ask
@@ -271,7 +275,7 @@ class Report(object):
         doc_obj = self.pool.get('jasper.document')
         js_ids = js_obj.search(self.cr, self.uid, [('enable', '=', True)])
         if not len(js_ids):
-            raise Exception('Error, no JasperServer found!')
+            raise JasperException(_('Configuration Error'), _('No JasperServer configuration found!'))
 
         js = js_obj.read(self.cr, self.uid, js_ids, context=self.context)[0]
         log_debug('DATA:')
