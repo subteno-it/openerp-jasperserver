@@ -1,4 +1,4 @@
-# Spanish (Ecuador) translation for openerp-jasperserver
+# Chinese (Simplified) translation for openerp-jasperserver
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openerp-jasperserver package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: openerp-jasperserver\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-21 15:35+0000\n"
-"PO-Revision-Date: 2011-05-13 14:59+0000\n"
-"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
-"Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
+"PO-Revision-Date: 2011-05-22 01:10+0000\n"
+"Last-Translator: ZhangCheng <skyxxzc@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,12 +20,12 @@ msgstr ""
 #. module: jasper_server
 #: selection:jasper.document,format_choice:0
 msgid "Single Format"
-msgstr "Formato Simple"
+msgstr ""
 
 #. module: jasper_server
 #: field:jasper.document,model_id:0
 msgid "Object Model"
-msgstr "Modelo de Objeto"
+msgstr "对象模型"
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:159
@@ -34,7 +34,7 @@ msgstr "Modelo de Objeto"
 #: code:addons/jasper_server/report/report_soap.py:168
 #, python-format
 msgid "Language Error"
-msgstr ""
+msgstr "语言错误"
 
 #. module: jasper_server
 #: help:jasper.document,after:0
@@ -42,8 +42,6 @@ msgid ""
 "This field must be filled with a valid SQL request and will be executed "
 "AFTER the report edition"
 msgstr ""
-"Este campo debe ser llenado con un SQL válido y será ejecutado DESPUES de la "
-"edición del reporte"
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:214
@@ -57,22 +55,22 @@ msgstr ""
 #: code:addons/jasper_server/wizard/format_choice.py:79
 #, python-format
 msgid "Error"
-msgstr "Error"
+msgstr "错误"
 
 #. module: jasper_server
 #: wizard_view:jasper_server.make_template,init:0
 msgid "Make template"
-msgstr "Crear Plantilla"
+msgstr "制作模版"
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,valid,filename:0
 msgid "Filename"
-msgstr "Nombre de Archivo"
+msgstr "文件名"
 
 #. module: jasper_server
 #: wizard_view:jasper_server.document_print,format_choice:0
 msgid "Format choice"
-msgstr "Formato de Elección"
+msgstr "选择格式"
 
 #. module: jasper_server
 #: model:ir.model,name:jasper_server.model_ir_values
@@ -82,29 +80,29 @@ msgstr ""
 #. module: jasper_server
 #: model:ir.model,name:jasper_server.model_ir_actions_wizard
 msgid "ir.actions.wizard"
-msgstr "ir.actions.wizard"
+msgstr ""
 
 #. module: jasper_server
 #: field:jasper.document.parameter,document_id:0
 msgid "Document"
-msgstr "Documento"
+msgstr ""
 
 #. module: jasper_server
 #: help:jasper.server,repo:0
 msgid "Enter the address of the repository"
-msgstr "Ingrese la dirección del repositorio"
+msgstr ""
 
 #. module: jasper_server
 #: help:jasper.document,child_ids:0
 msgid "Select reports to launch when this report is called"
-msgstr "Seleccionar reportes a lanzar cuando este reporte es llamado"
+msgstr ""
 
 #. module: jasper_server
 #: model:ir.actions.act_window,name:jasper_server.act_open_document_extension_view
 #: model:ir.model,name:jasper_server.model_jasper_document_extension
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_document_extension
 msgid "Jasper Document Extension"
-msgstr "Extensión de Documento Jasper"
+msgstr ""
 
 #. module: jasper_server
 #: help:jasper.document,before:0
@@ -112,18 +110,16 @@ msgid ""
 "This field must be filled with a valid SQL request and will be executed "
 "BEFORE the report edition"
 msgstr ""
-"Este campo debe ser llenado con un SQL válido y será ejecutado ANTES de la "
-"edición del reporte"
 
 #. module: jasper_server
 #: field:jasper.server,host:0
 msgid "Host"
-msgstr "Host"
+msgstr ""
 
 #. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_7
 msgid "Text Editor"
-msgstr "Editor de Texto"
+msgstr ""
 
 #. module: jasper_server
 #: help:jasper.document,attachment_use:0
@@ -131,19 +127,17 @@ msgid ""
 "If you check this, then the second time the user prints with same attachment "
 "name, it returns the previous report."
 msgstr ""
-"Si marca esta opción, entonces la segunda ves el usuario imprime el mismo "
-"nombre de adjunto, esto devuelve el reporte anterior."
 
 #. module: jasper_server
 #: view:jasper.document:0
 #: view:jasper.document.parameter:0
 msgid "Legend"
-msgstr "Leyenda"
+msgstr ""
 
 #. module: jasper_server
 #: help:jasper.document.parameter,code:0
 msgid "Enter the code to retrieve data"
-msgstr "Ingrese el código para obtener datos"
+msgstr ""
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:129
@@ -158,12 +152,12 @@ msgstr ""
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,indent:0
 msgid "Indent the XML output ?"
-msgstr "Identar la salida XML ?"
+msgstr ""
 
 #. module: jasper_server
 #: view:jasper.document.parameter:0
 msgid "c: for user s company"
-msgstr "c: para usuario de la compañia s"
+msgstr ""
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:168
@@ -176,46 +170,46 @@ msgstr ""
 #. module: jasper_server
 #: view:jasper.document:0
 msgid "Expression for duplicate the number of copie"
-msgstr "Expresión para duplicar en número de copia"
+msgstr ""
 
 #. module: jasper_server
 #: view:jasper.document:0
 msgid "Enter the name of the view"
-msgstr "Ingrese el nombre de la vista"
+msgstr ""
 
 #. module: jasper_server
 #: selection:jasper.document,mode:0
 msgid "Multiple Report"
-msgstr "Multiple Reporte"
+msgstr ""
 
 #. module: jasper_server
 #: help:jasper.server,user:0
 msgid "Enter the username for JasperServer user, by default is jasperadmin"
-msgstr "Ingrese el usuario para JasperServer, por defecto jasperadmin"
+msgstr ""
 
 #. module: jasper_server
 #: wizard_button:jasper_server.document_print,format_choice,create_wizard:0
 #: wizard_button:jasper_server.make_template,init,valid:0
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #. module: jasper_server
 #: model:ir.actions.act_window,name:jasper_server.action_jasper_server
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_server
 msgid "Jasper Server configuration"
-msgstr "Configuración de Jasper Server"
+msgstr ""
 
 #. module: jasper_server
 #: view:jasper.document.extension:0
 msgid "Documents extensions"
-msgstr "Extensiones de Documentos"
+msgstr ""
 
 #. module: jasper_server
 #: code:addons/jasper_server/wizard/format_choice.py:60
 #: code:addons/jasper_server/wizard/format_choice.py:79
 #, python-format
 msgid "No report found!"
-msgstr "Reporte no encontrado !"
+msgstr ""
 
 #. module: jasper_server
 #: help:jasper.document,attachment:0
@@ -224,15 +218,12 @@ msgid ""
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
 msgstr ""
-"Éste es el nombre del archivo del adjunto utilizado para almacenar el "
-"resultado de impresión. Déjelo vacío para no guardar los informes impresos. "
-"Puede utilizar una expresión Python con las variables objeto y fecha/hora."
 
 #. module: jasper_server
 #: model:ir.actions.wizard,name:jasper_server.wizard_jasper_make_template
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_make_template
 msgid "Make XML Template"
-msgstr "Crear Plantilla XML"
+msgstr ""
 
 #. module: jasper_server
 #: field:ir.actions.wizard,jasper:0
