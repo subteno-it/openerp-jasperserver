@@ -30,14 +30,9 @@ import logging
 
 from report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
-#from lxml.etree import Element, tostring
-#from netsvc import Logger, LOG_DEBUG
-#from tempfile import mkstemp
-#from subprocess import call
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from common import BODY_TEMPLATE, parameter
 from report_exception import JasperException, AuthError, EvalError
-#from tools.misc import ustr
 from pyPdf import PdfFileWriter, PdfFileReader
 from tools.translate import _
 
@@ -87,10 +82,12 @@ class Report(object):
     def __init__(self, name, cr, uid, ids, data, context):
         """Initialise the report"""
         self.name = name
+        self.service = name.replace('report.jasper.', '')
         self.cr = cr
         self.uid = uid
         self.ids = ids
         self.data = data
+        self.attrs = data.get('form', {})
         self.model = data.get('model', False)
         self.context = context
         self.pool = pooler.get_pool(cr.dbname)
@@ -98,8 +95,7 @@ class Report(object):
         self.outputFormat = 'pdf'
         self.path = None
 
-    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, attachment='', reload=False,
-                        ids=None, attrs=None, context=None):
+    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, ids=None, context=None):
         """
         After retrieve datas to launch report, execute it and return the content
         """
@@ -109,15 +105,12 @@ class Report(object):
         if ids is None:
             ids = []
 
-        if attrs is None:
-            attrs = {}
-
         js_obj = self.pool.get('jasper.server')
         cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
         aname = False
-        if attachment:
+        if self.attrs['attachment']:
             try:
-                aname = eval(attachment, {'object': cur_obj, 'time': time})
+                aname = eval(self.attrs['attachment'], {'object': cur_obj, 'time': time})
             except SyntaxError, e:
                 _logger.warning('Error %s' % str(e))
                 raise EvalError(_('Attachment Error'), _('Syntax error when evaluate attachment\n\nMessage: "%s"') % str(e))
@@ -167,8 +160,7 @@ class Report(object):
                 _logger.warning('Error %s' % str(e))
                 raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))
 
-
-        if reload and aname:
+        if self.attrs['reload'] and aname:
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
                     [('datas_fname', '=', aname + '.pdf'), ('res_model', '=', self.model), ('res_id', '=', ex)])
             if aids:
@@ -186,16 +178,16 @@ class Report(object):
                 'active_id': ex,
                 'active_ids': ','.join(str(i) for i in ids),
                 'model': self.model,
-                'sql_query': attrs.get('query', "SELECT 'NO QUERY' as nothing"),
-                'sql_query_where': attrs.get('query_where', '1 = 1'),
-                'report_name': attrs.get('report_name', _('No report name')),
+                'sql_query': self.attrs.get('query', "SELECT 'NO QUERY' as nothing"),
+                'sql_query_where': self.attrs.get('query_where', '1 = 1'),
+                'report_name': self.attrs.get('report_name', _('No report name')),
                 'lang': language or 'en_US',
             }
 
             # If XML we must compose it
-            if self.data['form']['params'][2] == 'xml':
+            if self.attrs['params'][2] == 'xml':
                 d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
-                        self.data['form']['params'][3], context=self.context)
+                        self.attrs['params'][3], context=self.context)
                 d_par['xml_data'] = d_xml
 
             # Retrieve the company information and send them in parameter
@@ -230,10 +222,10 @@ class Report(object):
 
             self.outputFormat = current_document.format.lower()
 
-            par = parameter(self.data['form'], d_par)
+            par = parameter(self.attrs, d_par)
             body_args = {
-                'format': self.data['form']['params'][0],
-                'path': self.path or self.data['form']['params'][1],
+                'format': self.attrs['params'][0],
+                'path': self.path or self.attrs['params'][1],
                 'param': par,
                 'database': '/openerp/databases/%s' % self.cr.dbname,
             }
@@ -304,7 +296,7 @@ class Report(object):
 
     def execute(self):
         """Launch the report and return it"""
-        ids = self.data['form']['ids']
+        ids = self.ids
         js_obj = self.pool.get('jasper.server')
         doc_obj = self.pool.get('jasper.document')
         js_ids = js_obj.search(self.cr, self.uid, [('enable', '=', True)])
@@ -315,15 +307,20 @@ class Report(object):
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
 
-        att = self.data['form']['params'][4]
-        attach = att.get('attachment', '')
-        reload = att.get('attachment_use', False)
-
         ##
         # For each IDS, launch a query, and return only one result
         #
         pdf_list = []
-        doc = doc_obj.browse(self.cr, self.uid, att.get('id'), context=self.context)
+        doc_ids = doc_obj.search(self.cr, self.uid, [('service', '=', self.service)], context=self.context)
+        if not doc_ids:
+            raise JasperException(_('Configuration Error'), _("Service name doesn't match!"))
+
+        doc = doc_obj.browse(self.cr, self.uid, doc_ids[0], context=self.context)
+        self.attrs['attachment'] = doc.attachment
+        self.attrs['reload'] = doc.attachment_use
+        if not self.attrs.get('params'):
+            uri = '/openerp/bases/%s/%s' % (self.cr.dbname, doc.report_unit)
+            self.attrs['params'] = (doc.format, uri, doc.mode, doc.depth, {})
         one_check = {}
         one_check[doc.id] = False
         content = ''
@@ -334,17 +331,15 @@ class Report(object):
                     if d.only_one and one_check.get(d.id, False):
                         continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
-                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, attach, reload, ids, att, context=self.context)
+                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, ids, context=self.context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, ids, att, context=self.context)
+                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, ids, context=self.context)
                 one_check[doc.id] = True
 
-        ##
-        # We use pyPdf to marge all PDF in unique file
-        #
+        ## We use pyPdf to marge all PDF in unique file
         if len(pdf_list) > 1 or duplicate > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
