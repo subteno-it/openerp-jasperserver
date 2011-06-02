@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP,
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.Syleam.fr/>) Damien CRIER
+#    Copyright (C) 2010-2011 SYLEAM Info Services (<http://www.Syleam.fr/>) Damien CRIER
 #
 #    This file is a part of jasper_server
 #
@@ -24,22 +24,10 @@
 
 from osv import osv
 from osv import fields
-from jasper_server.wizard.format_choice import format_choice
 from tools.sql import drop_view_if_exists
-import netsvc
-import pooler
 import logging
 
 _logger = logging.getLogger('jasper_server')
-
-
-def registered_wizard(name):
-    """ Register dynamicaly the wizard for each entry"""
-    gname = 'wizard.%s' % name
-    if gname in netsvc.Service._services:
-        return
-    format_choice(name)
-    _logger.info('Register the jasper service [%s]' % name)
 
 
 class jasper_document_extension(osv.osv):
@@ -101,6 +89,7 @@ class jasper_document(osv.osv):
         'only_one': fields.boolean('Launch one time for all ids', help='Launch the report only one time on multiple id'),
         'duplicate': fields.char('Duplicate', size=256, help="Indicate the number of duplicate copie, use o as object to evaluate\neg: o.partner_id.copy\nor\n'1'", ),
         'lang': fields.char('Lang', size=256, help="Indicate the lang to use for this report, use o as object to evaluate\neg: o.partner_id.lang\nor\n'fr_FR'\ndefault use user's lang"),
+        'report_id': fields.many2one('ir.actions.report.xml', 'Report link', readonly=True, help='Link to the report in ir.actions.report.xml'),
     }
 
     _defaults = {
@@ -113,31 +102,24 @@ class jasper_document(osv.osv):
         'format': lambda *a: 'PDF',
         'duplicate': lambda *a: "'1'",
         'lang': lambda *a: False,
+        'report_id': lambda *a: False,
     }
 
     def __init__(self, pool, cr):
         """
         Automaticaly registered service at server starts
         """
-        try:
-            cr_new = pooler.get_db(cr.dbname).cursor()
-            cr_new.execute("""SELECT 'jasper.'||service AS wiz_name FROM jasper_document WHERE enabled=true""")
-            for rec in cr_new.dictfetchall():
-                registered_wizard(rec['wiz_name'])
-            cr_new.commit()
-            cr_new.close()
-        except Exception:
-            pass
-
         super(jasper_document, self).__init__(pool, cr)
 
     def make_action(self, cr, uid, id, context=None):
         """
-        If action doesn't exists we must create it
-        Automatic registration to be directly available
+        Create an entry in ir_actions_report_xml
+        and ir.values
         """
         b = self.browse(cr, uid, id, context=context)
-        registered_wizard('jasper.%s' % b.service)
+        act_report_obj = self.pool.get('ir.actions.report.xml')
+
+        #registered_report('jasper.' + b.service)
 
     def create(self, cr, uid, vals, context=None):
         """

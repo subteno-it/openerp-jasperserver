@@ -160,9 +160,10 @@
                             <field name="sequence"/>
                             <field name="jasper_file" colspan="4" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
                             <field name="mode"/>
-                            <field name="toolbar" select="1"/>
+                            <field name="report_id"/>
                             <field name="ctx" colspan="4"/>
                             <field name="only_one" attrs="{'readonly': [('mode','=', 'multi')]}"/>
+                            <field name="toolbar" select="1"/>
                             <newline/>
                             <field name="lang" colspan="4"/>
                             <separator string="Output format" colspan="4"/>
