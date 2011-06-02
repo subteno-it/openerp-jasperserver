@@ -25,6 +25,8 @@
 from osv import osv
 from osv import fields
 from tools.sql import drop_view_if_exists
+from jasper_server.common import registered_report
+import ir
 import logging
 
 _logger = logging.getLogger('jasper_server')
@@ -111,6 +113,26 @@ class jasper_document(osv.osv):
         """
         super(jasper_document, self).__init__(pool, cr)
 
+    def _auto_init(self, cr, context=None):
+        """
+        When upgrade module, check if all jasper_document
+        have a link into ir.actions.reports.xml
+        """
+        if context is None:
+            context = {}
+
+        import pooler
+        pool = pooler.get_pool(cr.dbname)
+
+        doc_obj = pool.get('jasper.document')
+        doc_ids = doc_obj.search(cr, 1, [('report_id', '=', False)], context=context)
+        if doc_ids:
+            _logger.info('Migrate old configuration data to the new one, there are %s document' % len(doc_ids))
+            for id in doc_ids:
+                doc_obj.make_action(cr, 1, id, context=context)
+
+        super(jasper_document, self)._auto_init(cr, context=context)
+
     def make_action(self, cr, uid, id, context=None):
         """
         Create an entry in ir_actions_report_xml
@@ -119,7 +141,24 @@ class jasper_document(osv.osv):
         b = self.browse(cr, uid, id, context=context)
         act_report_obj = self.pool.get('ir.actions.report.xml')
 
-        #registered_report('jasper.' + b.service)
+        doc = self.browse(cr, uid, id, context=context)
+        if doc.report_id:
+            pass
+        else:
+            _logger.info('Create "%s" service' % doc.name)
+            args = {
+                'name': doc.name,
+                'report_name': 'jasper.' + doc.service,
+                'model': doc.model_id.model,
+                'report_type': 'jasper',
+                'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
+                'header': False,
+            }
+            report_id = act_report_obj.create(cr, uid, args, context=context)
+            cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
+            value = 'ir.actions.report.xml,'+str(report_id)
+            ir.ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
+            registered_report('jasper.' + doc.service)
 
     def create(self, cr, uid, vals, context=None):
         """
@@ -129,6 +168,7 @@ class jasper_document(osv.osv):
             context = {}
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         self.make_action(cr, uid, doc_id, context=context)
+
         # Check if view and create it in the database
         if vals.get('sql_name') and vals.get('sql_view'):
             drop_view_if_exists(cr, vals.get('sql_name'))
