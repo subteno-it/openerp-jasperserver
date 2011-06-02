@@ -25,7 +25,6 @@
 from report.interface import report_int
 from report_soap import Report
 from osv.osv import except_osv
-from tools.translate import _
 from report_exception import JasperException
 import logging
 
