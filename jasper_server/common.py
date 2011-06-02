@@ -34,7 +34,7 @@ def registered_report(name):
     gname = 'report.' + name
     if gname in netsvc.Service._services:
         return
-    report_jasper(name)
+    report_jasper(gname)
     _logger.info('Register the jasper report service [%s]' % name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
