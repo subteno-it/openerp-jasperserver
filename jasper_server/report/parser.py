@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP,
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>)
+#    Copyright (C) 2010-2011 SYLEAM Info Services (<http://www.syleam.fr/>)
 #              Christophe CHAUVET
 #
 #    This file is a part of jasper_server
