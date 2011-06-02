@@ -121,15 +121,20 @@ class jasper_document(osv.osv):
         if context is None:
             context = {}
 
-        import pooler
-        pool = pooler.get_pool(cr.dbname)
+        cr.execute("""SELECT count(*)
+                      FROM   pg_tables
+                      WHERE  schemaname = current_schema()
+                      AND    tablename = 'jasper_document'""")
+        if cr.fetchone()[0]:
+            import pooler
+            pool = pooler.get_pool(cr.dbname)
 
-        doc_obj = pool.get('jasper.document')
-        doc_ids = doc_obj.search(cr, 1, [('report_id', '=', False)], context=context)
-        if doc_ids:
-            _logger.info('Migrate old configuration data to the new one, there are %s document' % len(doc_ids))
-            for id in doc_ids:
-                doc_obj.make_action(cr, 1, id, context=context)
+            doc_obj = pool.get('jasper.document')
+            doc_ids = doc_obj.search(cr, 1, [('report_id', '=', False)], context=context)
+            if doc_ids:
+                _logger.info('Migrate old configuration data to the new one, there are %s document' % len(doc_ids))
+                for id in doc_ids:
+                    doc_obj.make_action(cr, 1, id, context=context)
 
         super(jasper_document, self)._auto_init(cr, context=context)
 
@@ -207,6 +212,19 @@ class jasper_document(osv.osv):
                 self.make_action(cr, uid, id, context=context)
 
         return res
+
+    #def unlink(self, cr, uid, ids, context=None):
+    #    """
+    #    When remove jasper_document, we must remove data to ir.actions.report.xml and ir.values
+    #    """
+    #    if context is None:
+    #        context = {}
+
+    #    doc = self.browse(cr, uid, ids
+    #    value = 'ir.actions.report.xml,' + str(report_id)
+
+
+    #    return super(jasper_document, self).unlink(cr, uid, ids, context=context)
 
 jasper_document()
 
