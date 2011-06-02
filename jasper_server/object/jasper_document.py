@@ -143,7 +143,16 @@ class jasper_document(osv.osv):
 
         doc = self.browse(cr, uid, id, context=context)
         if doc.report_id:
-            pass
+            _logger.info('Update "%s" service' % doc.name)
+            args = {
+                'name': doc.name,
+                'report_name': 'jasper.' + doc.service,
+                'model': doc.model_id.model,
+                'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
+                'header': False,
+                'multi': doc.toolbar,
+            }
+            act_report_obj.write(cr, uid, [doc.report_id.id], args, context=context)
         else:
             _logger.info('Create "%s" service' % doc.name)
             args = {
@@ -153,12 +162,13 @@ class jasper_document(osv.osv):
                 'report_type': 'jasper',
                 'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
                 'header': False,
+                'multi': doc.toolbar,
             }
             report_id = act_report_obj.create(cr, uid, args, context=context)
             cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
-            value = 'ir.actions.report.xml,'+str(report_id)
+            value = 'ir.actions.report.xml,' + str(report_id)
             ir.ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
-            registered_report('jasper.' + doc.service)
+        registered_report('jasper.' + doc.service)
 
     def create(self, cr, uid, vals, context=None):
         """
@@ -183,17 +193,20 @@ class jasper_document(osv.osv):
         if context is None:
             context = {}
 
-        if not context.get('action'):
-            for id in ids:
-                self.make_action(cr, uid, id, context=context)
-
         if vals.get('sql_name') or vals.get('sql_view'):
             sql_name = vals.get('sql_name', self.browse(cr, uid, ids[0]).sql_name)
             sql_view = vals.get('sql_view', self.browse(cr, uid, ids[0]).sql_view)
             drop_view_if_exists(cr, sql_name)
             sql_query = 'CREATE OR REPLACE VIEW %s AS\n%s' % (sql_name, sql_view)
             cr.execute(sql_query, (ids,))
-        return super(jasper_document, self).write(cr, uid, ids, vals, context=context)
+
+        res = super(jasper_document, self).write(cr, uid, ids, vals, context=context)
+
+        if not context.get('action'):
+            for id in ids:
+                self.make_action(cr, uid, id, context=context)
+
+        return res
 
 jasper_document()
 
