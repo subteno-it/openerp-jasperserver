@@ -26,7 +26,6 @@ from osv import fields
 from lxml.etree import Element, tostring
 from tools import ustr
 from tools.translate import _
-#import netsvc
 import logging
 _logger = logging.getLogger('jasper_server')
 
