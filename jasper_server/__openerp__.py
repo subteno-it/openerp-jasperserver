@@ -42,8 +42,11 @@ This module required library to work properly
 
 # pip install httplib2 (>= 0.6.0)
 # pip install pyPdf (>= 1.13)
+
+
+In collaboration with Eric vernichon (from Everlibre)
 """,
-    'author': 'Everlibre,SYLEAM',
+    'author': 'SYLEAM',
     'website': 'http://www.syleam.fr',
     'depends': [
         'base',
