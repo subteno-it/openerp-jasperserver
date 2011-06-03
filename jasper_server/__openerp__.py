@@ -48,6 +48,7 @@ In collaboration with Eric vernichon (from Everlibre)
 """,
     'author': 'SYLEAM',
     'website': 'http://www.syleam.fr',
+    'images': ['images/accueil.png','images/palette.png','images/document_form.png'],
     'depends': [
         'base',
     ],
