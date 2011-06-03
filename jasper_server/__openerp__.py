@@ -24,7 +24,7 @@
 
 {
     'name': 'JasperReport Server Interface',
-    'version': '6.5.6',
+    'version': '6.5.7',
     'category': 'Tools',
     'description': """This module interface JasperReport Server with OpenERP
 Features:

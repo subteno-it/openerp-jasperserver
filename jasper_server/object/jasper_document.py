@@ -113,31 +113,6 @@ class jasper_document(osv.osv):
         """
         super(jasper_document, self).__init__(pool, cr)
 
-    def _auto_init(self, cr, context=None):
-        """
-        When upgrade module, check if all jasper_document
-        have a link into ir.actions.reports.xml
-        """
-        if context is None:
-            context = {}
-
-        cr.execute("""SELECT count(*)
-                      FROM   pg_tables
-                      WHERE  schemaname = current_schema()
-                      AND    tablename = 'jasper_document'""")
-        if cr.fetchone()[0]:
-            import pooler
-            pool = pooler.get_pool(cr.dbname)
-
-            doc_obj = pool.get('jasper.document')
-            doc_ids = doc_obj.search(cr, 1, [('report_id', '=', False)], context=context)
-            if doc_ids:
-                _logger.info('Migrate old configuration data to the new one, there are %s document' % len(doc_ids))
-                for id in doc_ids:
-                    doc_obj.make_action(cr, 1, id, context=context)
-
-        super(jasper_document, self)._auto_init(cr, context=context)
-
     def make_action(self, cr, uid, id, context=None):
         """
         Create an entry in ir_actions_report_xml
