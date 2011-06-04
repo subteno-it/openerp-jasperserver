@@ -44,7 +44,7 @@ This module required library to work properly
 # pip install pyPdf (>= 1.13)
 
 
-In collaboration with Eric vernichon (from Everlibre)
+In collaboration with Eric Vernichon (from Everlibre)
 """,
     'author': 'SYLEAM',
     'website': 'http://www.syleam.fr',
