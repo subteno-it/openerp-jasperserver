@@ -196,7 +196,7 @@ class jasper_server(osv.osv):
         if not id:
             return x
 
-        if isinstance(id, int):
+        if isinstance(id, (int, long)):
             id = [id]
 
         obj = self.pool.get(relation)
