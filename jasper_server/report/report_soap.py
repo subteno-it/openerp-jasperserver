@@ -90,6 +90,7 @@ class Report(object):
         self.attrs = data.get('form', {})
         self.model = data.get('model', False)
         self.pool = pooler.get_pool(cr.dbname)
+        self.model_obj = self.pool.get(self.model)
         self.obj = None
         self.outputFormat = 'pdf'
         self.path = None
@@ -101,13 +102,14 @@ class Report(object):
         After retrieve datas to launch report, execute it and return the content
         """
         if context is None:
-            context = self.context
+            context = self.context.copy()
 
         if ids is None:
             ids = []
 
         js_obj = self.pool.get('jasper.server')
-        cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=context)
+        cur_obj = self.model_obj.browse(self.cr, self.uid, ex, context=context)
+        print 'test: ', hasattr(self.model_obj, 'check_print')
         aname = False
         if self.attrs['attachment']:
             try:
@@ -160,6 +162,34 @@ class Report(object):
             except Exception, e:
                 _logger.warning('Error %s' % str(e))
                 raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))
+
+        # Check if we can launch this reports
+        # Test can be simple, or un a function
+        if current_document.check_sel != 'none':
+            try:
+                if current_document.check_sel == 'simple' and not eval(current_document.check_simple, {'o': cur_obj}):
+                    raise JasperException(_('Check Print Error'), current_document.message_simple)
+                elif current_document.check_sel == 'func' and not hasattr(self.model_obj, 'check_print'):
+                    raise JasperException(_('Check Print Error'), _('"check_print" function not found in "%s" object') % self.model)
+                elif current_document.check_sel == 'func' and hasattr(self.model_obj, 'check_print') and \
+                        not self.model_obj.check_print(self.cr, self.uid, cur_obj, context=context):
+                    raise JasperException(_('Check Print Error'), _('Function "check_print" return an error'))
+
+            except SyntaxError, e:
+                _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Check Error'), _('Syntax error when check condition\n\nMessage: "%s"') % str(e))
+            except NameError, e:
+                _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Check Error'), _('Error when check condition\n\nMessage: "%s"') % str(e))
+            except AttributeError, e:
+                _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Check Error'), _('Attribute error when check condition\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+            except JasperException, e:
+                _logger.warning('Error %s' % str(e))
+                raise JasperException(e.title, e.message)
+            except Exception, e:
+                _logger.warning('Error %s' % str(e))
+                raise EvalError(_('Check Error'), _('Unknown error when check condition\nMessage: "%s"') % str(e))
 
         if self.attrs['reload'] and aname:
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
@@ -294,9 +324,9 @@ class Report(object):
                 self.cr.execute(js_conf['after'], {'id': ex})
 
             ## Update the number of print on object
-            fld = self.pool.get(self.model).fields_get(self.cr, self.uid)
+            fld = self.model_obj.fields_get(self.cr, self.uid)
             if 'number_of_print' in fld:
-                self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=context)
+                self.model_obj.write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=context)
 
         return (content, duplicate)
 

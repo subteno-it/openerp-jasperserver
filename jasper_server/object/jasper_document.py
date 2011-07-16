@@ -92,6 +92,10 @@ class jasper_document(osv.osv):
         'duplicate': fields.char('Duplicate', size=256, help="Indicate the number of duplicate copie, use o as object to evaluate\neg: o.partner_id.copy\nor\n'1'", ),
         'lang': fields.char('Lang', size=256, help="Indicate the lang to use for this report, use o as object to evaluate\neg: o.partner_id.lang\nor\n'fr_FR'\ndefault use user's lang"),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report link', readonly=True, help='Link to the report in ir.actions.report.xml'),
+        'check_sel': fields.selection([('none', 'None'), ('simple', 'Simple'), ('func', 'Function')], 'Checking type',
+                        help='if None, no check\nif Simple, define on Check Simple the condition\n if function, the object have check_print function'),
+        'check_simple': fields.char('Check Simple', size=256, help="This code inside this field must return True to send report execution\neg o.state in ('draft', 'open')"),
+        'message_simple': fields.char('Return message', size=256, translate=True, help="Error message when check simple doesn't valid"),
     }
 
     _defaults = {
@@ -105,6 +109,9 @@ class jasper_document(osv.osv):
         'duplicate': lambda *a: "'1'",
         'lang': lambda *a: False,
         'report_id': lambda *a: False,
+        'check_sel': lambda *a: 'none',
+        'check_simple': lambda *a: False,
+        'message_simple': lambda *a: False,
     }
 
     def __init__(self, pool, cr):
