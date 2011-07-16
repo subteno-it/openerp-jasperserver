@@ -89,11 +89,12 @@ class Report(object):
         self.data = data
         self.attrs = data.get('form', {})
         self.model = data.get('model', False)
-        self.context = context or {}
         self.pool = pooler.get_pool(cr.dbname)
         self.obj = None
         self.outputFormat = 'pdf'
         self.path = None
+        # If no context, retrieve one on the current user
+        self.context = context or self.pool.get('res.users').context_get(cr, uid, uid)
 
     def _jasper_execute(self, ex, current_document, js_conf, pdf_list, ids=None, context=None):
         """
@@ -106,7 +107,7 @@ class Report(object):
             ids = []
 
         js_obj = self.pool.get('jasper.server')
-        cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
+        cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=context)
         aname = False
         if self.attrs['attachment']:
             try:
@@ -143,7 +144,7 @@ class Report(object):
 
         log_debug('Number of duplicate copy: %d' % int(duplicate))
 
-        language = self.context.get('lang', 'en_US')
+        language = context.get('lang', 'en_US')
         if current_document.lang:
             try:
                 language = eval(current_document.lang, {'o': cur_obj})
@@ -187,16 +188,16 @@ class Report(object):
             # If XML we must compose it
             if self.attrs['params'][2] == 'xml':
                 d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
-                        self.attrs['params'][3], context=self.context)
+                        self.attrs['params'][3], context=context)
                 d_par['xml_data'] = d_xml
 
             # Retrieve the company information and send them in parameter
             # Is document have company field, to print correctly the document
             # Or take it to the user
             if hasattr(cur_obj, 'company_id'):
-                cny = self.pool.get('res.company').browse(self.cr, self.uid, cur_obj.company_id.id, context=self.context)
+                cny = self.pool.get('res.company').browse(self.cr, self.uid, cur_obj.company_id.id, context=context)
             else:
-                cny = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context).company_id
+                cny = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=context).company_id
 
             d_par['company_name'] = cny.name
             d_par['company_logo'] = cny.name.encode('ascii', 'ignore').replace(' ', '_')
@@ -210,7 +211,7 @@ class Report(object):
             addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [cny.partner_id.id], ['default'])['default']
             if not addr_id:
                 raise JasperException(_('Error'), _('Main company have no address defined on the partner!'))
-            addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
+            addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=context)
             d_par['company_street'] = addr.street or ''
             d_par['company_street2'] = addr.street2 or ''
             d_par['company_zip'] = addr.zip or ''
@@ -284,8 +285,7 @@ class Report(object):
                             'datas_fname': name,
                             'res_model': self.model,
                             'res_id': ex,
-                            }, context=self.context
-                )
+                            }, context=context)
 
             ###
             ## Execute the before query if it available
@@ -296,12 +296,14 @@ class Report(object):
             ## Update the number of print on object
             fld = self.pool.get(self.model).fields_get(self.cr, self.uid)
             if 'number_of_print' in fld:
-                self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=self.context)
+                self.pool.get(self.model).write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=context)
 
         return (content, duplicate)
 
     def execute(self):
         """Launch the report and return it"""
+        context = self.context.copy()
+
         ids = self.ids
         js_obj = self.pool.get('jasper.server')
         doc_obj = self.pool.get('jasper.document')
@@ -309,7 +311,7 @@ class Report(object):
         if not len(js_ids):
             raise JasperException(_('Configuration Error'), _('No JasperServer configuration found!'))
 
-        js = js_obj.read(self.cr, self.uid, js_ids, context=self.context)[0]
+        js = js_obj.read(self.cr, self.uid, js_ids, context=context)[0]
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
 
@@ -317,11 +319,11 @@ class Report(object):
         # For each IDS, launch a query, and return only one result
         #
         pdf_list = []
-        doc_ids = doc_obj.search(self.cr, self.uid, [('service', '=', self.service)], context=self.context)
+        doc_ids = doc_obj.search(self.cr, self.uid, [('service', '=', self.service)], context=context)
         if not doc_ids:
             raise JasperException(_('Configuration Error'), _("Service name doesn't match!"))
 
-        doc = doc_obj.browse(self.cr, self.uid, doc_ids[0], context=self.context)
+        doc = doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
         self.attrs['attachment'] = doc.attachment
         self.attrs['reload'] = doc.attachment_use
         if not self.attrs.get('params'):
@@ -337,12 +339,12 @@ class Report(object):
                     if d.only_one and one_check.get(d.id, False):
                         continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
-                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, ids, context=self.context)
+                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, ids, context=context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, ids, context=self.context)
+                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, ids, context=context)
                 one_check[doc.id] = True
 
         ## We use pyPdf to marge all PDF in unique file
