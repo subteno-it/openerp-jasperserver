@@ -22,14 +22,6 @@
 #
 ##############################################################################
 
-
-# Add report path to the python path
-import os
-import sys
-
-preport = os.path.abspath(os.path.join(os.path.dirname(__file__), 'report'))
-sys.path.append(preport)
-
 import wizard
 import oojasper
 import jasper_document

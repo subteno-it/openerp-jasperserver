@@ -42,6 +42,7 @@ This module required library to work properly
 
 # pip install httplib2 (>= 0.6.0)
 # pip install pyPdf (>= 1.13)
+# pip install python-dime (>= 0.2.1)
 
 
 In collaboration with Eric Vernichon (from Everlibre)
@@ -67,7 +68,7 @@ In collaboration with Eric Vernichon (from Everlibre)
         'demo/jasper_document.xml',
     ],
     'installable': True,
-    'external_dependencies': {'python': ['httplib2', 'pyPdf']},
+    'external_dependencies': {'python': ['httplib2', 'pyPdf', 'dime']},
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
