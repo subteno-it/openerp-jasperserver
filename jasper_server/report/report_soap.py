@@ -191,17 +191,23 @@ class Report(object):
                 d_par['xml_data'] = d_xml
 
             # Retrieve the company information and send them in parameter
-            user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
-            d_par['company_name'] = user.company_id.name
-            d_par['company_logo'] = user.company_id.name.encode('ascii', 'ignore').replace(' ', '_')
-            d_par['company_hearder1'] = user.company_id.rml_header1 or ''
-            d_par['company_footer1'] = user.company_id.rml_footer1 or ''
-            d_par['company_footer2'] = user.company_id.rml_footer2 or ''
-            d_par['company_website'] = user.company_id.partner_id.website or ''
-            d_par['company_currency'] = user.company_id.currency_id.name or ''
+            # Is document have company field, to print correctly the document
+            # Or take it to the user
+            if hasattr(cur_obj, 'company_id'):
+                cny = self.pool.get('res.company').browse(self.cr, self.uid, cur_obj.company_id.id, context=self.context)
+            else:
+                cny = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context).company_id
+
+            d_par['company_name'] = cny.name
+            d_par['company_logo'] = cny.name.encode('ascii', 'ignore').replace(' ', '_')
+            d_par['company_hearder1'] = cny.rml_header1 or ''
+            d_par['company_footer1'] = cny.rml_footer1 or ''
+            d_par['company_footer2'] = cny.rml_footer2 or ''
+            d_par['company_website'] = cny.partner_id.website or ''
+            d_par['company_currency'] = cny.currency_id.name or ''
 
             # Search the default address for the company.
-            addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [user.company_id.partner_id.id], ['default'])['default']
+            addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [cny.partner_id.id], ['default'])['default']
             if not addr_id:
                 raise JasperException(_('Error'), _('Main company have no address defined on the partner!'))
             addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=self.context)
@@ -216,7 +222,7 @@ class Report(object):
 
             for p in current_document.param_ids:
                 if p.code and  p.code.startswith('[['):
-                        d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': user.company_id, 't': time}) or ''
+                        d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': cny, 't': time}) or ''
                 else:
                         d_par[p.name] = p.code
 
