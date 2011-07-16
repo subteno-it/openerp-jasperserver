@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP, Management module for Jasper Server
-
-#    Copyright (C) 2011 SYLEAM (<http://www.syleam.fr/>) 
+#    Copyright (C) 2011 SYLEAM (<http://www.syleam.fr/>)
 #              Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
 #    This file is a part of jasper_server
@@ -27,6 +26,7 @@ import logging
 
 __name__ = "Upgrade existing reports"
 _logger = logging.getLogger('jasper_server')
+
 
 def migrate(cr, v):
     """

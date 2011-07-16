@@ -48,7 +48,7 @@ In collaboration with Eric Vernichon (from Everlibre)
 """,
     'author': 'SYLEAM',
     'website': 'http://www.syleam.fr',
-    'images': ['images/accueil.png','images/palette.png','images/document_form.png'],
+    'images': ['images/accueil.png', 'images/palette.png', 'images/document_form.png'],
     'depends': [
         'base',
     ],
@@ -67,7 +67,7 @@ In collaboration with Eric Vernichon (from Everlibre)
         'demo/jasper_document.xml',
     ],
     'installable': True,
-    'external_dependencies': {'python': ['httplib2','pyPdf']},
+    'external_dependencies': {'python': ['httplib2', 'pyPdf']},
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

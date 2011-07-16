@@ -37,11 +37,13 @@ SOAP_NS = 'http://schemas.xmlsoap.org/soap/envelope/'
 
 import struct as _struct
 
+
 def _typecheck_str(value, bits):
     if not isinstance(value, str):
         raise TypeError()
     if len(value) > (1 << bits):
         raise ValueError()
+
 
 def _typecheck_int(value, bits):
     if not isinstance(value, int):
@@ -49,16 +51,18 @@ def _typecheck_int(value, bits):
     if not (0 <= value < (1 << bits)):
         raise ValueError()
 
+
 def _typecheck(value, klass):
     if not isinstance(value, klass):
         raise ValueError()
+
 
 class Type(object):
 
     '''Please don't subclass Type, unless you know what you're doing.
     Please don't isntantiate Type. Instead, use one of its subclasses.'''
 
-    def __init__(self, value = ''):
+    def __init__(self, value=''):
         if self.__class__ == Type:
             raise TypeError(
                 '''Please use one of the Type's subclasses: %s.''' %
@@ -72,7 +76,7 @@ class Type(object):
             pass
         self.tnf = self._code
         self.value = value
-    
+
     @staticmethod
     def load_string(tnf, value):
         _typecheck_int(tnf, 4)
@@ -80,10 +84,11 @@ class Type(object):
             if klass._code == tnf:
                 return klass(value)
         return UnsupportedType(tnf, value)
-    
+
     def as_mime(self):
         from email.MIMEBase import MIMEBase
         return MIMEBase('application', 'octet-stream')
+
 
 class UnchangedType(Type):
 
@@ -96,6 +101,7 @@ class UnchangedType(Type):
 
     def __str__(self):
         return '<unchanged>'
+
 
 class MediaType(Type):
 
@@ -111,8 +117,9 @@ class MediaType(Type):
         maintype, subtype = self.value.split('/')
         return MIMEBase(maintype, subtype)
 
+
 class TypeByUri(Type):
-    
+
     '''A type which is identified by a URI construct.'''
 
     _code = 0x02
@@ -127,6 +134,7 @@ class TypeByUri(Type):
         else:
             return Type.as_mime(self)
 
+
 class UnknownType(Type):
 
     '''Indicate that type of the payload is unknown.'''
@@ -136,6 +144,7 @@ class UnknownType(Type):
 
     def __str__(self):
         return '<?>'
+
 
 class NoneType(Type):
 
@@ -147,6 +156,7 @@ class NoneType(Type):
     def __str__(self):
         return '<none>'
 
+
 class UnsupportedType(Type):
 
     '''An unsupported type.'''
@@ -156,34 +166,42 @@ class UnsupportedType(Type):
     def __init__(self, tnf, value):
         Type.__init__(self, value)
         self.tnf = tnf
-    
+
     def __str__(self):
         return '<unsupported>'
+
 
 def _write1(stream, value):
     stream.write(_struct.pack('>B', value))
 
+
 def _write2(stream, value):
     stream.write(_struct.pack('>H', value))
+
 
 def _write4(stream, value):
     stream.write(_struct.pack('>I', value))
 
+
 def _write_padded(stream, value):
     stream.write(value)
     stream.write('\0' * (4 - len(value) & 3))
-    
+
+
 def _read1(stream):
     value, = _struct.unpack('>B', stream.read(1))
     return value
+
 
 def _read2(stream):
     value, = _struct.unpack('>H', stream.read(2))
     return value
 
+
 def _read4(stream):
     value, = _struct.unpack('>I', stream.read(4))
     return value
+
 
 def _read_padded(stream, count):
     value = stream.read(count)
@@ -194,6 +212,7 @@ DEFAULT_VERSION = 1
 DEFAULT_TYPE = UnknownType()
 SUPPORTED_VERSIONS = (1,)
 
+
 class Record(object):
 
     class FaultyRecord(Exception):
@@ -202,7 +221,7 @@ class Record(object):
     class UnsupportedVersion(Exception):
         pass
 
-    def __init__(self, id = None, type = DEFAULT_TYPE, data = '', mb = 0, me = 0, cf = 0, version = DEFAULT_VERSION):
+    def __init__(self, id=None, type=DEFAULT_TYPE, data='', mb=0, me=0, cf=0, version=DEFAULT_VERSION):
         if id is None:
             from uuid import uuid4
             id = 'uuid:%s' % uuid4()
@@ -228,11 +247,11 @@ class Record(object):
         return '%s with id=%s, type=%s, flags=%s>' % (head, repr(self.id), self.type, flags)
 
     def save(self, stream):
-        dose = self.cf | self.me << 1 | self.mb << 2 | self.version << 3;
+        dose = self.cf | self.me << 1 | self.mb << 2 | self.version << 3
         _write1(stream, dose)
-        dose = self.type.tnf << 4;
+        dose = self.type.tnf << 4
         _write1(stream, dose)
-        options = '' # options are not supported
+        options = ''  # options are not supported
         for q in (options, self.id, self.type.value):
             _write2(stream, len(q))
         _write4(stream, len(self.data))
@@ -257,12 +276,12 @@ class Record(object):
         type_length = _read2(stream)
         data_length = _read4(stream)
         options = _read_padded(stream, options_length)
-        del options # options are not supported
+        del options  # options are not supported
         id = _read_padded(stream, id_length)
         type = _read_padded(stream, type_length)
         data = _read_padded(stream, data_length)
         return Record(id, Type.load_string(tnf, type), data, mb, me, cf, version)
-    
+
     @staticmethod
     def load_all(stream):
         while True:
@@ -280,19 +299,20 @@ class Record(object):
         encode(attachment)
         return attachment
 
+
 class Message(object):
 
     def __init__(self, records):
         self.records = list(records)
         self.dict = dict((record.id, record) for record in self.records)
-    
+
     def __repr__(self):
         head = object.__repr__(self).split(' object ')[0]
         return '%s with records=%s>' % (head, self.records)
 
     @staticmethod
     def load(stream):
-        return Message(records = Record.load_all(stream))
+        return Message(records=Record.load_all(stream))
 
     def __getitem__(self, key):
         if isinstance(key, int):

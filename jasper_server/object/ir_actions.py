@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP, Management module for Jasper Server
-#    Copyright (C) 2011 SYLEAM (<http://www.syleam.fr/>) 
+#    Copyright (C) 2011 SYLEAM (<http://www.syleam.fr/>)
 #              Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
 #    This file is a part of jasper_server
@@ -32,7 +32,7 @@ _logger = logging.getLogger('jasper_server')
 class IrActionReport(osv.osv):
     _inherit = 'ir.actions.report.xml'
 
-    def register_all(self,cursor):
+    def register_all(self, cursor):
         """
         Register all jasper report
         """
