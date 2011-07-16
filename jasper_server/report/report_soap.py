@@ -89,7 +89,7 @@ class Report(object):
         self.data = data
         self.attrs = data.get('form', {})
         self.model = data.get('model', False)
-        self.context = context
+        self.context = context or {}
         self.pool = pooler.get_pool(cr.dbname)
         self.obj = None
         self.outputFormat = 'pdf'
@@ -100,7 +100,7 @@ class Report(object):
         After retrieve datas to launch report, execute it and return the content
         """
         if context is None:
-            context = {}
+            context = self.context
 
         if ids is None:
             ids = []
