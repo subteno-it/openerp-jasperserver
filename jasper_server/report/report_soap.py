@@ -388,9 +388,11 @@ class Report(object):
                     c = StringIO()
                     tmp_content.write(c)
                     content = c.getvalue()
+        elif len(pdf_list) == 1:
+            content = open(pdf_list[0], 'r').read()
 
-            for f in pdf_list:
-                os.remove(f)
+        for f in pdf_list:
+            os.remove(f)
 
         self.obj = external_pdf(content)
         self.obj.set_output_type(self.outputFormat)
