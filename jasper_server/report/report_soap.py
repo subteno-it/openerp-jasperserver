@@ -308,7 +308,7 @@ class Report(object):
             ###
             ## Store the content in ir.attachment if ask
             if aname:
-                name = aname + self.outputFormat
+                name = aname + '.' + self.outputFormat
                 self.pool.get('ir.attachment').create(self.cr, self.uid, {
                             'name': aname,
                             'datas': base64.encodestring(ParseContent(content)),
