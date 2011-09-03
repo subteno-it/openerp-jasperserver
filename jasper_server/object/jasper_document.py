@@ -25,6 +25,7 @@
 from osv import osv
 from osv import fields
 from tools.sql import drop_view_if_exists
+from tools.translate import _
 from jasper_server.common import registered_report
 import ir
 import logging
@@ -194,6 +195,25 @@ class jasper_document(osv.osv):
                 self.make_action(cr, uid, id, context=context)
 
         return res
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        When we duplicate code, we must remove some field, before 
+        #TODO make doc string
+        Comment this
+        """
+        if context is None:
+            context = {}
+
+        if default is None:
+            default = {}
+
+        doc = self.browse(cr, uid, id, context=context)
+
+        default['report_id'] = False
+        default['service'] = doc.service + '_copy'
+        default['name'] = doc.name + _(' (copy)')
+        return super(jasper_document, self).copy(cr, uid, id, default, context=context)
 
     #def unlink(self, cr, uid, ids, context=None):
     #    """
