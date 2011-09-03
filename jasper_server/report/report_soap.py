@@ -109,7 +109,6 @@ class Report(object):
 
         js_obj = self.pool.get('jasper.server')
         cur_obj = self.model_obj.browse(self.cr, self.uid, ex, context=context)
-        print 'test: ', hasattr(self.model_obj, 'check_print')
         aname = False
         if self.attrs['attachment']:
             try:
@@ -191,16 +190,23 @@ class Report(object):
                 _logger.warning('Error %s' % str(e))
                 raise EvalError(_('Check Error'), _('Unknown error when check condition\nMessage: "%s"') % str(e))
 
+        reload_ok = False
         if self.attrs['reload'] and aname:
+            _logger.info('Printing must be reload from attachment if exists (%s)' % aname)
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
-                    [('datas_fname', '=', aname + '.pdf'), ('res_model', '=', self.model), ('res_id', '=', ex)])
+                    [('name', '=', aname), ('res_model', '=', self.model), ('res_id', '=', ex)])
             if aids:
+                reload_ok = True
+                _logger.info('Attachment found, reload it!')
                 brow_rec = self.pool.get('ir.attachment').browse(self.cr, self.uid, aids[0])
                 if brow_rec.datas:
                     d = base64.decodestring(brow_rec.datas)
                     WriteContent(d, pdf_list)
                     content = d
-        else:
+            else:
+                _logger.info('Attachment not found')
+
+        if not reload_ok:
             # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
             # We cannot use $X{IN, field, Collection}
             # use $P!{OERP_ACTIVE_IDS} indeed as
@@ -309,6 +315,7 @@ class Report(object):
             ## Store the content in ir.attachment if ask
             if aname:
                 name = aname + '.' + self.outputFormat
+                _logger.info('Save printing as attachment (%s)' % (name,))
                 self.pool.get('ir.attachment').create(self.cr, self.uid, {
                             'name': aname,
                             'datas': base64.encodestring(ParseContent(content)),
