@@ -198,9 +198,7 @@ class jasper_document(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         """
-        When we duplicate code, we must remove some field, before 
-        #TODO make doc string
-        Comment this
+        When we duplicate code, we must remove some field, before
         """
         if context is None:
             context = {}
