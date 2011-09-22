@@ -41,10 +41,9 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
 <SOAP-ENV:Body>
 <ns4:runReport>
 <request xsi:type="xsd:string">
-    &lt;request operationName=&quot;runReport&quot;&gt;
+    &lt;request operationName=&quot;runReport&quot; locale=&quot;fr&quot;&gt;
         &lt;argument name=&quot;RUN_OUTPUT_FORMAT&quot;&gt;%(format)s&lt;/argument&gt;
         &lt;argument name=&quot;PAGE&quot;&gt;0&lt;/argument&gt;
-        &lt;argument name=&quot;REPORT_LOCALE&quot;&gt;&lt;![CDATA[fr]]&gt;&lt;/argument&gt;
         &lt;argument name=&quot;USE_DIME_ATTACHMENTS&quot;&gt;
             &lt;![CDATA[1]]&gt;
         &lt;/argument&gt;
@@ -75,7 +74,7 @@ def entities(data):
     return data
 
 
-def parameter(dico, resource):
+def parameter(dico, resource, special=None):
     """
     Convert value to a parameter for SOAP query
 
@@ -112,10 +111,14 @@ def parameter(dico, resource):
             e.text = val and ustr(val) or ''
         res += tostring(e) + '\n'
 
-    for key, val in [('REPORT_LOCALE', 'fr_FR'), ('IS_JASPERSERVER', 'yes')]:
+    if special is None:
+        special = {}
+
+    for key in special:
+        _logger.debug(' PARAMETER -> SPECIAL: %s' % key)
         e = Element('parameter')
         e.set('name', key)
-        e.text = ustr(val)
+        e.text = ustr(special[key])
         res += tostring(e) + '\n'
 
     res = entities(res)

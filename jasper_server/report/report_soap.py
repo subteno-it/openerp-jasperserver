@@ -264,8 +264,12 @@ class Report(object):
                         d_par[p.name] = p.code
 
             self.outputFormat = current_document.format.lower()
+            special_dict = {
+                'REPORT_LOCALE': language or 'en_US',
+                'IS_JASPERSERVER': 'yes',
+            }
 
-            par = parameter(self.attrs, d_par)
+            par = parameter(self.attrs, d_par, special_dict)
             body_args = {
                 'format': self.attrs['params'][0],
                 'path': self.path or self.attrs['params'][1],
