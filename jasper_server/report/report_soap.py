@@ -158,7 +158,7 @@ class Report(object):
             user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=self.context)
             d_par['company_name'] = user.company_id.name
             d_par['company_logo'] = user.company_id.name.encode('ascii', 'ignore').replace(' ', '_')
-            d_par['company_hearder1'] = user.company_id.rml_header1 or ''
+            d_par['company_header1'] = user.company_id.rml_header1 or ''
             d_par['company_footer1'] = user.company_id.rml_footer1 or ''
             d_par['company_footer2'] = user.company_id.rml_footer2 or ''
             d_par['company_website'] = user.company_id.partner_id.website or ''
@@ -308,9 +308,11 @@ class Report(object):
                     c = StringIO()
                     tmp_content.write(c)
                     content = c.getvalue()
+        elif len(pdf_list) == 1:
+            content = open(pdf_list[0], 'r').read()
 
-            for f in pdf_list:
-                os.remove(f)
+        for f in pdf_list:
+            os.remove(f)
 
         self.obj = external_pdf(content)
         self.obj.set_output_type(self.outputFormat)
