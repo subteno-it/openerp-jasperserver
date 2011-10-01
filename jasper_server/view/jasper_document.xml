@@ -118,6 +118,7 @@
                         <label align="0.0" string="Use [[ o.name ]] to called browse object, see below for possibility" colspan="4"/>
                         <label align="0.0" string="c: for user s company" colspan="4"/>
                         <label align="0.0" string="o: for object" colspan="4"/>
+                        <label align="0.0" string="u: for current user (user launched the report)" colspan="4"/>
                         <label align="0.0" string="t: for time module" colspan="4"/>
                     </group>
                 </form>

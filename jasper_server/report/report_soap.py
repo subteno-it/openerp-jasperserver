@@ -230,10 +230,11 @@ class Report(object):
             # Retrieve the company information and send them in parameter
             # Is document have company field, to print correctly the document
             # Or take it to the user
+            user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=context)
             if hasattr(cur_obj, 'company_id'):
                 cny = self.pool.get('res.company').browse(self.cr, self.uid, cur_obj.company_id.id, context=context)
             else:
-                cny = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=context).company_id
+                cny = user.company_id
 
             d_par['company_name'] = cny.name
             d_par['company_logo'] = cny.name.encode('ascii', 'ignore').replace(' ', '_')
@@ -259,9 +260,9 @@ class Report(object):
 
             for p in current_document.param_ids:
                 if p.code and  p.code.startswith('[['):
-                        d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': cny, 't': time}) or ''
+                    d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': cny, 't': time, 'u': user}) or ''
                 else:
-                        d_par[p.name] = p.code
+                    d_par[p.name] = p.code
 
             self.outputFormat = current_document.format.lower()
             special_dict = {
