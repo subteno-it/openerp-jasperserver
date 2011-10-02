@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openerp-jasperserver\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-09-03 21:38+0000\n"
+"POT-Creation-Date: 2011-10-01 15:13+0000\n"
 "PO-Revision-Date: 2011-05-22 01:10+0000\n"
 "Last-Translator: ZhangCheng <skyxxzc@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-04 05:12+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-10-02 05:14+0000\n"
+"X-Generator: Launchpad (build 14071)\n"
 
 #. module: jasper_server
 #: selection:jasper.document,format_choice:0
@@ -53,12 +53,12 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:249
-#: code:addons/jasper_server/report/report_soap.py:292
-#: code:addons/jasper_server/report/report_soap.py:294
-#: code:addons/jasper_server/report/report_soap.py:296
-#: code:addons/jasper_server/report/report_soap.py:302
-#: code:addons/jasper_server/report/report_soap.py:308
+#: code:addons/jasper_server/report/report_soap.py:250
+#: code:addons/jasper_server/report/report_soap.py:297
+#: code:addons/jasper_server/report/report_soap.py:299
+#: code:addons/jasper_server/report/report_soap.py:301
+#: code:addons/jasper_server/report/report_soap.py:307
+#: code:addons/jasper_server/report/report_soap.py:313
 #: code:addons/jasper_server/wizard/format_choice.py:60
 #: code:addons/jasper_server/wizard/format_choice.py:67
 #: code:addons/jasper_server/wizard/format_choice.py:79
@@ -278,7 +278,7 @@ msgid "Service name"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/object/jasper_document.py:215
+#: code:addons/jasper_server/object/jasper_document.py:213
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -294,7 +294,7 @@ msgid "Before"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:306
+#: code:addons/jasper_server/report/report_soap.py:311
 #, python-format
 msgid "Authentification Error"
 msgstr ""
@@ -459,8 +459,8 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:349
-#: code:addons/jasper_server/report/report_soap.py:361
+#: code:addons/jasper_server/report/report_soap.py:354
+#: code:addons/jasper_server/report/report_soap.py:366
 #, python-format
 msgid "Configuration Error"
 msgstr ""
@@ -475,7 +475,7 @@ msgid "Duplicate Error"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:306
+#: code:addons/jasper_server/report/report_soap.py:311
 #, python-format
 msgid "Invalid login or password"
 msgstr ""
@@ -525,7 +525,7 @@ msgid "Checking type"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:292
+#: code:addons/jasper_server/report/report_soap.py:297
 #, python-format
 msgid "Server not found !"
 msgstr ""
@@ -560,7 +560,7 @@ msgid "Port"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:361
+#: code:addons/jasper_server/report/report_soap.py:366
 #, python-format
 msgid "Service name doesn't match!"
 msgstr ""
@@ -622,7 +622,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:302
+#: code:addons/jasper_server/report/report_soap.py:307
 #, python-format
 msgid ""
 "Code: %s\n"
@@ -676,7 +676,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:312
+#: code:addons/jasper_server/report/report_soap.py:317
 #, python-format
 msgid "Unknown Error"
 msgstr ""
@@ -712,7 +712,12 @@ msgid "Formats"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:349
+#: view:jasper.document.parameter:0
+msgid "u: for current user (user launched the report)"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:354
 #, python-format
 msgid "No JasperServer configuration found!"
 msgstr ""
@@ -856,7 +861,7 @@ msgid "After"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:312
+#: code:addons/jasper_server/report/report_soap.py:317
 #, python-format
 msgid ""
 "Content-type: %s\n"
@@ -983,7 +988,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:249
+#: code:addons/jasper_server/report/report_soap.py:250
 #, python-format
 msgid "Main company have no address defined on the partner!"
 msgstr ""
