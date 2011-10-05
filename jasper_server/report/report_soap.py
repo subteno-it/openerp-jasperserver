@@ -302,14 +302,22 @@ class Report(object):
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
                 for x in range(0, duplicate):
-                    tmp_pdf = PdfFileReader(open(pdf, 'r'))
+                    fp = open(pdf, 'r')
+                    tmp_pdf = PdfFileReader(fp)
                     for page in range(tmp_pdf.getNumPages()):
                         tmp_content.addPage(tmp_pdf.getPage(page))
+                    fp.close()
+                    del fp
                     c = StringIO()
                     tmp_content.write(c)
                     content = c.getvalue()
+                    c.close()
+                    del c
         elif len(pdf_list) == 1:
-            content = open(pdf_list[0], 'r').read()
+            fp = open(pdf_list[0], 'r')
+            content = fp.read()
+            fp.close()
+            del fp
 
         for f in pdf_list:
             os.remove(f)
