@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-03-31 16:25:00+0000\n"
-"PO-Revision-Date: 2011-03-31 18:26+0100\n"
+"POT-Creation-Date: 2011-10-08 09:56:51+0000\n"
+"PO-Revision-Date: 2011-10-08 12:02+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -117,6 +117,11 @@ msgstr "Indenter le XML ?"
 #: view:jasper.document.parameter:0
 msgid "c: for user s company"
 msgstr "c: pour la companie de l'utilisateur"
+
+#. module: jasper_server
+#: view:jasper.document:0
+msgid "Expression for duplicate the number of copie"
+msgstr "Expression pour le nombre d'exemplaire a sortir"
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:0
@@ -280,6 +285,12 @@ msgid "Rich Text Format"
 msgstr "Format Texte Enrichi"
 
 #. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:0
+#, python-format
+msgid "No report name"
+msgstr "Nom du rapport"
+
+#. module: jasper_server
 #: model:ir.ui.menu,name:jasper_server.menu_jasper_configuration
 msgid "Configuration"
 msgstr "Configuration"
@@ -308,24 +319,6 @@ msgstr "Extension"
 #: help:jasper.document,sequence:0
 msgid "The sequence is used when launch a multple report, to select the order to launch"
 msgstr "La séquence est utilisé lors du lancement de rapport multiple, pour sélectionner l'ordre d'exécution"
-
-#. module: jasper_server
-#: model:ir.module.module,description:jasper_server.module_meta_information
-msgid ""
-"This module interface JasperServer For Reports.\n"
-"\n"
-"This module required library to work properly\n"
-"\n"
-"# pip install httplib2\n"
-"\n"
-"    "
-msgstr ""
-"Ce module est une interface JasperServer pour les rapports.\n"
-"\n"
-"Ce module requière des bibliothèques pour fonctionner correctement\n"
-"\n"
-"# pip install httplib2\n"
-"\n"
 
 #. module: jasper_server
 #: model:ir.model,name:jasper_server.model_jasper_document_parameter
@@ -369,6 +362,46 @@ msgstr "Document Jasper"
 #: model:ir.ui.menu,name:jasper_server.menu_jasper
 msgid "Jasper Report"
 msgstr "Jasper Report"
+
+#. module: jasper_server
+#: model:ir.module.module,description:jasper_server.module_meta_information
+msgid ""
+"This module interface JasperServer For Reports.\n"
+"Features:\n"
+"- Document source must be in CSV, XML\n"
+"- Save document as attachment on object\n"
+"- Retrieve attachment if present\n"
+"- Add additionnals parameters (ex from fields function)\n"
+"- Affect group on report\n"
+"- Use context to display or not the print button (eg: in stock.picking separate per type)\n"
+"- Execute SQL query before and after treatement\n"
+"- Launch report based on SQL View\n"
+"\n"
+"This module required library to work properly\n"
+"\n"
+"# pip install httplib2 (>= 0.6.0)\n"
+"# pip install pyPdf (>= 1.13)\n"
+msgstr ""
+"Ce module interface JasperServer pour la génération de rapports.\n"
+"Fonctionnalitées:\n"
+"- Le document source peut être du SQL ou XML\n"
+"- Sauvegarder du document en tant que pièce jointe\n"
+"- Récupération depuis la pièce jointe si présente\n"
+"- Ajout de paramètres supplémentaire (comme les champs fonctions)\n"
+"- Affectation d'un groupe a un rapport\n"
+"- Utilisation du contexte pour faire apparaitre ou non le bouton (ex: dans stock.picking séparé par type)\n"
+"- Exécution d'une requete avant ou après traitement\n"
+"- Lancement d'un rapport basé sur une vue SQL\n"
+"\n"
+"Ce module requière des librairies python pour fonctionner correctement\n"
+"\n"
+"# pip install httplib2 (>= 0.6.0)\n"
+"# pip install pyPdf (>= 1.13)\n"
+
+#. module: jasper_server
+#: field:jasper.document,duplicate:0
+msgid "Duplicate"
+msgstr "Nombre d'exemplaire"
 
 #. module: jasper_server
 #: field:jasper.document,report_unit:0
@@ -582,6 +615,19 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: jasper_server
+#: help:jasper.document,duplicate:0
+msgid ""
+"Indicate the number of duplicate copie, use o as object to evaluate\n"
+"eg: o.partner_id.copy\n"
+"or\n"
+"'1'"
+msgstr ""
+"Indique le nombre d'exemplaire a sortir, utiliser o pour l'objet a évaluer\n"
+"ex: o.partner_id.copy\n"
+"ou\n"
+"'1'"
+
+#. module: jasper_server
 #: view:jasper.document:0
 msgid "Reports"
 msgstr "Rapports"
@@ -658,6 +704,21 @@ msgstr "Id"
 msgid "Indicates if this document is active or not"
 msgstr "Indique si ce document est actif ou pas"
 
+#~ msgid ""
+#~ "This module interface JasperServer For Reports.\n"
+#~ "\n"
+#~ "This module required library to work properly\n"
+#~ "\n"
+#~ "# pip install httplib2\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "Ce module est une interface JasperServer pour les rapports.\n"
+#~ "\n"
+#~ "Ce module requière des bibliothèques pour fonctionner correctement\n"
+#~ "\n"
+#~ "# pip install httplib2\n"
+#~ "\n"
 #~ msgid "If report is base on SQL view, inert it here"
 #~ msgstr "SI le rapport est basé sur une vue SQL, inserer la ici"
 #~ msgid "This module interface JasperServer For Reports."
