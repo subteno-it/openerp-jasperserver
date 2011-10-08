@@ -24,15 +24,24 @@
 
 {
     'name': 'Jasper Server Interface',
-    'version': '5.5.4',
+    'version': '5.5.5',
     'category': 'Tools',
     'description': """This module interface JasperServer For Reports.
+Features:
+- Document source must be in CSV, XML
+- Save document as attachment on object
+- Retrieve attachment if present
+- Add additionnals parameters (ex from fields function)
+- Affect group on report
+- Use context to display or not the print button (eg: in stock.picking separate per type)
+- Execute SQL query before and after treatement
+- Launch report based on SQL View
 
 This module required library to work properly
 
-# pip install httplib2
-
-    """,
+# pip install httplib2 (>= 0.6.0)
+# pip install pyPdf (>= 1.13)
+""",
     'author': 'Everlibre,SYLEAM',
     'website': 'http://www.syleam.fr',
     'depends': [
