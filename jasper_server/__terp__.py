@@ -24,7 +24,7 @@
 
 {
     'name': 'Jasper Server Interface',
-    'version': '5.5.5',
+    'version': '5.5.6',
     'category': 'Tools',
     'description': """This module interface JasperServer For Reports.
 Features:

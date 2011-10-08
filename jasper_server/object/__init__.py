@@ -23,16 +23,17 @@
 ##############################################################################
 
 
+
+## Add report path to the python path
+#import os
+#import sys
+#
+#preport = os.path.abspath(os.path.join(os.path.dirname(__file__), 'report'))
+#sys.path.append(preport)
+
 import wizard
 import oojasper
 import jasper_document
-import ir_values
-
-# Add report path to the python path
-import os
-import sys
-
-preport = os.path.abspath(os.path.join(os.path.dirname(__file__), 'report'))
-sys.path.append(preport)
+import ir_actions
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

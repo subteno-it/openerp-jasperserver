@@ -2,7 +2,9 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP,
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.Syleam.fr/>) Damien CRIER
+#    Copyright (C) 2010-2011 SYLEAM Info Services (<http://www.Syleam.fr/>)
+#                  Damien CRIER <damien.crier@syleam.fr>
+#                  Christophe CHAUVET <chrisotphe.chauvet@syleam.fr>
 #
 #    This file is a part of jasper_server
 #
@@ -24,22 +26,13 @@
 
 from osv import osv
 from osv import fields
-from jasper_server.wizard.format_choice import format_choice
 from tools.sql import drop_view_if_exists
+from common import registered_report
 import netsvc
 import pooler
+import ir
+
 logger = netsvc.Logger()
-
-
-def registered_wizard(name):
-    """ Register dynamicaly the wizard for each entry"""
-    gname = 'wizard.%s' % name
-    if netsvc.service_exist(gname):
-        if isinstance(netsvc.SERVICES[gname], format_choice):
-            return
-        del netsvc.SERVICES[gname]
-    format_choice(name)
-    logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Register the jasper service [%s]' % name)
 
 
 class jasper_document_extension(osv.osv):
@@ -100,6 +93,7 @@ class jasper_document(osv.osv):
         'sequence': fields.integer('Sequence', help='The sequence is used when launch a multple report, to select the order to launch'),
         'only_one': fields.boolean('Launch one time for all ids', help='Launch the report only one time on multiple id'),
         'duplicate': fields.char('Duplicate', size=256, help="Indicate the number of duplicate copie, use o as object to evaluate\neg: o.partner_id.copy\nor\n'1'", ),
+        'report_id': fields.many2one('ir.actions.report.xml', 'Report link', readonly=True, help='Link to the report in ir.actions.report.xml'),
     }
 
     _defaults = {
@@ -111,6 +105,7 @@ class jasper_document(osv.osv):
         'sequence': lambda *a: 100,
         'format': lambda *a: 'PDF',
         'duplicate': lambda *a: "'1'",
+        'report_id': lambda *a: False,
     }
 
     def __init__(self, pool, cr):
@@ -121,7 +116,7 @@ class jasper_document(osv.osv):
             cr_new = pooler.get_db(cr.dbname).cursor()
             cr_new.execute("""SELECT 'jasper.'||service AS wiz_name FROM jasper_document WHERE enabled=true""")
             for rec in cr_new.dictfetchall():
-                registered_wizard(rec['wiz_name'])
+                registered_report(rec['wiz_name'])
             cr_new.commit()
             cr_new.close()
         except Exception:
@@ -135,8 +130,28 @@ class jasper_document(osv.osv):
         Automatic registration to be directly available
         """
         b = self.browse(cr, uid, id, context=context)
-        wiz_name = 'jasper.%s' % b.service
-        registered_wizard(wiz_name)
+        #wiz_name = 'jasper.%s' % b.service
+        #registered_wizard(wiz_name)
+        act_report_obj = self.pool.get('ir.actions.report.xml')
+        #registered_report('jasper.' + b.service)
+        doc = self.browse(cr, uid, id, context=context)
+        if doc.report_id:
+            pass
+        else:
+            logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Create "%s" service' % doc.name)
+            args = {
+                'name': doc.name,
+                'report_name': 'jasper.' + doc.service,
+                'model': doc.model_id.model,
+                'report_type': 'jasper',
+                'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
+                'header': False,
+            }
+            report_id = act_report_obj.create(cr, uid, args, context=context)
+            cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
+            value = 'ir.actions.report.xml,' + str(report_id)
+            ir.ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
+            registered_report('jasper.' + doc.service)
 
     def create(self, cr, uid, vals, context=None):
         """
@@ -146,6 +161,7 @@ class jasper_document(osv.osv):
             context = {}
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         self.make_action(cr, uid, doc_id, context=context)
+
         # Check if view and create it in the database
         if vals.get('sql_name') and vals.get('sql_view'):
             drop_view_if_exists(cr, vals.get('sql_name'))
