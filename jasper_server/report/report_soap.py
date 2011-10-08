@@ -306,12 +306,12 @@ class Report(object):
                     tmp_pdf = PdfFileReader(fp)
                     for page in range(tmp_pdf.getNumPages()):
                         tmp_content.addPage(tmp_pdf.getPage(page))
-                    fp.close()
-                    del fp
                     c = StringIO()
                     tmp_content.write(c)
                     content = c.getvalue()
                     c.close()
+                    fp.close()
+                    del fp
                     del c
         elif len(pdf_list) == 1:
             fp = open(pdf_list[0], 'r')
