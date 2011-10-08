@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-10-08 09:56:51+0000\n"
-"PO-Revision-Date: 2011-10-08 12:02+0100\n"
+"POT-Creation-Date: 2011-10-08 16:59:29+0000\n"
+"PO-Revision-Date: 2011-10-08 19:01+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -107,6 +107,11 @@ msgstr "Légende"
 #: help:jasper.document.parameter,code:0
 msgid "Enter the code to retrieve data"
 msgstr "Entrer le code pour récupérer la donnée, voir la légende"
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Use [[ o.name ]] to called browse object, see below for possibility"
+msgstr "Utiliser [[ o.name ]] pour appeller la methode browse de l'objet, voir ci dessous pour les possibilités"
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,indent:0
@@ -275,6 +280,11 @@ msgid "t: for time module"
 msgstr "t: pour le module time"
 
 #. module: jasper_server
+#: field:jasper.document,report_id:0
+msgid "Report link"
+msgstr "Lien vers le rapport"
+
+#. module: jasper_server
 #: wizard_view:jasper_server.make_template,valid:0
 msgid "Select the location to save the data file"
 msgstr "Sélectionner un emplacement ou sauvegarder le fichier de données"
@@ -319,6 +329,12 @@ msgstr "Extension"
 #: help:jasper.document,sequence:0
 msgid "The sequence is used when launch a multple report, to select the order to launch"
 msgstr "La séquence est utilisé lors du lancement de rapport multiple, pour sélectionner l'ordre d'exécution"
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:0
+#, python-format
+msgid "Configuration Error"
+msgstr "Erreur de configuration"
 
 #. module: jasper_server
 #: model:ir.model,name:jasper_server.model_jasper_document_parameter
@@ -397,6 +413,12 @@ msgstr ""
 "\n"
 "# pip install httplib2 (>= 0.6.0)\n"
 "# pip install pyPdf (>= 1.13)\n"
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:0
+#, python-format
+msgid "Service name doesn't match!"
+msgstr "Le nom du service ne correspond pas!"
 
 #. module: jasper_server
 #: field:jasper.document,duplicate:0
@@ -491,9 +513,9 @@ msgid "Output format"
 msgstr "Format de sortie"
 
 #. module: jasper_server
-#: view:jasper.document.parameter:0
-msgid "Use [[ o.name ]] to called browse object, see below for possibility"
-msgstr "Utiliser [[ o.name ]] pour appeller la methode browse de l'objet, voir ci dessous pour les possibilités"
+#: help:jasper.document,report_id:0
+msgid "Link to the report in ir.actions.report.xml"
+msgstr "Lien vers le rapport dans ir.actions.report.xml"
 
 #. module: jasper_server
 #: field:jasper.document,format:0
