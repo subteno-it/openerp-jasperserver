@@ -121,8 +121,6 @@ class Report(object):
         log_debug('Number of duplicate copy: %d' % int(duplicate))
 
         reload_ok = False
-        import pdb
-        pdb.set_trace()
         if self.attrs['reload'] and aname:
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
                     [('datas_fname', '=', aname + '.pdf'), ('res_model', '=', self.model), ('res_id', '=', ex)])

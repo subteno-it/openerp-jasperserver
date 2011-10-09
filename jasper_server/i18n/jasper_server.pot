@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-10-08 09:56:51+0000\n"
-"PO-Revision-Date: 2011-10-08 09:56:51+0000\n"
+"POT-Creation-Date: 2011-10-08 16:59:29+0000\n"
+"PO-Revision-Date: 2011-10-08 16:59:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -107,6 +107,11 @@ msgstr ""
 #. module: jasper_server
 #: help:jasper.document.parameter,code:0
 msgid "Enter the code to retrieve data"
+msgstr ""
+
+#. module: jasper_server
+#: view:jasper.document.parameter:0
+msgid "Use [[ o.name ]] to called browse object, see below for possibility"
 msgstr ""
 
 #. module: jasper_server
@@ -272,6 +277,11 @@ msgid "t: for time module"
 msgstr ""
 
 #. module: jasper_server
+#: field:jasper.document,report_id:0
+msgid "Report link"
+msgstr ""
+
+#. module: jasper_server
 #: wizard_view:jasper_server.make_template,valid:0
 msgid "Select the location to save the data file"
 msgstr ""
@@ -315,6 +325,12 @@ msgstr ""
 #. module: jasper_server
 #: help:jasper.document,sequence:0
 msgid "The sequence is used when launch a multple report, to select the order to launch"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:0
+#, python-format
+msgid "Configuration Error"
 msgstr ""
 
 #. module: jasper_server
@@ -378,6 +394,12 @@ msgid "This module interface JasperServer For Reports.\n"
 "# pip install httplib2 (>= 0.6.0)\n"
 "# pip install pyPdf (>= 1.13)\n"
 ""
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:0
+#, python-format
+msgid "Service name doesn't match!"
 msgstr ""
 
 #. module: jasper_server
@@ -473,8 +495,8 @@ msgid "Output format"
 msgstr ""
 
 #. module: jasper_server
-#: view:jasper.document.parameter:0
-msgid "Use [[ o.name ]] to called browse object, see below for possibility"
+#: help:jasper.document,report_id:0
+msgid "Link to the report in ir.actions.report.xml"
 msgstr ""
 
 #. module: jasper_server
