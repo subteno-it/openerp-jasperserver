@@ -107,6 +107,7 @@ class Report(object):
         if ids is None:
             ids = []
 
+        doc_obj = self.pool.get('jasper.document')
         js_obj = self.pool.get('jasper.server')
         cur_obj = self.model_obj.browse(self.cr, self.uid, ex, context=context)
         aname = False
@@ -270,6 +271,10 @@ class Report(object):
                 'REPORT_LOCALE': language or 'en_US',
                 'IS_JASPERSERVER': 'yes',
             }
+
+            # we must retrieve label in the language document (not user's language)
+            for l in doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
+                special_dict['I18N_' + l.name.upper()] = l.value
 
             par = parameter(self.attrs, d_par, special_dict)
             body_args = {

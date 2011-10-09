@@ -126,6 +126,40 @@
         </record>
 
         ##
+        # Document label
+        #
+        <record id="view_jasper_document_label_tree" model="ir.ui.view">
+            <field name="name">jasper.document.label.tree</field>
+            <field name="model">jasper.document.label</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Label">
+                    <field name="name"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_jasper_document_label_form" model="ir.ui.view">
+            <field name="name">jasper.document.label.form</field>
+            <field name="model">jasper.document.label</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Label">
+                    <field name="name" colspan="4"/>
+                    <field name="value" colspan="4"/>
+                    <separator string="Legend" colspan="4"/>
+                    <group colspan="4" col="2">
+                        <label align="0.0" string="All label are pass as parameter to the JasperServer, and start with I18N_" colspan="4"/>
+                        <label align="0.0" string="These parameters are translate in the language define in the general tab" colspan="4"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        ##
         # Document
         #
         <record id="view_document_tree" model="ir.ui.view">
@@ -210,6 +244,9 @@
                         <page string="Reports" attrs="{'invisible': [('mode','!=','multi')]}">
                             <separator string="Select report to launch when this report is launched" colspan="4"/>
                             <field name="child_ids" nolabel="1" domain="[('mode','!=', 'multi'),('model_id','=',model_id),('enabled','=',True)]"/>
+                        </page>
+                        <page string="Labels">
+                            <field name="label_ids" nolabel="1" />
                         </page>
                     </notebook>
                 </form>

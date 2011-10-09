@@ -97,6 +97,7 @@ class jasper_document(osv.osv):
                         help='if None, no check\nif Simple, define on Check Simple the condition\n if function, the object have check_print function'),
         'check_simple': fields.char('Check Simple', size=256, help="This code inside this field must return True to send report execution\neg o.state in ('draft', 'open')"),
         'message_simple': fields.char('Return message', size=256, translate=True, help="Error message when check simple doesn't valid"),
+        'label_ids': fields.one2many('jasper.document.label', 'document_id', 'Labels'),
     }
 
     _defaults = {
@@ -246,5 +247,17 @@ class jasper_document_parameter(osv.osv):
 
 jasper_document_parameter()
 
+
+class jasper_document_label(osv.osv):
+    _name = 'jasper.document.label'
+    _description = 'Manage label in document, for different language'
+
+    _columns = {
+        'name': fields.char('Parameter', size=64, help='Name of the parameter send to JasperServer, prefix with I18N_\neg: test become I18N_TEST as parameter', required=True),
+        'value': fields.char('Value', size=256, help='Name of the label, this field must be translate in all languages available in the database', required=True, translate=True),
+        'document_id': fields.many2one('jasper.document', 'Document'),
+    }
+
+jasper_document_label()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
