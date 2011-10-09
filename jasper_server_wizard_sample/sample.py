@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    jasper_server_wizard_sample module for OpenERP, Sample to show haw to launch report from wizard
-#    Copyright (C) 2011 SYLEAM (<http://www.syleam.fr/>) 
+#    Copyright (C) 2011 SYLEAM (<http://www.syleam.fr/>)
 #              Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
 #    This file is a part of jasper_server_wizard_sample
