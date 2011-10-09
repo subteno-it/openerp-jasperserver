@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        ##############################################################################
+        #
+        #    jasper_server_wizard_sample module for OpenERP, Sample to show haw to launch report from wizard
+        #    Copyright (C) 2011 SYLEAM ([http://www.syleam.fr/]) 
+        #              Christophe CHAUVET [christophe.chauvet@syleam.fr]
+        #
+        #    This file is a part of jasper_server_wizard_sample
+        #
+        #    jasper_server_wizard_sample is free software: you can redistribute it and/or modify
+        #    it under the terms of the GNU General Public License as published by
+        #    the Free Software Foundation, either version 3 of the License, or
+        #    (at your option) any later version.
+        #
+        #    jasper_server_wizard_sample is distributed in the hope that it will be useful,
+        #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        #    GNU General Public License for more details.
+        #
+        #    You should have received a copy of the GNU General Public License
+        #    along with this program.  If not, see [http://www.gnu.org/licenses/].
+        #
+        ##############################################################################
+
+        <record id="view_sample_wizard_form" model="ir.ui.view">
+            <field name="name">show.sample.wizard.form</field>
+            <field name="model">show.sample.wizard</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+            <form string="Show sample wizard">
+                <field name="name" select="1"/>
+                <field name="final"/>
+                <field name="partner_id" colspan="4"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <separator string="" colspan="4" />
+                <group colspan="4" col="6">
+                    <label string ="" colspan="2"/>
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="terp-gtk-go-back-rtl" string="Launch" name="launch" type="object"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_sample_wizard_view">
+            <field name="name">Show sample wizard to launch report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">show.sample.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'jasper': {'test','sample'}}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_jasper_sample_wizard"
+            parent="base.menu_base_partner"
+            sequence="20"
+            action="action_sample_wizard_view"/>
+
+    </data>
+</openerp>
