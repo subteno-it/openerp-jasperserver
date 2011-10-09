@@ -88,6 +88,7 @@ class Report(object):
         self.ids = ids
         self.data = data
         self.attrs = data.get('form', {})
+        self.custom = data.get('jasper', {})
         self.model = data.get('model', False)
         self.pool = pooler.get_pool(cr.dbname)
         self.model_obj = self.pool.get(self.model)
@@ -275,6 +276,15 @@ class Report(object):
             # we must retrieve label in the language document (not user's language)
             for l in doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
                 special_dict['I18N_' + l.name.upper()] = l.value
+
+            # If report is launched since a wizard, we can retrieve some parameters
+            for d in self.custom.keys():
+                special_dict['CUSTOM_' + d.upper()] = self.custom[d]
+
+            # If special value is available in context, we add them as parameters
+            if context.get('jasper') and isinstance(context['jasper'], dict):
+                for d in context['jasper'].keys():
+                    special_dict['CONTEXT_' + d.upper()] = context['jasper'][d]
 
             par = parameter(self.attrs, d_par, special_dict)
             body_args = {
