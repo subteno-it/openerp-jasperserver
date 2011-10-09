@@ -219,6 +219,7 @@ class Report(object):
                 'sql_query_where': self.attrs.get('query_where', '1 = 1'),
                 'report_name': self.attrs.get('report_name', _('No report name')),
                 'lang': language or 'en_US',
+                'duplicate': duplicate,
             }
 
             # If XML we must compose it
