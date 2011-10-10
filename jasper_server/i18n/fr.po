@@ -6,14 +6,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-10-09 15:04+0000\n"
-"PO-Revision-Date: 2011-10-09 17:15+0100\n"
-"Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
+"PO-Revision-Date: 2011-10-01 15:32+0000\n"
+"Last-Translator: Christophe Chauvet - http://www.syleam.fr/ <Unknown>\n"
 "Language-Team: french\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Launchpad (build 14071)\n"
-"X-Launchpad-Export-Date: 2011-10-02 05:14+0000\n"
+"X-Launchpad-Export-Date: 2011-10-10 05:21+0000\n"
+"X-Generator: Launchpad (build 14123)\n"
 
 #. module: jasper_server
 #: selection:jasper.document,format_choice:0
@@ -48,8 +48,12 @@ msgstr "Erreur de langue"
 
 #. module: jasper_server
 #: help:jasper.document,after:0
-msgid "This field must be filled with a valid SQL request and will be executed AFTER the report edition"
-msgstr "Ce champ doit être remplit avec une requête SQL valide et sera exécuté APRÈS le rapport d'édition"
+msgid ""
+"This field must be filled with a valid SQL request and will be executed "
+"AFTER the report edition"
+msgstr ""
+"Ce champ doit être remplit avec une requête SQL valide et sera exécuté APRÈS "
+"le rapport d'édition"
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:252
@@ -91,7 +95,8 @@ msgid ""
 "This code inside this field must return True to send report execution\n"
 "eg o.state in ('draft', 'open')"
 msgstr ""
-"Le code à l'intérieur de la fonction doit retourner True pour executer le rapport\n"
+"Le code à l'intérieur de la fonction doit retourner True pour executer le "
+"rapport\n"
 "ex o.state in ('draft', 'open')"
 
 #. module: jasper_server
@@ -125,7 +130,7 @@ msgstr "Extension des documents jasper"
 #. module: jasper_server
 #: model:ir.model,name:jasper_server.model_jasper_document_label
 msgid "Manage label in document, for different language"
-msgstr "Gestion des libellés de document pour les différentes langue"
+msgstr ""
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:171
@@ -137,8 +142,12 @@ msgstr "Erreur en vérification d'impression"
 
 #. module: jasper_server
 #: help:jasper.document,before:0
-msgid "This field must be filled with a valid SQL request and will be executed BEFORE the report edition"
-msgstr "Ce champ doit être remplit avec une requête SQL valide et sera exécuté AVANT le rapport d'édition"
+msgid ""
+"This field must be filled with a valid SQL request and will be executed "
+"BEFORE the report edition"
+msgstr ""
+"Ce champ doit être remplit avec une requête SQL valide et sera exécuté AVANT "
+"le rapport d'édition"
 
 #. module: jasper_server
 #: field:jasper.server,host:0
@@ -152,8 +161,12 @@ msgstr "Editeur de texte"
 
 #. module: jasper_server
 #: help:jasper.document,attachment_use:0
-msgid "If you check this, then the second time the user prints with same attachment name, it returns the previous report."
-msgstr "Si vous cochez ceci, alors la seconde fois que l'utilisateur imprimera avec le même nom de pièce jointe, cela retournera le rapport stocké"
+msgid ""
+"If you check this, then the second time the user prints with same attachment "
+"name, it returns the previous report."
+msgstr ""
+"Si vous cochez ceci, alors la seconde fois que l'utilisateur imprimera avec "
+"le même nom de pièce jointe, cela retournera le rapport stocké"
 
 #. module: jasper_server
 #: view:jasper.document:0
@@ -184,7 +197,9 @@ msgstr ""
 #. module: jasper_server
 #: view:jasper.document.parameter:0
 msgid "Use [[ o.name ]] to called browse object, see below for possibility"
-msgstr "Utiliser [[ o.name ]] pour appeller la methode browse de l'objet, voir ci dessous pour les possibilités"
+msgstr ""
+"Utiliser [[ o.name ]] pour appeller la methode browse de l'objet, voir ci "
+"dessous pour les possibilités"
 
 #. module: jasper_server
 #: wizard_field:jasper_server.make_template,init,indent:0
@@ -209,7 +224,7 @@ msgstr ""
 #. module: jasper_server
 #: field:jasper.document.label,value:0
 msgid "Value"
-msgstr "Valeur"
+msgstr ""
 
 #. module: jasper_server
 #: view:jasper.document:0
@@ -235,7 +250,8 @@ msgstr "Configuration JasperServer"
 #. module: jasper_server
 #: help:jasper.server,user:0
 msgid "Enter the username for JasperServer user, by default is jasperadmin"
-msgstr "Entrer le nom de l'utilisateur JasperServer, par défaut c'est jasperadmin"
+msgstr ""
+"Entrer le nom de l'utilisateur JasperServer, par défaut c'est jasperadmin"
 
 #. module: jasper_server
 #: wizard_button:jasper_server.document_print,format_choice,create_wizard:0
@@ -261,7 +277,7 @@ msgstr "Simplifié"
 #: view:jasper.document:0
 #: field:jasper.document,label_ids:0
 msgid "Labels"
-msgstr "Libellés"
+msgstr ""
 
 #. module: jasper_server
 #: view:jasper.document.extension:0
@@ -365,7 +381,7 @@ msgstr ""
 #. module: jasper_server
 #: view:jasper.document.label:0
 msgid "Label"
-msgstr "Libellé"
+msgstr ""
 
 #. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_4
@@ -499,13 +515,23 @@ msgstr "Extension"
 
 #. module: jasper_server
 #: help:jasper.document,attachment:0
-msgid "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
-msgstr "Ceci est le nom de la pièce jointe utiliser pour le stockage de l'impression produite, Laisser vide pour ne pas sauvegarder le rapport imprimé. Vous pouvez utiliser une expression python avec object et time comme variables."
+msgid ""
+"This is the filename of the attachment used to store the printing result. "
+"Keep empty to not save the printed reports. You can use a python expression "
+"with the object and time variables."
+msgstr ""
+"Ceci est le nom de la pièce jointe utiliser pour le stockage de l'impression "
+"produite, Laisser vide pour ne pas sauvegarder le rapport imprimé. Vous "
+"pouvez utiliser une expression python avec object et time comme variables."
 
 #. module: jasper_server
 #: help:jasper.document,sequence:0
-msgid "The sequence is used when launch a multple report, to select the order to launch"
-msgstr "La séquence est utilisé lorsque de multiple rapport sont lancés, pour sélectionner l'ordre à lancer"
+msgid ""
+"The sequence is used when launch a multple report, to select the order to "
+"launch"
+msgstr ""
+"La séquence est utilisé lorsque de multiple rapport sont lancés, pour "
+"sélectionner l'ordre à lancer"
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:360
@@ -560,7 +586,8 @@ msgstr "Visionneuse Flash"
 #. module: jasper_server
 #: help:jasper.document,toolbar:0
 msgid "Check this if you want to hide button in toolbar"
-msgstr "Cocher ceci si vous souhaitez masquer le bouton dans la barre à droite"
+msgstr ""
+"Cocher ceci si vous souhaitez masquer le bouton dans la barre à droite"
 
 #. module: jasper_server
 #: field:jasper.document,check_sel:0
@@ -569,8 +596,9 @@ msgstr "Type de vérification"
 
 #. module: jasper_server
 #: view:jasper.document.label:0
-msgid "All label are pass as parameter to the JasperServer, and start with I18N_"
-msgstr "Tous les libellés sont passés en tant que paramètre à JasperServer, et débute par I18N_"
+msgid ""
+"All label are pass as parameter to the JasperServer, and start with I18N_"
+msgstr ""
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:303
@@ -640,8 +668,9 @@ msgstr "Lancer une fois pour tous les IDS"
 
 #. module: jasper_server
 #: view:jasper.document.label:0
-msgid "These parameters are translate in the language define in the general tab"
-msgstr "Ces paramètres sont traduis dans la langue définit dans l'onglet Général"
+msgid ""
+"These parameters are translate in the language define in the general tab"
+msgstr ""
 
 #. module: jasper_server
 #: field:jasper.server,repo:0
@@ -661,7 +690,8 @@ msgstr ""
 #. module: jasper_server
 #: help:jasper.server,pass:0
 msgid "Enter the password for the user, by defaul is jasperadmin"
-msgstr "Entrer le mot de passe pour l'utilisateur, par défaut c'est jasperadmin"
+msgstr ""
+"Entrer le mot de passe pour l'utilisateur, par défaut c'est jasperadmin"
 
 #. module: jasper_server
 #: help:jasper.server,host:0
@@ -679,7 +709,8 @@ msgid ""
 "- Launch multiple reports and merge in one printing action\n"
 "- Add additionnals parameters (ex from fields function)\n"
 "- Affect group on report\n"
-"- Use context to display or not the print button (eg: in stock.picking separate per type)\n"
+"- Use context to display or not the print button (eg: in stock.picking "
+"separate per type)\n"
 "- Execute SQL query before and after treatement\n"
 "- Launch report based on SQL View\n"
 "\n"
@@ -692,25 +723,6 @@ msgid ""
 "\n"
 "In collaboration with Eric Vernichon (from Everlibre)\n"
 msgstr ""
-"Ce module interface JasperReport Server avec OpenERP\n"
-"Fonctionnalités:\n"
-"- Le document source peut être SQL ou XML\n"
-"- Sauvegarder le document en pièce jointe sur l'objet\n"
-"- récupérer de la pièce jointe si présente\n"
-"- lancer de multiple rapport, et les fusionnés en une action\n"
-"- Ajout de paramètres additionnelles (ex: les champs fonctions)\n"
-"- Affecter un groupe au rapport\n"
-"- Utiliser le context pour afficher ou non le bouton- Exécuter une requête SQL avant et après traitement\n"
-"- Lancer le rapport basé sur une vue SQL\n"
-"\n"
-"Ce module nécéssite des bibliothèques supplémentaires pour fonctionner\n"
-"\n"
-"# pip install httplib2 (>= 0.6.0)\n"
-"# pip install pyPdf (>= 1.13)\n"
-"# pip install python-dime (>= 0.2.1)\n"
-"\n"
-"\n"
-"Écrit en collaboration avec Eric Vernichon (ex Everlibre)\n"
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:128
@@ -757,7 +769,8 @@ msgid ""
 "'fr_FR'\n"
 "default use user's lang"
 msgstr ""
-"Indiquer la langue a utilisée pour ce rapport, utilisez o pour l'objet a évalué\n"
+"Indiquer la langue a utilisée pour ce rapport, utilisez o pour l'objet a "
+"évalué\n"
 "ex: o.partner_id.lang\n"
 "or\n"
 "'fr_FR'\n"
@@ -825,8 +838,10 @@ msgstr "Formats"
 
 #. module: jasper_server
 #: help:jasper.document.label,value:0
-msgid "Name of the label, this field must be translate in all languages available in the database"
-msgstr "Nom du libellé, ce champ doit être traduit dans toutes les langues disponible dans la base de donnée"
+msgid ""
+"Name of the label, this field must be translate in all languages available "
+"in the database"
+msgstr ""
 
 #. module: jasper_server
 #: view:jasper.document.parameter:0
@@ -995,8 +1010,6 @@ msgid ""
 "Name of the parameter send to JasperServer, prefix with I18N_\n"
 "eg: test become I18N_TEST as parameter"
 msgstr ""
-"Nom du paramètre envoyé à JasperServer, préfixé par I18N_\n"
-"ex: test devient I18N_TEST comme paramètre"
 
 #. module: jasper_server
 #: code:addons/jasper_server/report/report_soap.py:323
@@ -1042,7 +1055,7 @@ msgstr "Entrer la requête SELECT de la vue seulement"
 #. module: jasper_server
 #: model:ir.module.module,shortdesc:jasper_server.module_meta_information
 msgid "JasperReport Server Interface"
-msgstr "Interface JasperReport Server"
+msgstr ""
 
 #. module: jasper_server
 #: field:jasper.document,name:0
@@ -1174,33 +1187,18 @@ msgstr "Id"
 msgid "Indicates if this document is active or not"
 msgstr "Indique si ce document est actif ou pas"
 
-#~ msgid "ir.values"
-#~ msgstr "ir.values"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom du modèle invalide pour l'action définit."
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Invalide pour cette vue!"
-#~ msgid ""
-#~ "This module interface JasperServer For Reports.\n"
-#~ "\n"
-#~ "This module required library to work properly\n"
-#~ "\n"
-#~ "# pip install httplib2\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "Ce module est une interface JasperServer pour les rapports.\n"
-#~ "\n"
-#~ "Ce module requière des bibliothèques pour fonctionner correctement\n"
-#~ "\n"
-#~ "# pip install httplib2\n"
-#~ "\n"
-#~ "    "
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Le nom de l'objet doit commencer par un x_ et ne doit pas contenir de "
 #~ "caractères spéciaux !"
+
 #~ msgid "Jasper Server Interface"
 #~ msgstr "Interface JasperServer"
 
@@ -1211,4 +1209,3 @@ msgstr "Indique si ce document est actif ou pas"
 #~ msgstr ""
 #~ "Erreur\n"
 #~ "La société principale n'a pas d'adresse définit sur le partenaire!"
-
