@@ -3,14 +3,14 @@
 --
 CREATE OR REPLACE FUNCTION get_trad(langue varchar, typ varchar, nom varchar, texte varchar) RETURNS varchar AS $$
 	DECLARE
-	  resultat varchar;
-	  resultat1 varchar;
+	  resultat text;
+	  resultat1 text;
 
         BEGIN
 		IF texte is not null then
-			select into resultat value from ir_translation where lang=langue and type=typ and name=nom and src=texte;
+			select into resultat value::text from ir_translation where lang=langue and type=typ and name=nom and src=texte;
 		ELSE
-			select into resultat value from ir_translation where lang=langue and type=typ and name=nom;
+			select into resultat value::text from ir_translation where lang=langue and type=typ and name=nom;
 		END IF;
 		IF NOT FOUND THEN
 			RETURN texte;
