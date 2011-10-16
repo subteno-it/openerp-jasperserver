@@ -159,6 +159,33 @@ class jasper_document(osv.osv):
             ir.ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
         registered_report('jasper.' + doc.service)
 
+    def action_values(self, cr, uid, report_id, context=None):
+        """
+        Search ids for reports
+        """
+        args = [
+            ('key2', '=', 'client_print_multi'),
+            ('value', '=', 'ir.actions.report.xml,%d' % report_id),
+            ('object', '=', True),
+        ]
+        return self.pool.get('ir.values').search(cr, uid, args, context=context)
+
+    def create_values(self, cr, uid, id, context=None):
+        doc = self.browse(cr, uid, id, context=context)
+        if not self.action_values(cr, uid, doc.report_id.id, context=context):
+            value = 'ir.actions.report.xml,%d' % doc.report_id.id
+            ir.ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
+        return True
+
+    def unlink_values(self, cr, uid, id, context=None):
+        """
+        Only remove link in ir.values, not the report
+        """
+        doc = self.browse(cr, uid, id, context=context)
+        for v in self.action_values(cr, uid, doc.report_id.id, context=context):
+            ir.ir_del(cr, uid, v)
+        return True
+
     def create(self, cr, uid, vals, context=None):
         """
         Dynamicaly declare the wizard for this document
@@ -195,6 +222,13 @@ class jasper_document(osv.osv):
             for id in ids:
                 self.make_action(cr, uid, id, context=context)
 
+            if 'enabled' in vals:
+                if vals['enabled']:
+                    for id in ids:
+                        self.create_values(cr, uid, id, context)
+                else:
+                    for id in ids:
+                        self.unlink_values(cr, uid, id, context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -214,18 +248,19 @@ class jasper_document(osv.osv):
         default['name'] = doc.name + _(' (copy)')
         return super(jasper_document, self).copy(cr, uid, id, default, context=context)
 
-    #def unlink(self, cr, uid, ids, context=None):
-    #    """
-    #    When remove jasper_document, we must remove data to ir.actions.report.xml and ir.values
-    #    """
-    #    if context is None:
-    #        context = {}
+    def unlink(self, cr, uid, ids, context=None):
+        """
+        When remove jasper_document, we must remove data to ir.actions.report.xml and ir.values
+        """
+        if context is None:
+            context = {}
 
-    #    doc = self.browse(cr, uid, ids
-    #    value = 'ir.actions.report.xml,' + str(report_id)
+        for doc in self.browse(cr, uid, ids, context=context):
+            if doc.report_id:
+                self.unlink_values(cr, uid, doc.id, context)
+                self.pool.get('ir.actions.report.xml').unlink(cr, uid, [doc.report_id.id], context=context)
 
-
-    #    return super(jasper_document, self).unlink(cr, uid, ids, context=context)
+        return super(jasper_document, self).unlink(cr, uid, ids, context=context)
 
 jasper_document()
 
