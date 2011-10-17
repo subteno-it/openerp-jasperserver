@@ -1,18 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * jasper_server_wizard_sample
+# French translation for openerp-jasperserver
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openerp-jasperserver package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openerp-jasperserver\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-10-09 20:14+0000\n"
-"PO-Revision-Date: 2011-10-09 22:16+0100\n"
-"Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2011-10-11 10:24+0000\n"
+"Last-Translator: Christophe Chauvet - http://www.syleam.fr/ <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.3.0\n"
+"X-Launchpad-Export-Date: 2011-10-12 04:57+0000\n"
+"X-Generator: Launchpad (build 14124)\n"
 
 #. module: jasper_server_wizard_sample
 #: field:show.sample.wizard,date_end:0
@@ -32,7 +35,7 @@ msgstr "Lancer"
 #. module: jasper_server_wizard_sample
 #: model:ir.model,name:jasper_server_wizard_sample.model_show_sample_wizard
 msgid "Demonstration how to launch report from wizard"
-msgstr "Démonstration sur comment lancer un rapport depuis un assistant"
+msgstr "Démonstration de comment lancer un rapport depuis un assistant"
 
 #. module: jasper_server_wizard_sample
 #: help:show.sample.wizard,name:0
@@ -43,12 +46,12 @@ msgstr "Nom du document a imprimer"
 #: model:ir.actions.act_window,name:jasper_server_wizard_sample.action_sample_wizard_view
 #: model:ir.ui.menu,name:jasper_server_wizard_sample.menu_jasper_sample_wizard
 msgid "Show sample wizard to launch report"
-msgstr "Assistant de démonstration pour lancer le rapport"
+msgstr "Montre un exemple d'assistant pour lancer un rapport"
 
 #. module: jasper_server_wizard_sample
 #: view:show.sample.wizard:0
 msgid "Show sample wizard"
-msgstr "Assistant de démonstration"
+msgstr "Montre un exemple d'assistant"
 
 #. module: jasper_server_wizard_sample
 #: view:show.sample.wizard:0
@@ -68,5 +71,4 @@ msgstr "Date de début"
 #. module: jasper_server_wizard_sample
 #: field:show.sample.wizard,final:0
 msgid "Final"
-msgstr "Finale"
-
+msgstr "Définitif"
