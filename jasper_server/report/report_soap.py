@@ -405,19 +405,27 @@ class Report(object):
                 (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, ids, context=context)
                 one_check[doc.id] = True
 
-        ## We use pyPdf to marge all PDF in unique file
+        ## We use pyPdf to merge all PDF in unique file
         if len(pdf_list) > 1 or duplicate > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
                 for x in range(0, duplicate):
-                    tmp_pdf = PdfFileReader(open(pdf, 'r'))
+                    fp = open(pdf, 'r')
+                    tmp_pdf = PdfFileReader(fp)
                     for page in range(tmp_pdf.getNumPages()):
                         tmp_content.addPage(tmp_pdf.getPage(page))
                     c = StringIO()
                     tmp_content.write(c)
                     content = c.getvalue()
+                    c.close()
+                    fp.close()
+                    del fp
+                    del c
         elif len(pdf_list) == 1:
-            content = open(pdf_list[0], 'r').read()
+            fp = open(pdf_list[0], 'r')
+            content = fp.read()
+            fp.close()
+            del fp
 
         for f in pdf_list:
             os.remove(f)
