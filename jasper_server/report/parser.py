@@ -27,6 +27,7 @@ from HTMLParser import HTMLParser
 from lxml.etree import parse
 from tempfile import mkstemp
 from dime import Message
+import os
 
 
 class HTML2Text(HTMLParser):
@@ -79,11 +80,12 @@ def ParseDIME(source, list_file):
         if x.type.value == 'application/pdf':
             content = x.data
             # Store the PDF in TEMP directory
-            __, f_name = mkstemp(suffix='.pdf', prefix='jasper')
+            fd, f_name = mkstemp(suffix='.pdf', prefix='jasper')
             list_file.append(f_name)
             fpdf = open(f_name, 'w+b')
             fpdf.write(content)
             fpdf.close()
+            os.close(fd)
 
 
 def ParseXML(source):
