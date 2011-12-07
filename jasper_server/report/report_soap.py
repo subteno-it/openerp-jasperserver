@@ -241,7 +241,7 @@ class Report(object):
 
             d_par['company_name'] = cny.name
             d_par['company_logo'] = cny.name.encode('ascii', 'ignore').replace(' ', '_')
-            d_par['company_hearder1'] = cny.rml_header1 or ''
+            d_par['company_header1'] = cny.rml_header1 or ''
             d_par['company_footer1'] = cny.rml_footer1 or ''
             d_par['company_footer2'] = cny.rml_footer2 or ''
             d_par['company_website'] = cny.partner_id.website or ''
