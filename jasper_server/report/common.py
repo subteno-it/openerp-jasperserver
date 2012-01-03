@@ -27,6 +27,7 @@ from tools.misc import ustr
 from netsvc import Logger, LOG_DEBUG
 logger = Logger()
 
+
 def log_debug(message):
     logger.notifyChannel('jasper_server', LOG_DEBUG, ' %s' % message)
 
@@ -59,6 +60,7 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
 </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>"""
 
+
 def entities(data):
     """
     Convert XML string to XML entities
@@ -74,6 +76,7 @@ def entities(data):
     data = data.replace('"', '&quot;')
     data = data.replace("'", "&apos;")
     return data
+
 
 def parameter(dico, resource):
     """

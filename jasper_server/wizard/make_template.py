@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server module for OpenERP, 
+#    jasper_server module for OpenERP,
 #    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>) Christophe CHAUVET
 #
 #    This file is a part of jasper_server
@@ -47,6 +47,7 @@ init_fields = {
     'indent': {'string': 'Indent the XML output ?', 'type': 'boolean', 'default': True},
 }
 
+
 def _init(self, cr, uid, data, context):
     return {}
 
@@ -77,19 +78,20 @@ def _generate(self, cr, uid, data, context):
     datas = base64.encodestring(buf.getvalue())
     buf.close()
     filename = 'jasper.xml'
-    res = {'datas': datas , 'filename': filename}
+    res = {'datas': datas, 'filename': filename}
     return res
+
 
 class make_template(wizard.interface):
 
     states = {
-        'init' : {
+        'init': {
             'actions': [_init],
             'result': {
                 'type': 'form',
                 'arch': init_form,
                 'fields': init_fields,
-                'state': [('end','Cancel','gtk-cancel'), ('valid', 'OK', 'gtk-ok', True)],
+                'state': [('end', 'Cancel', 'gtk-cancel'), ('valid', 'OK', 'gtk-ok', True)],
             }
         },
         'valid': {

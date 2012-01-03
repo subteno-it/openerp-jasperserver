@@ -41,18 +41,17 @@ class IrActionReport(osv.osv):
         if 'jasper' not in [k for k, v in res]:
             self._columns['report_type'].selection.append(('jasper', 'Jasper'))
 
-
     def register_all(self, cursor):
         """
         Register all jasper report
         """
-        logger.notifyChannel('jasper_server', netsvc.LOG_INFO, '====[REGISTER JASPER REPORT]========================') 
+        logger.notifyChannel('jasper_server', netsvc.LOG_INFO, '====[REGISTER JASPER REPORT]========================')
         value = super(IrActionReport, self).register_all(cursor)
         cursor.execute("SELECT id, report_name FROM ir_act_report_xml WHERE report_type = 'jasper'")
         records = cursor.dictfetchall()
         for record in records:
             registered_report(record['report_name'])
-        logger.notifyChannel('jasper_server', netsvc.LOG_DEBUG, '====[END REGISTER JASPER REPORT]====================') 
+        logger.notifyChannel('jasper_server', netsvc.LOG_DEBUG, '====[END REGISTER JASPER REPORT]====================')
         return value
 
 IrActionReport()
