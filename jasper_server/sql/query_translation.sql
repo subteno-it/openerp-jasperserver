@@ -31,24 +31,24 @@
 -- :param id: id of the current object
 -- :param defval: Return this value, if no translation found
 --
-CREATE OR REPLACE FUNCTION get_trad(lang varchar, model varchar, field varchar, id integer, defval varchar) RETURNS varchar AS $$
+CREATE OR REPLACE FUNCTION get_trad(oerp_lang varchar, oerp_model varchar, oerp_field varchar, oerp_id integer, oerp_defval varchar) RETURNS varchar AS $$
     DECLARE
         resultat text;
 
     BEGIN
-        IF id IS NOT NULL THEN
-            SELECT INTO resultat value::text 
-            FROM  ir_translation 
-            WHERE lang=lang 
-            AND   type='model' 
-            AND   name=model||','||field 
-            AND   res_id=id;
+        IF oerp_id IS NOT NULL THEN
+            SELECT INTO resultat value::text
+            FROM  ir_translation
+            WHERE lang=oerp_lang
+            AND   type='model'
+            AND   name=oerp_model||','||oerp_field
+            AND   res_id=oerp_id;
         ELSE
-            RETURN defval;
+            RETURN oerp_defval;
         END IF;
 
-        IF NOT FOUND THEN
-            RETURN defval;
+        IF NOT FOUND OR resultat = '' THEN
+            RETURN oerp_defval;
         ELSE
             RETURN resultat;
         END IF;
