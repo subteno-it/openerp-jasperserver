@@ -234,7 +234,7 @@ class Report(object):
             # Is document have company field, to print correctly the document
             # Or take it to the user
             user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=context)
-            if hasattr(cur_obj, 'company_id'):
+            if hasattr(cur_obj, 'company_id') and cur_obj.company_id:
                 cny = self.pool.get('res.company').browse(self.cr, self.uid, cur_obj.company_id.id, context=context)
             else:
                 cny = user.company_id
