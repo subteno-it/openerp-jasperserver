@@ -169,11 +169,16 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Jasper Document" colors="#f66a00:enabled==False" >
-                    <field name="name"/>
-                    <field name="model_id"/>
                     <field name="enabled"/>
+                    <field name="name"/>
+                    <field name="service"/>
+                    <field name="format"/>
+                    <field name="model_id"/>
+                    <field name="mode"/>
                     <field name="sequence"/>
-                    <field name="jasper_file"/>
+                    <field name="lang"/>
+                    <field name="report_unit"/>
+                    <field name="attachment"/>
                 </tree>
             </field>
         </record>
@@ -202,7 +207,6 @@
                             <newline/>
                             <field name="lang" colspan="4"/>
                             <separator string="Output format" colspan="4"/>
-                            <field name="format_choice"/>
                             <field name="format"/>
                             <separator string="Attachment" colspan="4"/>
                             <field name="attachment" colspan="4"/>
@@ -250,6 +254,30 @@
                         </page>
                     </notebook>
                 </form>
+            </field>
+        </record>
+
+        <record id="view_document_search" model="ir.ui.view">
+            <field name="name">jasper.document.search</field>
+            <field name="model">jasper.document</field>
+            <field name="type">search</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Documents">
+                   <filter string="Enabled" icon="terp-accessories-archiver" domain="[('enabled','=',1)]"/>
+                   <separator orientation="vertical"/>
+                   <field name="model_id"/>
+                   <field name="service"/>
+                   <field name="report_unit"/>
+                   <newline/>
+                   <group  expand="0" string="Group by..." >
+                       <filter string='Model' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'model_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Mode' icon="terp-mrp" domain="[]" context="{'group_by' : 'mode'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Format' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'format'}" />
+                   </group>
+                </search>
             </field>
         </record>
 
