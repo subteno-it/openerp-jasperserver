@@ -45,8 +45,8 @@ class jasper_server(osv.osv):
     _columns = {
         'host': fields.char('Host', size=128, required=True, help='Enter hostname or IP address'),
         'port': fields.integer('Port'),
-        'user': fields.char('Username', size=128, required=True, help='Enter the username for JasperServer user, by default is jasperadmin'),
-        'pass': fields.char('Password', size=128, required=True, help='Enter the password for the user, by defaul is jasperadmin'),
+        'user': fields.char('Username', size=128, help='Enter the username for JasperServer user, by default is jasperadmin'),
+        'pass': fields.char('Password', size=128, help='Enter the password for the user, by defaul is jasperadmin'),
         'repo': fields.char('Repository', size=256, required=True, help='Enter the address of the repository'),
         'sequence': fields.integer('Sequence'),
         'enable': fields.boolean('Enable', help='Check this, if the server is available',),

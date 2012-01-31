@@ -60,8 +60,8 @@
                             <field name="enable" select="1"/>
                         </group>
                         <group colspan="2" col="2">
-                            <field name="user"/>
-                            <field name="pass" password="1"/>
+                            <field name="user" required="1"/>
+                            <field name="pass" password="1" required="1"/>
                         </group>
                     </group>
                     <group colspan="4" col="10">
