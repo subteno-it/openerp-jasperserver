@@ -27,7 +27,6 @@ from osv import fields
 from tools.sql import drop_view_if_exists
 from tools.translate import _
 from jasper_server.common import registered_report
-import ir
 import logging
 
 _logger = logging.getLogger('jasper_server')
@@ -156,7 +155,7 @@ class jasper_document(osv.osv):
             report_id = act_report_obj.create(cr, uid, args, context=context)
             cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
             value = 'ir.actions.report.xml,' + str(report_id)
-            ir.ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
+            self.pool.get('ir.model.data').ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
         registered_report('jasper.' + doc.service)
 
     def action_values(self, cr, uid, report_id, context=None):
@@ -174,7 +173,7 @@ class jasper_document(osv.osv):
         doc = self.browse(cr, uid, id, context=context)
         if not self.action_values(cr, uid, doc.report_id.id, context=context):
             value = 'ir.actions.report.xml,%d' % doc.report_id.id
-            ir.ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
+            self.pool.get('ir.model.data').ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
         return True
 
     def unlink_values(self, cr, uid, id, context=None):
