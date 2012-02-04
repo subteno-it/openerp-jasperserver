@@ -22,7 +22,10 @@
 #
 ##############################################################################
 
-import object
+import ir_actions_wizard
+import oojasper
+import jasper_document
+import ir_actions
 import report
 import wizard
 

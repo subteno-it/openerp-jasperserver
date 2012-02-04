@@ -28,13 +28,13 @@ import time
 import base64
 import logging
 
-from report.render import render
+from openerp.report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
 from common import BODY_TEMPLATE, parameter
 from report_exception import JasperException, AuthError, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
-from tools.translate import _
+from openerp.tools.translate import _
 
 _logger = logging.getLogger('jasper_server')
 
@@ -312,9 +312,9 @@ class Report(object):
             except ServerNotFoundError:
                 raise JasperException(_('Error'), _('Server not found !'))
             except HttpLib2Error, e:
-                raise JasperException(_('Error'), '%s' % str(e))
+                raise JasperException(_('Error HttpLib2'), '%s' % str(e))
             except Exception, e:
-                raise JasperException(_('Error'), '%s' % str(e))
+                raise JasperException(_('Unknown Error'), '%s' % str(e))
 
             log_debug('HTTP -> RESPONSE:')
             log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))

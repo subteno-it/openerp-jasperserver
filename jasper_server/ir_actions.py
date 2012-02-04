@@ -22,7 +22,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 from jasper_server.common import registered_report
 import logging
 
@@ -37,13 +37,13 @@ class IrActionReport(osv.osv):
         Register all jasper report
         """
         _logger.info('====[REGISTER JASPER REPORT]========================')
-        value = super(IrActionReport, self).register_all(cursor)
+        #value = super(IrActionReport, self).register_all(cursor)
         cursor.execute("SELECT id, report_name FROM ir_act_report_xml WHERE report_type = 'jasper'")
         records = cursor.dictfetchall()
         for record in records:
             registered_report(record['report_name'])
         _logger.info('====[END REGISTER JASPER REPORT]====================')
-        return value
+        return True
 
 IrActionReport()
 

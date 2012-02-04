@@ -21,11 +21,13 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools import ustr
+from openerp.tools.translate import _
+
 from lxml.etree import Element, tostring
-from tools import ustr
-from tools.translate import _
+
 import logging
 _logger = logging.getLogger('jasper_server')
 

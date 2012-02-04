@@ -24,9 +24,9 @@
 
 import netsvc
 import logging
-from jasper_server.report.jasper import report_jasper
+from jasper import report_jasper
 
-_logger = logging.getLogger('jasper_server')
+logger = logging.getLogger('jasper_server')
 
 
 def registered_report(name):
@@ -35,6 +35,6 @@ def registered_report(name):
     if gname in netsvc.Service._services:
         return
     report_jasper(gname)
-    _logger.info('Register the jasper report service [%s]' % name)
+    logger.info('Register the jasper report service [%s]' % name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

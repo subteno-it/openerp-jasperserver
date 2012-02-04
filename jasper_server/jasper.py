@@ -22,29 +22,31 @@
 #
 ##############################################################################
 
-from report.interface import report_int
-from report_soap import Report
-from osv.osv import except_osv
-from report_exception import JasperException
-import logging
+from openerp.report.interface import report_int
+from openerp.osv.osv import except_osv
 
-_logger = logging.getLogger('jasper_server')
+from report.report_soap import Report
+from report.report_exception import JasperException
+
+import logging
 
 
 class report_jasper(report_int):
     """
     Extend report_int to use Jasper Server
     """
+    logger = logging.getLogger('jasper_server')
+
     def create(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
 
-        _logger.debug('Call %s' % self.name)
+        self.logger.debug('Call %s' % self.name)
         try:
             return Report(self.name, cr, uid, ids, data, context).execute()
         except JasperException, e:
             raise except_osv(e.title, e.message)
 
-#report_jasper('report.print.jasper.server')
+report_jasper('report.print.jasper.server')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
