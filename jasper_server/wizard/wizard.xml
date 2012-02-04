@@ -24,6 +24,8 @@
         #
         ##############################################################################
 
+        <!-- Wizard must be rewrite to osv.osv_memory -->
+        <!--
         <wizard id="wizard_jasper_document_print"
             name="jasper_server.document_print"
             model="jasper.document"
@@ -40,6 +42,7 @@
             sequence="20"
             action="wizard_jasper_make_template"
             type="wizard"/>
+        -->
 
     </data>
 </openerp>
