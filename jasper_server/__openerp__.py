@@ -24,8 +24,9 @@
 
 {
     'name': 'JasperReport Server Interface',
-    'version': '6.5.12',
-    'category': 'Tools',
+    'version': '6.6.1',
+    'category': 'Reporting',
+    'complexity': "expert",
     'description': """This module interface JasperReport Server with OpenERP
 Features:
 - Document source must be in CSV, XML
@@ -68,6 +69,7 @@ In collaboration with Eric Vernichon (from Everlibre)
         'demo/jasper_document.xml',
     ],
     'installable': True,
+    'auto_install': False,
     'external_dependencies': {'python': ['httplib2', 'pyPdf', 'dime']},
 }
 
