@@ -27,6 +27,7 @@ from HTMLParser import HTMLParser
 from lxml.etree import parse
 from tempfile import mkstemp
 from dime import Message
+from report_exception import JasperException
 import os
 
 
@@ -98,10 +99,16 @@ def ParseXML(source):
     fp.close()
     r = tree.xpath('//runReportReturn')
     if not r:
-        raise Exception('Error, invalid Jasper Message')
+        raise JasperException('Error, invalid Jasper Message')
+
     fp = StringIO(r[0].text)
-    tree = parse(fp)
-    fp.close()
+    fp.seek(0)
+    try:
+        tree = parse(fp)
+    except Exception:
+        raise JasperException('Error', 'Impossible to parse XML error message')
+    finally:
+        fp.close()
     return (tree.xpath('//returnCode')[0].text,
             tree.xpath('//returnMessage')[0].text)
 
