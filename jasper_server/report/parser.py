@@ -99,7 +99,7 @@ def ParseXML(source):
     r = tree.xpath('//runReportReturn')
     if not r:
         raise Exception('Error, invalid Jasper Message')
-    fp = StringIO(r[0].text)
+    fp = StringIO(r[0].text.encode('utf-8'))
     tree = parse(fp)
     fp.close()
     return (tree.xpath('//returnCode')[0].text,
