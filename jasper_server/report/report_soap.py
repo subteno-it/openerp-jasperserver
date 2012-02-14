@@ -314,6 +314,8 @@ class Report(object):
             except HttpLib2Error, e:
                 raise JasperException(_('Error HttpLib2'), '%s' % str(e))
             except Exception, e:
+                if str(e).find("'makefile'") >= 0:
+                    raise JasperException(_('Connection error'), _('Cannot find the JasperServer at this address %s') % (uri,))
                 raise JasperException(_('Unknown Error'), '%s' % str(e))
 
             log_debug('HTTP -> RESPONSE:')
