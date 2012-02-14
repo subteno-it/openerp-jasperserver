@@ -101,7 +101,7 @@ def ParseXML(source):
     if not r:
         raise JasperException('Error, invalid Jasper Message')
 
-    fp = StringIO(r[0].text)
+    fp = StringIO(r[0].text.encode('utf-8'))
     fp.seek(0)
     try:
         tree = parse(fp)
