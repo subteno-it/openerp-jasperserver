@@ -314,6 +314,10 @@ class Report(object):
             except HttpLib2Error, e:
                 raise JasperException(_('Error'), '%s' % str(e))
             except Exception, e:
+                # Bad fix for bug in httplib2 http://code.google.com/p/httplib2/issues/detail?id=96
+                # not fix yet
+                if str(e).find("'makefile'") >= 0:
+                    raise JasperException(_('Connection error'), _('Cannot find the JasperServer at this address %s') % (uri,))
                 raise JasperException(_('Error'), '%s' % str(e))
 
             log_debug('HTTP -> RESPONSE:')
