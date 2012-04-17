@@ -222,6 +222,8 @@ class Report(object):
                 'report_name': self.attrs.get('report_name', _('No report name')),
                 'lang': language or 'en_US',
                 'duplicate': duplicate,
+                'dbname': self.cr.dbname,
+                'uid': self.uid,
             }
 
             # If XML we must compose it
