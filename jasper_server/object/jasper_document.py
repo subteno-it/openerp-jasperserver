@@ -152,6 +152,8 @@ class jasper_document(osv.osv):
                 'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
                 'header': False,
                 'multi': doc.toolbar,
+                'attachment': doc.attachment,
+                'attachment_use': doc.attachment_use,
             }
             report_id = act_report_obj.create(cr, uid, args, context=context)
             cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
@@ -289,8 +291,14 @@ class jasper_document_label(osv.osv):
 
     _columns = {
         'name': fields.char('Parameter', size=64, help='Name of the parameter send to JasperServer, prefix with I18N_\neg: test become I18N_TEST as parameter', required=True),
-        'value': fields.char('Value', size=256, help='Name of the label, this field must be translate in all languages available in the database', required=True, translate=True),
+        'value': fields.char('Value', size=256, help='Name of the label, this field must be translate in all languages available in the database', translate=True),
+        'value_text': fields.text('Value', help='Name of the label, this field must be translate in all languages available in the database', translate=True),
         'document_id': fields.many2one('jasper.document', 'Document'),
+        'value_type': fields.selection([('char', 'Char'),('text','Text')], 'Type of value', help='Help note'),
+    }
+
+    _defaults = {
+        'value_type': 'char',
     }
 
 jasper_document_label()
