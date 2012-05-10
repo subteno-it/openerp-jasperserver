@@ -163,9 +163,10 @@ class jasper_document(osv.osv):
         Search ids for reports
         """
         args = [
+            ('key', '=', 'action'),
             ('key2', '=', 'client_print_multi'),
             ('value', '=', 'ir.actions.report.xml,%d' % report_id),
-            ('object', '=', True),
+            #('object', '=', True),
         ]
         return self.pool.get('ir.values').search(cr, uid, args, context=context)
 
@@ -181,8 +182,7 @@ class jasper_document(osv.osv):
         Only remove link in ir.values, not the report
         """
         doc = self.browse(cr, uid, id, context=context)
-        for v in self.action_values(cr, uid, doc.report_id.id, context=context):
-            ir.ir_del(cr, uid, v)
+        self.pool.get('ir.values').unlink(cr, uid, self.action_values(cr, uid, doc.report_id.id, context=context))
         return True
 
     def create(self, cr, uid, vals, context=None):
