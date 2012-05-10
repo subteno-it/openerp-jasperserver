@@ -102,6 +102,12 @@ class Report(object):
         """
         After retrieve datas to launch report, execute it and return the content
         """
+
+        # Issue 934068 with web client with model is missing from the context
+        if not self.model:
+            self.model = current_document.model_id.model
+            self.model_obj = self.pool.get(self.model)
+
         if context is None:
             context = self.context.copy()
 
