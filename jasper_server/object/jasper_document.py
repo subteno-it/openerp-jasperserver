@@ -289,8 +289,14 @@ class jasper_document_label(osv.osv):
 
     _columns = {
         'name': fields.char('Parameter', size=64, help='Name of the parameter send to JasperServer, prefix with I18N_\neg: test become I18N_TEST as parameter', required=True),
-        'value': fields.char('Value', size=256, help='Name of the label, this field must be translate in all languages available in the database', required=True, translate=True),
+        'value': fields.char('Value', size=256, help='Name of the label, this field must be translate in all languages available in the database', translate=True),
+        'value_text': fields.text('Value', help='Name of the label, this field must be translate in all languages available in the database', translate=True),
         'document_id': fields.many2one('jasper.document', 'Document'),
+        'value_type': fields.selection([('char', 'Monoline'), ('text', 'Multilines')], 'Type of parameter', help='Select monoline or multilines text to pass as parameter'),
+    }
+
+    _defaults = {
+        'value_type': 'char',
     }
 
 jasper_document_label()

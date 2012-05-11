@@ -136,7 +136,9 @@
             <field name="arch" type="xml">
                 <tree string="Label">
                     <field name="name"/>
+                    <field name="value_type"/>
                     <field name="value"/>
+                    <field name="value_text"/>
                 </tree>
             </field>
         </record>
@@ -149,7 +151,10 @@
             <field name="arch" type="xml">
                 <form string="Label">
                     <field name="name" colspan="4"/>
-                    <field name="value" colspan="4"/>
+                    <field name="value_type" colspan="4"/>
+                    <field name="value" colspan="4" attrs="{'required': [('value_type','=', 'char')], 'invisible': [('value_type','=','text')]}"/>
+                    <field name="value_text" colspan="4" attrs="{'required': [('value_type','=', 'text')], 'invisible': [('value_type','=','char')]}" height="300"
+                        nolabel="1" />
                     <separator string="Legend" colspan="4"/>
                     <group colspan="4" col="2">
                         <label align="0.0" string="All label are pass as parameter to the JasperServer, and start with I18N_" colspan="4"/>
