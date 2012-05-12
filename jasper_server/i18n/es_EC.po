@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openerp-jasperserver\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-14 16:54+0000\n"
+"POT-Creation-Date: 2012-05-11 07:59+0000\n"
 "PO-Revision-Date: 2011-05-13 14:59+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-25 05:08+0000\n"
-"X-Generator: Launchpad (build 15139)\n"
+"X-Launchpad-Export-Date: 2012-05-12 05:57+0000\n"
+"X-Generator: Launchpad (build 15225)\n"
 
 #. module: jasper_server
 #: selection:jasper.document,format_choice:0
@@ -46,18 +46,18 @@ msgid "Language Error"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:320
+#: code:addons/jasper_server/report/report_soap.py:322
 #, python-format
 msgid "Connection error"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:253
-#: code:addons/jasper_server/report/report_soap.py:313
+#: code:addons/jasper_server/report/report_soap.py:255
 #: code:addons/jasper_server/report/report_soap.py:315
-#: code:addons/jasper_server/report/report_soap.py:321
-#: code:addons/jasper_server/report/report_soap.py:327
-#: code:addons/jasper_server/report/report_soap.py:333
+#: code:addons/jasper_server/report/report_soap.py:317
+#: code:addons/jasper_server/report/report_soap.py:323
+#: code:addons/jasper_server/report/report_soap.py:329
+#: code:addons/jasper_server/report/report_soap.py:335
 #: code:addons/jasper_server/wizard/format_choice.py:60
 #: code:addons/jasper_server/wizard/format_choice.py:67
 #: code:addons/jasper_server/wizard/format_choice.py:79
@@ -205,6 +205,11 @@ msgid "Indent the XML output ?"
 msgstr "Identar la salida XML ?"
 
 #. module: jasper_server
+#: field:jasper.document.label,value_type:0
+msgid "Type of parameter"
+msgstr ""
+
+#. module: jasper_server
 #: view:jasper.document.parameter:0
 msgid "c: for user s company"
 msgstr "c: para usuario de la compañia s"
@@ -219,6 +224,7 @@ msgstr ""
 
 #. module: jasper_server
 #: field:jasper.document.label,value:0
+#: field:jasper.document.label,value_text:0
 msgid "Value"
 msgstr ""
 
@@ -330,7 +336,7 @@ msgid "Before"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:331
+#: code:addons/jasper_server/report/report_soap.py:333
 #, python-format
 msgid "Authentification Error"
 msgstr ""
@@ -515,20 +521,20 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:320
+#: code:addons/jasper_server/report/report_soap.py:322
 #, python-format
 msgid "Cannot find the JasperServer at this address %s"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:374
-#: code:addons/jasper_server/report/report_soap.py:386
+#: code:addons/jasper_server/report/report_soap.py:376
+#: code:addons/jasper_server/report/report_soap.py:388
 #, python-format
 msgid "Configuration Error"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:331
+#: code:addons/jasper_server/report/report_soap.py:333
 #, python-format
 msgid "Invalid login or password"
 msgstr ""
@@ -563,6 +569,11 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
+#: selection:jasper.document.label,value_type:0
+msgid "Multilines"
+msgstr ""
+
+#. module: jasper_server
 #: model:jasper.document.extension,name:jasper_server.jasper_document_extension_9
 msgid "Flash Viewer"
 msgstr ""
@@ -589,7 +600,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:313
+#: code:addons/jasper_server/report/report_soap.py:315
 #, python-format
 msgid "Server not found !"
 msgstr ""
@@ -624,7 +635,7 @@ msgid "Port"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:386
+#: code:addons/jasper_server/report/report_soap.py:388
 #, python-format
 msgid "Service name doesn't match!"
 msgstr ""
@@ -674,6 +685,11 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
+#: help:jasper.document.label,value_type:0
+msgid "Select monoline or multilines text to pass as parameter"
+msgstr ""
+
+#. module: jasper_server
 #: help:jasper.server,pass:0
 msgid "Enter the password for the user, by defaul is jasperadmin"
 msgstr ""
@@ -718,7 +734,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:327
+#: code:addons/jasper_server/report/report_soap.py:329
 #, python-format
 msgid ""
 "Code: %s\n"
@@ -772,7 +788,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:337
+#: code:addons/jasper_server/report/report_soap.py:339
 #, python-format
 msgid "Unknown Error"
 msgstr ""
@@ -799,6 +815,11 @@ msgid "Output format"
 msgstr ""
 
 #. module: jasper_server
+#: selection:jasper.document.label,value_type:0
+msgid "Monoline"
+msgstr ""
+
+#. module: jasper_server
 #: help:jasper.document,report_id:0
 msgid "Link to the report in ir.actions.report.xml"
 msgstr ""
@@ -810,6 +831,7 @@ msgstr ""
 
 #. module: jasper_server
 #: help:jasper.document.label,value:0
+#: help:jasper.document.label,value_text:0
 msgid ""
 "Name of the label, this field must be translate in all languages available "
 "in the database"
@@ -821,7 +843,7 @@ msgid "u: for current user (user launched the report)"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:374
+#: code:addons/jasper_server/report/report_soap.py:376
 #, python-format
 msgid "No JasperServer configuration found!"
 msgstr ""
@@ -973,7 +995,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:337
+#: code:addons/jasper_server/report/report_soap.py:339
 #, python-format
 msgid ""
 "Content-type: %s\n"
@@ -1104,7 +1126,7 @@ msgid ""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:253
+#: code:addons/jasper_server/report/report_soap.py:255
 #, python-format
 msgid "Main company have no address defined on the partner!"
 msgstr ""
