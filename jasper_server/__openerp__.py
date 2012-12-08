@@ -24,7 +24,7 @@
 
 {
     'name': 'JasperReport Server Interface',
-    'version': '6.6.1',
+    'version': '6.1',
     'category': 'Reporting',
     'complexity': "expert",
     'description': """This module interface JasperReport Server with OpenERP
@@ -71,6 +71,7 @@ In collaboration with Eric Vernichon (from Everlibre)
     'installable': True,
     'auto_install': False,
     'external_dependencies': {'python': ['httplib2', 'pyPdf', 'dime']},
+    'application': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
