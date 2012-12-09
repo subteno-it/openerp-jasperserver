@@ -67,7 +67,7 @@ class jasper_document(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, translate=True, required=True),  # button name
         'service': fields.char('Service name', size=64, required=True,
-            help='Enter the service name register at start by OpenERP Server'),
+                               help='Enter the service name register at start by OpenERP Server'),
         'enabled': fields.boolean('Active', help="Indicates if this document is active or not"),
         'model_id': fields.many2one('ir.model', 'Object Model', required=True),  # object model in ir.model
         'jasper_file': fields.char('Jasper file', size=128),  # jasper filename
@@ -93,7 +93,7 @@ class jasper_document(osv.osv):
         'lang': fields.char('Lang', size=256, help="Indicate the lang to use for this report, use o as object to evaluate\neg: o.partner_id.lang\nor\n'fr_FR'\ndefault use user's lang"),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report link', readonly=True, help='Link to the report in ir.actions.report.xml'),
         'check_sel': fields.selection([('none', 'None'), ('simple', 'Simple'), ('func', 'Function')], 'Checking type',
-                        help='if None, no check\nif Simple, define on Check Simple the condition\n if function, the object have check_print function'),
+                                      help='if None, no check\nif Simple, define on Check Simple the condition\n if function, the object have check_print function'),
         'check_simple': fields.char('Check Simple', size=256, help="This code inside this field must return True to send report execution\neg o.state in ('draft', 'open')"),
         'message_simple': fields.char('Return message', size=256, translate=True, help="Error message when check simple doesn't valid"),
         'label_ids': fields.one2many('jasper.document.label', 'document_id', 'Labels'),
@@ -126,7 +126,6 @@ class jasper_document(osv.osv):
         Create an entry in ir_actions_report_xml
         and ir.values
         """
-        b = self.browse(cr, uid, id, context=context)
         act_report_obj = self.pool.get('ir.actions.report.xml')
 
         doc = self.browse(cr, uid, id, context=context)
@@ -153,6 +152,13 @@ class jasper_document(osv.osv):
                 'multi': doc.toolbar,
             }
             report_id = act_report_obj.create(cr, uid, args, context=context)
+            ir_model_data_obj = self.pool.get('ir.model.data')
+            ir_model_data_obj.create(cr, uid, {
+                'name': 'jasper_' + doc.service,
+                'module': '',
+                'model': 'ir.actions.report.xml',
+                'res_id': report_id,
+            }, context=context)
             cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
             value = 'ir.actions.report.xml,' + str(report_id)
             self.pool.get('ir.model.data').ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
