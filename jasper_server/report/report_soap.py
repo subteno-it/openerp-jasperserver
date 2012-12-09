@@ -28,13 +28,13 @@ import time
 import base64
 import logging
 
-from openerp.report.render import render
+from report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
-from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
+from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent, ParseMultipart
 from common import BODY_TEMPLATE, parameter
 from report_exception import JasperException, AuthError, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
-from openerp.tools.translate import _
+from tools.translate import _
 
 _logger = logging.getLogger('jasper_server')
 
@@ -98,11 +98,25 @@ class Report(object):
         # If no context, retrieve one on the current user
         self.context = context or self.pool.get('res.users').context_get(cr, uid, uid)
 
-    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, ids=None, context=None):
+    def add_attachment(self, id, aname, content, context=None):
+        """
+        Add attachment for this report
+        """
+        name = aname + '.' + self.outputFormat
+        return self.pool.get('ir.attachment').create(self.cr, self.uid, {
+                    'name': aname,
+                    'datas': base64.encodestring(content),
+                    'datas_fname': name,
+                    'res_model': self.model,
+                    'res_id': id,
+                    }, context=context
+        )
+
+    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, reload=False,
+                        ids=None, context=None):
         """
         After retrieve datas to launch report, execute it and return the content
         """
-
         # Issue 934068 with web client with model is missing from the context
         if not self.model:
             self.model = current_document.model_id.model
@@ -228,6 +242,8 @@ class Report(object):
                 'report_name': self.attrs.get('report_name', _('No report name')),
                 'lang': language or 'en_US',
                 'duplicate': duplicate,
+                'dbname': self.cr.dbname,
+                'uid': self.uid,
             }
 
             # If XML we must compose it
@@ -281,7 +297,7 @@ class Report(object):
 
             # we must retrieve label in the language document (not user's language)
             for l in doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
-                special_dict['I18N_' + l.name.upper()] = l.value
+                special_dict['I18N_' + l.name.upper()] = (l.value_type == 'char' and l.value) or l.value_text or ''
 
             # If report is launched since a wizard, we can retrieve some parameters
             for d in self.custom.keys():
@@ -318,11 +334,13 @@ class Report(object):
             except ServerNotFoundError:
                 raise JasperException(_('Error'), _('Server not found !'))
             except HttpLib2Error, e:
-                raise JasperException(_('Error HttpLib2'), '%s' % str(e))
+                raise JasperException(_('Error'), '%s' % str(e))
             except Exception, e:
+                # Bad fix for bug in httplib2 http://code.google.com/p/httplib2/issues/detail?id=96
+                # not fix yet
                 if str(e).find("'makefile'") >= 0:
                     raise JasperException(_('Connection error'), _('Cannot find the JasperServer at this address %s') % (uri,))
-                raise JasperException(_('Unknown Error'), '%s' % str(e))
+                raise JasperException(_('Error'), '%s' % str(e))
 
             log_debug('HTTP -> RESPONSE:')
             log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
@@ -337,21 +355,15 @@ class Report(object):
                     raise JasperException(_('Error'), '%s' % ParseHTML(content))
             elif resp.get('content-type') == 'application/dime':
                 ParseDIME(content, pdf_list)
+            elif resp.get('content-type').startswith('multipart/related'):
+                ParseMultipart(content, pdf_list)
             else:
                 raise JasperException(_('Unknown Error'), _('Content-type: %s\nMessage:%s') % (resp.get('content-type'), content))
 
             ###
             ## Store the content in ir.attachment if ask
             if aname:
-                name = aname + '.' + self.outputFormat
-                _logger.info('Save printing as attachment (%s)' % (name,))
-                self.pool.get('ir.attachment').create(self.cr, self.uid, {
-                            'name': aname,
-                            'datas': base64.encodestring(ParseContent(content)),
-                            'datas_fname': name,
-                            'res_model': self.model,
-                            'res_id': ex,
-                            }, context=context)
+                self.add_attachment(ex, aname, ParseContent(content, resp.get('content-type')), context=self.context)
 
             ###
             ## Execute the before query if it available
@@ -395,6 +407,7 @@ class Report(object):
         if not self.attrs.get('params'):
             uri = '/openerp/bases/%s/%s' % (self.cr.dbname, doc.report_unit)
             self.attrs['params'] = (doc.format, uri, doc.mode, doc.depth, {})
+
         one_check = {}
         one_check[doc.id] = False
         content = ''
@@ -405,15 +418,17 @@ class Report(object):
                     if d.only_one and one_check.get(d.id, False):
                         continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
-                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, ids, context=context)
+                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, reload, ids, context=self.context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, ids, context=context)
+                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, reload, ids, context=self.context)
                 one_check[doc.id] = True
 
+        ##
         ## We use pyPdf to merge all PDF in unique file
+        #
         if len(pdf_list) > 1 or duplicate > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
