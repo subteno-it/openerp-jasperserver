@@ -29,10 +29,13 @@ from tempfile import mkstemp
 from dime import Message
 import os
 
-import email,re
+import email
+import re
+
 
 class NotMultipartError(Exception):
     pass
+
 
 class HTML2Text(HTMLParser):
     """
@@ -133,7 +136,8 @@ def ParseContent(source, content_type='application/dime'):
         return content
     elif content_type.startswith('multipart/related'):
         srch = re.search(r'----=[^\r\n]*', source)
-        if srch is None: raise NotMultipartError()
+        if srch is None:
+            raise NotMultipartError()
         boundary = srch.group()
         res = " \n" + source
         res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)
@@ -145,10 +149,11 @@ def ParseContent(source, content_type='application/dime'):
 
 
 def ParseMultipart(res, list_file):
-    srch = re.search(r'----=[^\r\n]*',res)
-    if srch is None: raise NotMultipartError()
+    srch = re.search(r'----=[^\r\n]*', res)
+    if srch is None:
+        raise NotMultipartError()
     boundary = srch.group()
-    res = " \n"+res
+    res = " \n" + res
     res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)
     message = email.message_from_string(res)
     attachment = message.get_payload()[1]

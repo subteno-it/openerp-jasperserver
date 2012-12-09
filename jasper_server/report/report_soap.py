@@ -29,10 +29,13 @@ import base64
 
 from report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
+#from lxml.etree import Element, tostring
 from netsvc import Logger, LOG_DEBUG, LOG_WARNING
 from common import BODY_TEMPLATE, parameter
-from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
-from report_exception import JasperException
+#from tempfile import mkstemp
+#from subprocess import call
+from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent, ParseMultipart
+#from tools.misc import ustr
 from pyPdf import PdfFileWriter, PdfFileReader
 from tools.translate import _
 
@@ -95,7 +98,22 @@ class Report(object):
         self.outputFormat = 'pdf'
         self.path = None
 
-    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, ids=None, context=None):
+    def add_attachment(self, id, aname, content, context=None):
+        """
+        Add attachment for this report
+        """
+        name = aname + '.' + self.outputFormat
+        return self.pool.get('ir.attachment').create(self.cr, self.uid, {
+                    'name': aname,
+                    'datas': base64.encodestring(content),
+                    'datas_fname': name,
+                    'res_model': self.model,
+                    'res_id': id,
+                    }, context=context
+        )
+
+    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, attachment='', reload=False,
+                        ids=None, attrs=None, context=None):
         """
         After retrieve datas to launch report, execute it and return the content
         """
@@ -104,6 +122,9 @@ class Report(object):
 
         if ids is None:
             ids = []
+
+        if attrs is None:
+            attrs = {}
 
         js_obj = self.pool.get('jasper.server')
         cur_obj = self.pool.get(self.model).browse(self.cr, self.uid, ex, context=self.context)
@@ -224,21 +245,15 @@ class Report(object):
                 raise Exception('Error: %s' % ParseHTML(content))
             elif resp.get('content-type') == 'application/dime':
                 ParseDIME(content, pdf_list)
+            elif resp.get('content-type').startswith('multipart/related'):
+                ParseMultipart(content, pdf_list)
             else:
                 raise Exception('Unknown Error: Content-type: %s\nMessage:%s' % (resp.get('content-type'), content))
 
             ###
             ## Store the content in ir.attachment if ask
             if aname:
-                name = aname + '.' + self.outputFormat
-                self.pool.get('ir.attachment').create(self.cr, self.uid, {
-                            'name': aname,
-                            'datas': base64.encodestring(ParseContent(content)),
-                            'datas_fname': name,
-                            'res_model': self.model,
-                            'res_id': ex,
-                            }, context=self.context
-                )
+                self.add_attachment(ex, aname, ParseContent(content, resp.get('content-type')), context=self.context)
 
             ###
             ## Execute the before query if it available
@@ -291,15 +306,17 @@ class Report(object):
                     if d.only_one and one_check.get(d.id, False):
                         continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
-                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, ids, context=self.context)
+                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, attach, reload, ids, att, context=self.context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, ids, context=self.context)
+                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, attach, reload, ids, att, context=self.context)
                 one_check[doc.id] = True
 
+        ##
         # We use pyPdf to marge all PDF in unique file
+        #
         if len(pdf_list) > 1 or duplicate > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
