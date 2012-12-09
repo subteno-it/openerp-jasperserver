@@ -29,6 +29,13 @@ from tempfile import mkstemp
 from dime import Message
 import os
 
+import email
+import re
+
+
+class NotMultipartError(Exception):
+    pass
+
 
 class HTML2Text(HTMLParser):
     """
@@ -115,29 +122,61 @@ def ParseHTML(source):
     return p.get_text()
 
 
-def ParseContent(source):
+def ParseContent(source, content_type='application/dime'):
     """
     Parse the content and return a decode stream
-
     """
-    fp = StringIO(source)
-    a = Message.load(fp)
-    content = ''
-    for x in a.records:
-        if x.type.value == 'application/pdf':
-            content = x.data
-    return content
+    if content_type == 'application/dime':
+        fp = StringIO(source)
+        a = Message.load(fp)
+        content = ''
+        for x in a.records:
+            if x.type.value == 'application/pdf':
+                content = x.data
+        return content
+    elif content_type.startswith('multipart/related'):
+        srch = re.search(r'----=[^\r\n]*', source)
+        if srch is None:
+            raise NotMultipartError()
+        boundary = srch.group()
+        res = " \n" + source
+        res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)
+        message = email.message_from_string(res)
+        attachment = message.get_payload()[1]
+        return attachment.get_payload()
+    else:
+        raise Exception('Unknown Content Type')
+
+
+def ParseMultipart(res, list_file):
+    srch = re.search(r'----=[^\r\n]*', res)
+    if srch is None:
+        raise NotMultipartError()
+    boundary = srch.group()
+    res = " \n" + res
+    res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)
+    message = email.message_from_string(res)
+    attachment = message.get_payload()[1]
+    #return {'content-type': attachment.get_content_type(), 'data': attachment.get_payload()}
+    # Store the PDF in TEMP directory
+    fd, f_name = mkstemp(suffix='.pdf', prefix='jasper')
+    list_file.append(f_name)
+    fpdf = open(f_name, 'w+b')
+    fpdf.write(attachment.get_payload())
+    fpdf.close()
+    os.close(fd)
 
 
 def WriteContent(content, list_file):
     """
     Write content in tempory file
     """
-    __, f_name = mkstemp(suffix='.pdf', prefix='jasper')
+    fd, f_name = mkstemp(suffix='.pdf', prefix='jasper')
     list_file.append(f_name)
     fpdf = open(f_name, 'w+b')
     fpdf.write(content)
     fpdf.close()
+    os.close(fd)
 
 if __name__ == '__main__':
     print ParseHTML("""<html><head><title>Apache Tomcat/5.5.20 - Rapport d'erreur</title>

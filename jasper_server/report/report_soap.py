@@ -30,7 +30,7 @@ import logging
 
 from report.render import render
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
-from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent
+from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent, ParseMultipart
 from common import BODY_TEMPLATE, parameter
 from report_exception import JasperException, AuthError, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
@@ -98,7 +98,22 @@ class Report(object):
         # If no context, retrieve one on the current user
         self.context = context or self.pool.get('res.users').context_get(cr, uid, uid)
 
-    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, ids=None, context=None):
+    def add_attachment(self, id, aname, content, context=None):
+        """
+        Add attachment for this report
+        """
+        name = aname + '.' + self.outputFormat
+        return self.pool.get('ir.attachment').create(self.cr, self.uid, {
+                    'name': aname,
+                    'datas': base64.encodestring(content),
+                    'datas_fname': name,
+                    'res_model': self.model,
+                    'res_id': id,
+                    }, context=context
+        )
+
+    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, reload=False,
+                        ids=None, context=None):
         """
         After retrieve datas to launch report, execute it and return the content
         """
@@ -335,21 +350,15 @@ class Report(object):
                     raise JasperException(_('Error'), '%s' % ParseHTML(content))
             elif resp.get('content-type') == 'application/dime':
                 ParseDIME(content, pdf_list)
+            elif resp.get('content-type').startswith('multipart/related'):
+                ParseMultipart(content, pdf_list)
             else:
                 raise JasperException(_('Unknown Error'), _('Content-type: %s\nMessage:%s') % (resp.get('content-type'), content))
 
             ###
             ## Store the content in ir.attachment if ask
             if aname:
-                name = aname + '.' + self.outputFormat
-                _logger.info('Save printing as attachment (%s)' % (name,))
-                self.pool.get('ir.attachment').create(self.cr, self.uid, {
-                            'name': aname,
-                            'datas': base64.encodestring(ParseContent(content)),
-                            'datas_fname': name,
-                            'res_model': self.model,
-                            'res_id': ex,
-                            }, context=context)
+                self.add_attachment(ex, aname, ParseContent(content, resp.get('content-type')), context=self.context)
 
             ###
             ## Execute the before query if it available
@@ -393,6 +402,7 @@ class Report(object):
         if not self.attrs.get('params'):
             uri = '/openerp/bases/%s/%s' % (self.cr.dbname, doc.report_unit)
             self.attrs['params'] = (doc.format, uri, doc.mode, doc.depth, {})
+
         one_check = {}
         one_check[doc.id] = False
         content = ''
@@ -403,15 +413,17 @@ class Report(object):
                     if d.only_one and one_check.get(d.id, False):
                         continue
                     self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
-                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, ids, context=context)
+                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, reload, ids, context=self.context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, ids, context=context)
+                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, reload, ids, context=self.context)
                 one_check[doc.id] = True
 
+        ##
         ## We use pyPdf to merge all PDF in unique file
+        #
         if len(pdf_list) > 1 or duplicate > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:

@@ -44,9 +44,6 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
     &lt;request operationName=&quot;runReport&quot; locale=&quot;fr&quot;&gt;
         &lt;argument name=&quot;RUN_OUTPUT_FORMAT&quot;&gt;%(format)s&lt;/argument&gt;
         &lt;argument name=&quot;PAGE&quot;&gt;0&lt;/argument&gt;
-        &lt;argument name=&quot;USE_DIME_ATTACHMENTS&quot;&gt;
-            &lt;![CDATA[1]]&gt;
-        &lt;/argument&gt;
         &lt;resourceDescriptor name=&quot;&quot; wsType=&quot;reportUnit&quot; uriString=&quot;%(path)s&quot; isNew=&quot;false&quot;&gt;
             &lt;label&gt;&lt;/label&gt;
             %(param)s
@@ -55,7 +52,6 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
 </request></ns4:runReport>
 </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>"""
-
 
 def entities(data):
     """
