@@ -53,6 +53,7 @@ BODY_TEMPLATE = """<SOAP-ENV:Envelope
 </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>"""
 
+
 def entities(data):
     """
     Convert XML string to XML entities
