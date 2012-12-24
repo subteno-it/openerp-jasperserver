@@ -56,7 +56,7 @@ class jasper_server(osv.osv):
 
     _defaults = {
         'host': lambda *a: 'localhost',
-        'port': lambda *a: 8180,
+        'port': lambda *a: 8080,
         'user': lambda *a: 'jasperadmin',
         'pass': lambda *a: 'jasperadmin',
         'repo': lambda *a: '/jasperserver/services/repository',
