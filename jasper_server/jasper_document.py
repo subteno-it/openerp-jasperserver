@@ -22,10 +22,10 @@
 ##############################################################################
 
 
-from osv import osv
-from osv import fields
-from tools.sql import drop_view_if_exists
-from tools.translate import _
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.sql import drop_view_if_exists
+from openerp.tools.translate import _
 from jasper_server.common import registered_report
 import logging
 
@@ -100,19 +100,19 @@ class jasper_document(osv.osv):
     }
 
     _defaults = {
-        'format_choice': lambda *a: 'mono',
-        'mode': lambda *a: 'sql',
-        'attachment': lambda *a: False,
-        'toolbar': lambda *a: True,
-        'depth': lambda *a: 0,
-        'sequence': lambda *a: 100,
-        'format': lambda *a: 'PDF',
-        'duplicate': lambda *a: "'1'",
-        'lang': lambda *a: False,
-        'report_id': lambda *a: False,
-        'check_sel': lambda *a: 'none',
-        'check_simple': lambda *a: False,
-        'message_simple': lambda *a: False,
+        'format_choice': 'mono',
+        'mode': 'sql',
+        'attachment': False,
+        'toolbar': True,
+        'depth': 0,
+        'sequence': 100,
+        'format': 'PDF',
+        'duplicate': "'1'",
+        'lang': False,
+        'report_id': False,
+        'check_sel': 'none',
+        'check_simple': False,
+        'message_simple': False,
     }
 
     def __init__(self, pool, cr):
