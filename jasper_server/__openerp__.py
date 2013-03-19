@@ -43,7 +43,6 @@ This module required library to work properly
 
 # pip install httplib2 (>= 0.6.0)
 # pip install pyPdf (>= 1.13)
-# pip install python-dime (>= 0.2.1)
 
 
 In collaboration with Eric Vernichon (from Everlibre)
@@ -70,7 +69,7 @@ In collaboration with Eric Vernichon (from Everlibre)
     ],
     'installable': True,
     'auto_install': False,
-    'external_dependencies': {'python': ['httplib2', 'pyPdf', 'dime']},
+    'external_dependencies': {'python': ['httplib2', 'pyPdf']},
     'application': True,
 }
 

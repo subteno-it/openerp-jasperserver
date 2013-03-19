@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-        <data>
+        <data noupdate="0">
                 <record id="jasper_server.menu_jasper" model="ir.ui.menu">
                         <field name="groups_id" eval="[(6,0,[ref('base.group_system')])]"/>
                 </record>
@@ -9,12 +9,21 @@
                         <field name="groups_id" eval="[(6,0,[ref('base.group_system')])]"/>
                 </record>
 
+                <!-- Add new category to display the group below inside a combobox -->
+                <record id="module_category_reporting_jasperserver" model="ir.module.category">
+                    <field name="name">JasperReport</field>
+                    <field name="parent_id" ref="base.module_category_reporting"/>
+                    <field name="sequence">9</field>
+                </record>
+
                 <record id="group_jasper_user" model="res.groups">
                     <field name="name">Jasper / User</field>
+                    <field name="category_id" ref="base.module_category_reporting"/>
                 </record>
 
                 <record id="group_jasper_manager" model="res.groups">
                     <field name="name">Jasper / Manager</field>
+                    <field name="category_id" ref="base.module_category_reporting"/>
                 </record>
         </data>
 </openerp>
