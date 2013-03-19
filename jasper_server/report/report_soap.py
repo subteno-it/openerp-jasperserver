@@ -264,24 +264,20 @@ class Report(object):
             d_par['company_name'] = cny.name
             d_par['company_logo'] = cny.name.encode('ascii', 'ignore').replace(' ', '_')
             d_par['company_header1'] = cny.rml_header1 or ''
-            d_par['company_footer1'] = cny.rml_footer1 or ''
-            d_par['company_footer2'] = cny.rml_footer2 or ''
+            d_par['company_footer1'] = cny.rml_footer or ''
+            d_par['company_footer2'] = ''
             d_par['company_website'] = cny.partner_id.website or ''
             d_par['company_currency'] = cny.currency_id.name or ''
 
             # Search the default address for the company.
-            addr_id = self.pool.get('res.partner').address_get(self.cr, self.uid, [cny.partner_id.id], ['default'])['default']
-            if not addr_id:
-                raise JasperException(_('Error'), _('Main company have no address defined on the partner!'))
-            addr = self.pool.get('res.partner.address').browse(self.cr, self.uid, addr_id, context=context)
-            d_par['company_street'] = addr.street or ''
-            d_par['company_street2'] = addr.street2 or ''
-            d_par['company_zip'] = addr.zip or ''
-            d_par['company_city'] = addr.city or ''
-            d_par['company_country'] = addr.country_id.name or ''
-            d_par['company_phone'] = addr.phone or ''
-            d_par['company_fax'] = addr.fax or ''
-            d_par['company_mail'] = addr.email or ''
+            d_par['company_street'] = cny.partner_id.street or ''
+            d_par['company_street2'] = cny.partner_id.street2 or ''
+            d_par['company_zip'] = cny.partner_id.zip or ''
+            d_par['company_city'] = cny.partner_id.city or ''
+            d_par['company_country'] = cny.partner_id.country_id.name or ''
+            d_par['company_phone'] = cny.partner_id.phone or ''
+            d_par['company_fax'] = cny.partner_id.fax or ''
+            d_par['company_mail'] = cny.partner_id.email or ''
 
             for p in current_document.param_ids:
                 if p.code and  p.code.startswith('[['):
