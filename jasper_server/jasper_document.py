@@ -65,7 +65,7 @@ class jasper_document(osv.osv):
     # TODO: Add One2many with model list and depth for each, use for ban process
     # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
-        'name': fields.char('Name', size=128, translate=True, required=True),  # button name
+        'name': fields.char('Name', size=128, translate=True, required=True, placeholder="InvoiceJ"),  # button name
         'service': fields.char('Service name', size=64, required=True,
                                help='Enter the service name register at start by OpenERP Server'),
         'enabled': fields.boolean('Active', help="Indicates if this document is active or not"),
@@ -152,13 +152,13 @@ class jasper_document(osv.osv):
                 'multi': doc.toolbar,
             }
             report_id = act_report_obj.create(cr, uid, args, context=context)
-            ir_model_data_obj = self.pool.get('ir.model.data')
-            ir_model_data_obj.create(cr, uid, {
-                'name': 'jasper_' + doc.service,
-                'module': '',
-                'model': 'ir.actions.report.xml',
-                'res_id': report_id,
-            }, context=context)
+            #ir_model_data_obj = self.pool.get('ir.model.data')
+            #ir_model_data_obj.create(cr, uid, {
+            #    'name': 'jasper_' + doc.service,
+            #    'module': '',
+            #    'model': 'ir.actions.report.xml',
+            #    'res_id': report_id,
+            #}, context=context)
             cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
             value = 'ir.actions.report.xml,' + str(report_id)
             self.pool.get('ir.model.data').ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
