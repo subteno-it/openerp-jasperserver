@@ -22,7 +22,7 @@
 #
 ##############################################################################
 
-import netsvc
+from openerp import netsvc
 import logging
 from jasper import report_jasper
 
