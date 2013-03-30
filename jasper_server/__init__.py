@@ -23,8 +23,8 @@
 ##############################################################################
 
 import ir_actions_wizard
-import jasper_server
-import jasper_document
+import obj_server
+import obj_document
 import ir_actions
 import report
 import wizard
