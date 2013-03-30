@@ -26,6 +26,7 @@
     'name': 'JasperReport Server Interface',
     'version': '6.2',
     'category': 'Reporting',
+    'sequence': 20,
     'complexity': "expert",
     'description': """This module interface JasperReport Server with OpenERP
 Features:
@@ -53,8 +54,7 @@ In collaboration with Eric Vernichon (from Everlibre)
     'depends': [
         'base',
     ],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/groups.xml',
         'security/ir.model.access.csv',
         'data/jasper_document_extension.xml',
@@ -64,7 +64,7 @@ In collaboration with Eric Vernichon (from Everlibre)
         #'report/report.xml',
         'wizard/wizard.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'demo/jasper_document.xml',
     ],
     'installable': True,
