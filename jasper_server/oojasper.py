@@ -28,6 +28,7 @@ from openerp.tools.translate import _
 from openerp.modules import get_module_path
 import openerp
 import os
+import jasperlib
 
 from lxml.etree import Element, tostring
 
@@ -39,7 +40,7 @@ def log_error(message):
     _logger.error(message)
 
 
-class jasper_server(osv.osv):
+class JasperServer(osv.Model):
     """
     Class to store the Jasper Server configuration
     """
@@ -55,6 +56,7 @@ class jasper_server(osv.osv):
         'repo': fields.char('Repository', size=256, required=True, help='Enter the address of the repository'),
         'sequence': fields.integer('Sequence'),
         'enable': fields.boolean('Enable', help='Check this, if the server is available',),
+        'status': fields.char('Status', size=64, help='Check the registered and authentification status'),
     }
 
     _defaults = {
@@ -135,7 +137,26 @@ class jasper_server(osv.osv):
             finally:
                 fct_file.close()
 
-        super(jasper_server, self).__init__(pool, cr)
+        super(JasperServer, self).__init__(pool, cr)
+
+    def check_auth(self, cr, uid, ids, context=None):
+        """
+        Check if we can contact JasperServer instance
+        and check the authentification
+        """
+        js_config = self.read(cr, uid, ids[0], context=context)
+        try:
+            js = jasperlib.Jasper(host=js_config['host'],
+                                  port=js_config['port'],
+                                  user=js_config['user'],
+                                  pwd=js_config['pass'])
+            js.auth()
+        except jasperlib.ServerNotFound:
+            return self.write(cr, uid, ids, {'status': _('Error, server not found %s %d') % (js.host, js.port)}, context=context)
+        except jasperlib.AuthError:
+            return self.write(cr, uid, ids, {'status': _('Error, Authentification failed for %s/%s') % (js.user, js.pwd)}, context=context)
+
+        return self.write(cr, uid, ids, {'status': _('Connection OK')}, context=context)
 
     ## ************************************************
     # These method can create an XML for Jasper Server
@@ -281,6 +302,5 @@ class jasper_server(osv.osv):
         root.append(self.generate_xml(cr, uid, model, id, depth, context=context))
         return tostring(root, pretty_print=context.get('indent', False))
 
-jasper_server()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

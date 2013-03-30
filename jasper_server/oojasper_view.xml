@@ -40,7 +40,6 @@
         <record id="view_jasper_server_tree" model="ir.ui.view">
             <field name="name">jasper.server.tree</field>
             <field name="model">jasper.server</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
 
@@ -58,26 +57,39 @@
         <record id="view_jasper_server_form" model="ir.ui.view">
             <field name="name">jasper.server.form</field>
             <field name="model">jasper.server</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-
-                <form string="Jasper Server">
-                    <group colspan="4" col="6">
-                        <group colspan="4" col="4">
-                            <field name="host" select="1"/>
-                            <field name="port" select="1"/>
-                            <field name="sequence"/>
-                            <field name="enable" select="1"/>
+                <form string="Jasper Server" version="7.0">
+                    <header>
+                        <button string="Check Auth" icon="gtk-ok" type="object" name="check_auth"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <field name="enable" class="oe_inline"/>
+                                <label string="Enable" for="enable"/>
+                                <label for="host" string="Hostname or IP address"/>
+                            </div>
+                        </div>
+                        <h1><field name="host" placeholder="eg: localhost or 127.0.0.1"/></h1>
+                        <group colspan="4" col="6">
+                            <group colspan="4" col="4">
+                                <field name="port" placeholder="eg: 8080"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <field name="user" required="1" placeholder="By default user is jasperadmin"/>
+                                <field name="pass" password="1" required="1" placeholder="By default the password is jasperadmin"/>
+                            </group>
                         </group>
-                        <group colspan="2" col="2">
-                            <field name="user" required="1"/>
-                            <field name="pass" password="1" required="1"/>
+                        <group colspan="4" col="10">
+                            <field name="repo" colspan="10"/>
                         </group>
-                    </group>
-                    <group colspan="4" col="10">
-                        <field name="repo" colspan="10"/>
-                    </group>
+                        <group colspan="4">
+                            <separator string="Check and Authentification status" colspan="4"/>
+                            <field name="status" colspan="4" nolabel="1"/>
+                        </group>
+                    </sheet>
                 </form>
 
             </field>
