@@ -32,7 +32,7 @@ import logging
 _logger = logging.getLogger('jasper_server')
 
 
-class jasper_document_extension(osv.osv):
+class jasper_document_extension(osv.Model):
     _name = 'jasper.document.extension'
     _description = 'Jasper Document Extension'
 
@@ -42,10 +42,8 @@ class jasper_document_extension(osv.osv):
         'extension': fields.char('Extension', size=10, required=True),
     }
 
-jasper_document_extension()
 
-
-class jasper_document(osv.osv):
+class jasper_document(osv.Model):
     _name = 'jasper.document'
     _description = 'Jasper Document'
     _order = 'sequence'
@@ -62,8 +60,6 @@ class jasper_document(osv.osv):
         extensions = [(extension['jasper_code'], extension['name'] + " (*." + extension['extension'] + ")") for extension in extensions]
         return extensions
 
-    # TODO: Add One2many with model list and depth for each, use for ban process
-    # TODO: Implement thhe possibility to dynamicaly generate a wizard
     _columns = {
         'name': fields.char('Name', size=128, translate=True, required=True, placeholder="InvoiceJ"),  # button name
         'service': fields.char('Service name', size=64, required=True,
@@ -267,10 +263,8 @@ class jasper_document(osv.osv):
 
         return super(jasper_document, self).unlink(cr, uid, ids, context=context)
 
-jasper_document()
 
-
-class jasper_document_parameter(osv.osv):
+class jasper_document_parameter(osv.Model):
     _name = 'jasper.document.parameter'
     _description = 'Add parameter to send to jasper server'
 
@@ -282,13 +276,11 @@ class jasper_document_parameter(osv.osv):
     }
 
     _defaults = {
-        'enabled': lambda *a: True,
+        'enabled': True,
     }
 
-jasper_document_parameter()
 
-
-class jasper_document_label(osv.osv):
+class jasper_document_label(osv.Model):
     _name = 'jasper.document.label'
     _description = 'Manage label in document, for different language'
 
@@ -297,7 +289,5 @@ class jasper_document_label(osv.osv):
         'value': fields.char('Value', size=256, help='Name of the label, this field must be translate in all languages available in the database', required=True, translate=True),
         'document_id': fields.many2one('jasper.document', 'Document'),
     }
-
-jasper_document_label()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
