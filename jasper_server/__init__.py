@@ -23,7 +23,7 @@
 ##############################################################################
 
 import ir_actions_wizard
-import oojasper
+import jasper_server
 import jasper_document
 import ir_actions
 import report

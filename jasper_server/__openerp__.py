@@ -58,10 +58,8 @@ In collaboration with Eric Vernichon (from Everlibre)
         'security/groups.xml',
         'security/ir.model.access.csv',
         'data/jasper_document_extension.xml',
-        #'view/menu.xml',
-        'oojasper_view.xml',
+        'jasper_server_view.xml',
         'jasper_document_view.xml',
-        #'report/report.xml',
         'wizard/wizard.xml',
     ],
     'demo': [
