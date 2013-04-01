@@ -263,6 +263,10 @@ class jasper_document(osv.Model):
 
         return super(jasper_document, self).unlink(cr, uid, ids, context=context)
 
+    def check_report(self, cr, uid, ids, context=None):
+        # TODO, use jasperlib to check if report exists
+        return True
+
 
 class jasper_document_parameter(osv.Model):
     _name = 'jasper.document.parameter'

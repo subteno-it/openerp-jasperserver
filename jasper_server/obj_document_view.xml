@@ -4,8 +4,9 @@
         ##############################################################################
         #
         #    jasper_server module for OpenERP, 
-        #    Copyright (C) 2010 SYLEAM Info Services ([http://www.Syleam.fr/]) 
+        #    Copyright (C) 2010-2013 SYLEAM Info Services ([http://www.Syleam.fr/]) 
         #                  Damien CRIER
+        #                  Christophe CHAUVET [christophe.chauvet@syleam.fr]
         #
         #    This file is a part of jasper_server
         #
@@ -189,70 +190,85 @@
             <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-                <form string="Jasper Document">
-                    <field name="name" select="1"/>
-                    <field name="enabled" select="2"/>
-                    <notebook colspan="4">
-                        <page string="General">
-                            <field name="model_id" select="1"/>
-                            <field name="service" select="1"/>
-                            <field name="report_unit" select="1" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
-                            <field name="sequence"/>
-                            <field name="jasper_file" colspan="4" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
-                            <field name="mode"/>
-                            <field name="report_id"/>
-                            <field name="ctx" colspan="4"/>
-                            <field name="only_one" attrs="{'readonly': [('mode','=', 'multi')]}"/>
-                            <field name="toolbar" select="1"/>
-                            <newline/>
-                            <field name="lang" colspan="4"/>
-                            <separator string="Output format" colspan="4"/>
-                            <field name="format"/>
-                            <separator string="Attachment" colspan="4"/>
-                            <field name="attachment" colspan="4"/>
-                            <field name="attachment_use"/>
-                            <separator string="Expression for duplicate the number of copie" colspan="4"/>
-                            <field name="duplicate" colspan="4"/>
-                            <separator string="Condition to launch the printing report" colspan="4"/>
-                            <field name="check_sel"/>
-                            <field name="message_simple" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
-                            <newline/>
-                            <field name="check_simple" colspan="4" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
-                        </page>
-                        <page string="Groups">
-                            <field name="group_ids" nolabel="1" colspan="4"/>
-                        </page>
-                        <page string="XML" attrs="{'invisible': [('mode','!=','xml')]}">
-                            <field name="depth"/>
-                        </page>
-                        <page string="SQL View" attrs="{'invisible': [('mode','!=','sql')]}">
-                            <separator string="Enter the name of the view" colspan="4"/>
-                            <field name="sql_name" colspan="4" nolabel="1"/>
-                            <separator string="Enter the select query of the view only" colspan="4"/>
-                            <field name="sql_view" colspan="4" nolabel="1" attrs="{'required': [('sql_name','!=', False)]}"/>
-                        </page>
-                        <page string="Processes" attrs="{'invisible': [('mode','=','multi')]}">
-                            <separator string="Execute SQL query before treatment" colspan="4"/>
-                            <field name="before" colspan="4" nolabel="1"/>
-                            <separator string="Execute SQL query after treatment" colspan="4"/>
-                            <field name="after" colspan="4" nolabel="1"/>
-                            <separator string="Legend" colspan="4"/>
-                            <group colspan="4" col="6">
-                                <label string="%%(id)s" colspan="2"/>
-                                <newline/>
-                            </group>
-                        </page>
-                        <page string="Parameters" attrs="{'invisible': [('mode','=','multi')]}">
-                            <field name="param_ids" nolabel="1" />
-                        </page>
-                        <page string="Reports" attrs="{'invisible': [('mode','!=','multi')]}">
-                            <separator string="Select report to launch when this report is launched" colspan="4"/>
-                            <field name="child_ids" nolabel="1" domain="[('mode','!=', 'multi'),('model_id','=',model_id),('enabled','=',True)]"/>
-                        </page>
-                        <page string="Labels">
-                            <field name="label_ids" nolabel="1" />
-                        </page>
-                    </notebook>
+                <form string="Jasper Document" version="7.0">
+                    <header>
+                        <button string="Check report" icon="gtk-ok" type="object" name="check_report"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" />
+                                <field name="enabled" class="oe_inline"/>
+                                <label string="Active" for="enabled"/>
+                            </div>
+                            <h1><field name="name" /></h1>
+                        </div>
+
+                        <notebook colspan="4">
+                            <page string="General">
+                                <group colspan="4" col="4">
+                                    <field name="model_id" />
+                                    <field name="service" />
+                                    <field name="report_unit" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
+                                    <field name="sequence"/>
+                                    <field name="jasper_file" colspan="4" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
+                                    <field name="mode"/>
+                                    <field name="report_id"/>
+                                    <field name="ctx" colspan="4"/>
+                                    <field name="only_one" attrs="{'readonly': [('mode','=', 'multi')]}"/>
+                                    <field name="toolbar" />
+                                    <newline/>
+                                    <field name="lang" colspan="4"/>
+                                    <separator string="Output format" colspan="4"/>
+                                    <field name="format"/>
+                                    <separator string="Attachment" colspan="4"/>
+                                    <field name="attachment" colspan="4"/>
+                                    <field name="attachment_use"/>
+                                    <separator string="Expression for duplicate the number of copie" colspan="4"/>
+                                    <field name="duplicate" colspan="4"/>
+                                    <separator string="Condition to launch the printing report" colspan="4"/>
+                                    <field name="check_sel"/>
+                                    <field name="message_simple" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
+                                    <newline/>
+                                    <field name="check_simple" colspan="4" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
+
+                                </group>
+                            </page>
+                            <page string="Groups">
+                                <field name="group_ids" nolabel="1" colspan="4"/>
+                            </page>
+                            <page string="XML" attrs="{'invisible': [('mode','!=','xml')]}">
+                                <field name="depth"/>
+                            </page>
+                            <page string="SQL View" attrs="{'invisible': [('mode','!=','sql')]}">
+                                <separator string="Enter the name of the view" colspan="4"/>
+                                <field name="sql_name" colspan="4" nolabel="1"/>
+                                <separator string="Enter the select query of the view only" colspan="4"/>
+                                <field name="sql_view" colspan="4" nolabel="1" attrs="{'required': [('sql_name','!=', False)]}"/>
+                            </page>
+                            <page string="Processes" attrs="{'invisible': [('mode','=','multi')]}">
+                                <separator string="Execute SQL query before treatment" colspan="4"/>
+                                <field name="before" colspan="4" nolabel="1"/>
+                                <separator string="Execute SQL query after treatment" colspan="4"/>
+                                <field name="after" colspan="4" nolabel="1"/>
+                                <separator string="Legend" colspan="4"/>
+                                <group colspan="4" col="6">
+                                    <label string="%%(id)s" colspan="2"/>
+                                    <newline/>
+                                </group>
+                            </page>
+                            <page string="Parameters" attrs="{'invisible': [('mode','=','multi')]}">
+                                <field name="param_ids" nolabel="1" />
+                            </page>
+                            <page string="Reports" attrs="{'invisible': [('mode','!=','multi')]}">
+                                <separator string="Select report to launch when this report is launched" colspan="4"/>
+                                <field name="child_ids" nolabel="1" domain="[('mode','!=', 'multi'),('model_id','=',model_id),('enabled','=',True)]"/>
+                            </page>
+                            <page string="Labels">
+                                <field name="label_ids" nolabel="1" />
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -264,19 +280,19 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Documents">
-                   <filter string="Enabled" icon="terp-accessories-archiver" domain="[('enabled','=',1)]"/>
-                   <separator orientation="vertical"/>
-                   <field name="model_id"/>
-                   <field name="service"/>
-                   <field name="report_unit"/>
-                   <newline/>
-                   <group  expand="0" string="Group by..." >
-                       <filter string='Model' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'model_id'}" />
-                       <separator orientation="vertical"/>
-                       <filter string='Mode' icon="terp-mrp" domain="[]" context="{'group_by' : 'mode'}" />
-                       <separator orientation="vertical"/>
-                       <filter string='Format' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'format'}" />
-                   </group>
+                    <filter string="Enabled" icon="terp-accessories-archiver" domain="[('enabled','=',1)]"/>
+                    <separator orientation="vertical"/>
+                    <field name="model_id"/>
+                    <field name="service"/>
+                    <field name="report_unit"/>
+                    <newline/>
+                    <group  expand="0" string="Group by..." >
+                        <filter string='Model' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'model_id'}" />
+                        <separator orientation="vertical"/>
+                        <filter string='Mode' icon="terp-mrp" domain="[]" context="{'group_by' : 'mode'}" />
+                        <separator orientation="vertical"/>
+                        <filter string='Format' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'format'}" />
+                    </group>
                 </search>
             </field>
         </record>
