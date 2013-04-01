@@ -27,6 +27,7 @@ from openerp.osv import fields
 from openerp.tools.sql import drop_view_if_exists
 from openerp.tools.translate import _
 from jasper_server.common import registered_report
+import jasperlib
 import logging
 
 _logger = logging.getLogger('jasper_server')
@@ -265,6 +266,27 @@ class jasper_document(osv.Model):
 
     def check_report(self, cr, uid, ids, context=None):
         # TODO, use jasperlib to check if report exists
+        js_server = self.pool.get('jasper.server')
+        js_server_ids = js_server.search(cr, uid, [('enable', '=', True)], context=context)
+        if not js_server_ids:
+            raise osv.except_osv(_('Error'), _('No JasperServer configuration found !'))
+
+        jss = js_server.browse(cr, uid, js_server_ids[0], context=context)
+
+        curr = self.browse(cr, uid, ids[0], context=context)
+        try:
+            js = jasperlib.Jasper(jss.host, jss.port, jss.user, jss['pass'])
+            js.auth()
+            uri = '/openerp/bases/%s/%s' % (cr.dbname, curr.report_unit)
+            envelop = js.run_report(uri=uri, output='PDF', params={})
+            js.send(jasperlib.SoapEnv('runReport', envelop).output())
+        except jasperlib.ServerNotFound:
+            raise osv.except_osv(_('Error'), _('Error, server not found %s %d') % (js.host, js.port))
+        except jasperlib.AuthError:
+            raise osv.except_osv(_('Error'), _('Error, Authentification failed for %s/%s') % (js.user, js.pwd))
+        except jasperlib.ServerError, e:
+            raise osv.except_osv(_('Error'), str(e).decode('utf-8'))
+
         return True
 
 
