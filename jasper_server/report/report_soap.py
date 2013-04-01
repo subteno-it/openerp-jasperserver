@@ -261,23 +261,25 @@ class Report(object):
             else:
                 cny = user.company_id
 
-            d_par['company_name'] = cny.name
-            d_par['company_logo'] = cny.name.encode('ascii', 'ignore').replace(' ', '_')
-            d_par['company_header1'] = cny.rml_header1 or ''
-            d_par['company_footer1'] = cny.rml_footer or ''
-            d_par['company_footer2'] = ''
-            d_par['company_website'] = cny.partner_id.website or ''
-            d_par['company_currency'] = cny.currency_id.name or ''
+            d_par.update({
+                'company_name': cny.name,
+                'company_logo': cny.name.encode('ascii', 'ignore').replace(' ', '_'),
+                'company_header1': cny.rml_header1 or '',
+                'company_footer1': cny.rml_footer or '',
+                'company_footer2': '',
+                'company_website': cny.partner_id.website or '',
+                'company_currency': cny.currency_id.name or '',
 
-            # Search the default address for the company.
-            d_par['company_street'] = cny.partner_id.street or ''
-            d_par['company_street2'] = cny.partner_id.street2 or ''
-            d_par['company_zip'] = cny.partner_id.zip or ''
-            d_par['company_city'] = cny.partner_id.city or ''
-            d_par['company_country'] = cny.partner_id.country_id.name or ''
-            d_par['company_phone'] = cny.partner_id.phone or ''
-            d_par['company_fax'] = cny.partner_id.fax or ''
-            d_par['company_mail'] = cny.partner_id.email or ''
+                # Search the default address for the company.
+                'company_street': cny.partner_id.street or '',
+                'company_street2': cny.partner_id.street2 or '',
+                'company_zip': cny.partner_id.zip or '',
+                'company_city': cny.partner_id.city or '',
+                'company_country': cny.partner_id.country_id.name or '',
+                'company_phone': cny.partner_id.phone or '',
+                'company_fax': cny.partner_id.fax or '',
+                'company_mail': cny.partner_id.email or '',
+            })
 
             for p in current_document.param_ids:
                 if p.code and  p.code.startswith('[['):
