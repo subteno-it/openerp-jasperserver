@@ -32,7 +32,6 @@
         <record id="view_document_extension_tree" model="ir.ui.view">
             <field name="name">Jasper Document Extension [list]</field>
             <field name="model">jasper.document.extension</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Document extensions">
@@ -46,7 +45,6 @@
         <record id="view_document_extension_form" model="ir.ui.view">
             <field name="name">Jasper Document Extension [form]</field>
             <field name="model">jasper.document.extension</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Documents extensions">
@@ -93,7 +91,6 @@
         <record id="view_jasper_document_parameter_tree" model="ir.ui.view">
             <field name="name">jasper.document.parameter.tree</field>
             <field name="model">jasper.document.parameter</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Parameter">
@@ -107,7 +104,6 @@
         <record id="view_jasper_document_parameter_form" model="ir.ui.view">
             <field name="name">jasper.document.parameter.form</field>
             <field name="model">jasper.document.parameter</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Parameter">
@@ -132,7 +128,6 @@
         <record id="view_jasper_document_label_tree" model="ir.ui.view">
             <field name="name">jasper.document.label.tree</field>
             <field name="model">jasper.document.label</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Label">
@@ -145,7 +140,6 @@
         <record id="view_jasper_document_label_form" model="ir.ui.view">
             <field name="name">jasper.document.label.form</field>
             <field name="model">jasper.document.label</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Label">
@@ -166,7 +160,6 @@
         <record id="view_document_tree" model="ir.ui.view">
             <field name="name">Jasper Document [tree]</field>
             <field name="model">jasper.document</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Jasper Document" colors="#f66a00:enabled==False" >
@@ -187,7 +180,6 @@
         <record id="view_document_form" model="ir.ui.view">
             <field name="name">Jasper Document</field>
             <field name="model">jasper.document</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Jasper Document" version="7.0">
@@ -276,7 +268,6 @@
         <record id="view_document_search" model="ir.ui.view">
             <field name="name">jasper.document.search</field>
             <field name="model">jasper.document</field>
-            <field name="type">search</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Documents">
