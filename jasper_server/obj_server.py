@@ -57,6 +57,7 @@ class JasperServer(osv.Model):
         'sequence': fields.integer('Sequence'),
         'enable': fields.boolean('Enable', help='Check this, if the server is available',),
         'status': fields.char('Status', size=64, help='Check the registered and authentification status'),
+        'prefix': fields.char('Prefix', size=32, help='If prefix is filled, the reportUnit must in the new tree, usefull on a share hosting'),
     }
 
     _defaults = {
@@ -66,6 +67,7 @@ class JasperServer(osv.Model):
         'pass': lambda *a: 'jasperadmin',
         'repo': lambda *a: '/jasperserver/services/repository',
         'sequence': lambda *a: 10,
+        'prefix': False,
     }
 
     def __init__(self, pool, cr):

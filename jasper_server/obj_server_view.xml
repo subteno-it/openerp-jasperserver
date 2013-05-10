@@ -48,6 +48,7 @@
                     <field name="host"/>
                     <field name="port"/>
                     <field name="user"/>
+                    <field name="prefix"/>
                     <field name="repo"/>
                 </tree>
 
@@ -83,6 +84,7 @@
                             </group>
                         </group>
                         <group colspan="4" col="10">
+                            <field name="prefix" colspan="10"/>
                             <field name="repo" colspan="10"/>
                         </group>
                         <group colspan="4">
