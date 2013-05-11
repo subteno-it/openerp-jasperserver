@@ -30,18 +30,18 @@ from report.report_exception import JasperException
 
 import logging
 
+logger = logging.getLogger('jasper_server')
 
 class report_jasper(report_int):
     """
     Extend report_int to use Jasper Server
     """
-    logger = logging.getLogger('jasper_server')
 
     def create(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
 
-        self.logger.debug('Call %s' % self.name)
+        logger.debug('Call %s' % self.name)
         try:
             return Report(self.name, cr, uid, ids, data, context).execute()
         except JasperException, e:

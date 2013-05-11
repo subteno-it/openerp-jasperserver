@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP,
-#    Copyright (C) 2010 SYLEAM Info Services (<http://www.syleam.fr/>)
+#    Copyright (C) 2010-2013 SYLEAM Info Services (<http://www.syleam.fr/>)
 #                  Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
 #    This file is a part of jasper_server
@@ -26,7 +26,7 @@ from openerp.osv import osv
 from openerp.osv import fields
 
 
-class ir_actions_wizard(osv.osv):
+class ir_actions_wizard(osv.Model):
     """
     Add boolean field, that identify the wizard link to a jasper document
     Use to registered report at start
@@ -40,7 +40,5 @@ class ir_actions_wizard(osv.osv):
     _defaults = {
         'jasper': lambda *a: False,
     }
-
-ir_actions_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

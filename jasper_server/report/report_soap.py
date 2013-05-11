@@ -36,7 +36,7 @@ from report_exception import JasperException, AuthError, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
 from tools.translate import _
 
-_logger = logging.getLogger('jasper_server')
+logger = logging.getLogger('jasper_server')
 
 ##
 # If cStringIO is available, we use it
@@ -72,7 +72,7 @@ class external_pdf(render):
 
 
 def log_debug(message):
-    _logger.debug(' %s' % message)
+    logger.debug(' %s' % message)
 
 
 class Report(object):
@@ -136,16 +136,16 @@ class Report(object):
             try:
                 aname = eval(self.attrs['attachment'], {'object': cur_obj, 'time': time})
             except SyntaxError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Attachment Error'), _('Syntax error when evaluate attachment\n\nMessage: "%s"') % str(e))
             except NameError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Attachment Error'), _('Error when evaluate attachment\n\nMessage: "%s"') % str(e))
             except AttributeError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Attachment Error'), _('Attribute error when evaluate attachment\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
             except Exception, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Attachment Error'), _('Unknown error when evaluate attachment\nMessage: "%s"') % str(e))
 
         duplicate = 1
@@ -153,16 +153,16 @@ class Report(object):
             try:
                 duplicate = int(eval(current_document.duplicate, {'o': cur_obj}))
             except SyntaxError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Duplicate Error'), _('Syntax error when evaluate duplicate\n\nMessage: "%s"') % str(e))
             except NameError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Duplicate Error'), _('Error when evaluate duplicate\n\nMessage: "%s"') % str(e))
             except AttributeError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Duplicate Error'), _('Attribute error when evaluate duplicate\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
             except Exception, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Duplicate Error'), _('Unknown error when evaluate duplicate\nMessage: "%s"') % str(e))
 
         log_debug('Number of duplicate copy: %d' % int(duplicate))
@@ -172,16 +172,16 @@ class Report(object):
             try:
                 language = eval(current_document.lang, {'o': cur_obj})
             except SyntaxError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Language Error'), _('Syntax error when evaluate language\n\nMessage: "%s"') % str(e))
             except NameError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Language Error'), _('Error when evaluate language\n\nMessage: "%s"') % str(e))
             except AttributeError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Language Error'), _('Attribute error when evaluate language\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
             except Exception, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))
 
         # Check if we can launch this reports
@@ -197,36 +197,36 @@ class Report(object):
                     raise JasperException(_('Check Print Error'), _('Function "check_print" return an error'))
 
             except SyntaxError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Check Error'), _('Syntax error when check condition\n\nMessage: "%s"') % str(e))
             except NameError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Check Error'), _('Error when check condition\n\nMessage: "%s"') % str(e))
             except AttributeError, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Check Error'), _('Attribute error when check condition\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
             except JasperException, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise JasperException(e.title, e.message)
             except Exception, e:
-                _logger.warning('Error %s' % str(e))
+                logger.warning('Error %s' % str(e))
                 raise EvalError(_('Check Error'), _('Unknown error when check condition\nMessage: "%s"') % str(e))
 
         reload_ok = False
         if self.attrs['reload'] and aname:
-            _logger.info('Printing must be reload from attachment if exists (%s)' % aname)
+            logger.info('Printing must be reload from attachment if exists (%s)' % aname)
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
                     [('name', '=', aname), ('res_model', '=', self.model), ('res_id', '=', ex)])
             if aids:
                 reload_ok = True
-                _logger.info('Attachment found, reload it!')
+                logger.info('Attachment found, reload it!')
                 brow_rec = self.pool.get('ir.attachment').browse(self.cr, self.uid, aids[0])
                 if brow_rec.datas:
                     d = base64.decodestring(brow_rec.datas)
                     WriteContent(d, pdf_list)
                     content = d
             else:
-                _logger.info('Attachment not found')
+                logger.info('Attachment not found')
 
         if not reload_ok:
             # Bug found in iReport >= 3.7.x (IN doesn't work in SQL Query)
