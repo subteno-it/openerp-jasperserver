@@ -91,10 +91,15 @@ class Report(object):
         self.custom = data.get('jasper', {})
         self.model = data.get('model', False)
         self.pool = pooler.get_pool(cr.dbname)
-        self.model_obj = self.pool.get(self.model)
-        self.obj = None
         self.outputFormat = 'pdf'
         self.path = None
+
+        # Reuse object pool
+        self.model_obj = self.pool.get(self.model)
+        self.doc_obj = self.pool.get('jasper.document')
+        self.js_obj = self.pool.get('jasper.server')
+        self.obj = None
+
         # If no context, retrieve one on the current user
         self.context = context or self.pool.get('res.users').context_get(cr, uid, uid)
 
@@ -128,8 +133,6 @@ class Report(object):
         if ids is None:
             ids = []
 
-        doc_obj = self.pool.get('jasper.document')
-        js_obj = self.pool.get('jasper.server')
         cur_obj = self.model_obj.browse(self.cr, self.uid, ex, context=context)
         aname = False
         if self.attrs['attachment']:
@@ -248,7 +251,7 @@ class Report(object):
 
             # If XML we must compose it
             if self.attrs['params'][2] == 'xml':
-                d_xml = js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
+                d_xml = self.js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
                         self.attrs['params'][3], context=context)
                 d_par['xml_data'] = d_xml
 
@@ -294,7 +297,7 @@ class Report(object):
             }
 
             # we must retrieve label in the language document (not user's language)
-            for l in doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
+            for l in self.doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
                 special_dict['I18N_' + l.name.upper()] = (l.value_type == 'char' and l.value) or l.value_text or ''
 
             # If report is launched since a wizard, we can retrieve some parameters
@@ -381,13 +384,11 @@ class Report(object):
         context = self.context.copy()
 
         ids = self.ids
-        js_obj = self.pool.get('jasper.server')
-        doc_obj = self.pool.get('jasper.document')
-        js_ids = js_obj.search(self.cr, self.uid, [('enable', '=', True)])
+        js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
         if not len(js_ids):
             raise JasperException(_('Configuration Error'), _('No JasperServer configuration found!'))
 
-        js = js_obj.read(self.cr, self.uid, js_ids, context=context)[0]
+        js = self.js_obj.read(self.cr, self.uid, js_ids, context=context)[0]
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
 
@@ -395,11 +396,11 @@ class Report(object):
         # For each IDS, launch a query, and return only one result
         #
         pdf_list = []
-        doc_ids = doc_obj.search(self.cr, self.uid, [('service', '=', self.service)], context=context)
+        doc_ids = self.doc_obj.search(self.cr, self.uid, [('service', '=', self.service)], context=context)
         if not doc_ids:
             raise JasperException(_('Configuration Error'), _("Service name doesn't match!"))
 
-        doc = doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
+        doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
         self.attrs['attachment'] = doc.attachment
         self.attrs['reload'] = doc.attachment_use
         if not self.attrs.get('params'):
