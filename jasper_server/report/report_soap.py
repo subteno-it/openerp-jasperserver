@@ -400,11 +400,14 @@ class Report(object):
         if not doc_ids:
             raise JasperException(_('Configuration Error'), _("Service name doesn't match!"))
 
+        def compose_path(basename):
+            return js['prefix'] and '/' + js['prefix'] + '/instances/%s/%s' or basename
+
         doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
         self.attrs['attachment'] = doc.attachment
         self.attrs['reload'] = doc.attachment_use
         if not self.attrs.get('params'):
-            uri = '/openerp/bases/%s/%s' % (self.cr.dbname, doc.report_unit)
+            uri = compose_path('/openerp/bases/%s/%s') % (self.cr.dbname, doc.report_unit)
             self.attrs['params'] = (doc.format, uri, doc.mode, doc.depth, {})
 
         one_check = {}
@@ -416,7 +419,7 @@ class Report(object):
                 for d in doc.child_ids:
                     if d.only_one and one_check.get(d.id, False):
                         continue
-                    self.path = '/openerp/bases/%s/%s' % (self.cr.dbname, d.report_unit)
+                    self.path = compose_path('/openerp/bases/%s/%s') % (self.cr.dbname, d.report_unit)
                     (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, reload, ids, context=self.context)
                     one_check[d.id] = True
             else:
