@@ -108,6 +108,9 @@ class Report(object):
         Add attachment for this report
         """
         name = aname + '.' + self.outputFormat
+        context['type'] ='binary'
+        context['default_type'] ='binary'
+        
         return self.pool.get('ir.attachment').create(self.cr, self.uid, {
                     'name': aname,
                     'datas': base64.encodestring(content),
