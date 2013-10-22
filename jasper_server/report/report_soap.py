@@ -108,13 +108,17 @@ class Report(object):
         Add attachment for this report
         """
         name = aname + '.' + self.outputFormat
+        ctx = context.copy()
+        ctx['type'] ='binary'
+        ctx['default_type'] ='binary'
+        
         return self.pool.get('ir.attachment').create(self.cr, self.uid, {
                     'name': aname,
                     'datas': base64.encodestring(content),
                     'datas_fname': name,
                     'res_model': self.model,
                     'res_id': id,
-                    }, context=context
+                    }, context=ctx
         )
 
     def _jasper_execute(self, ex, current_document, js_conf, pdf_list, reload=False,
