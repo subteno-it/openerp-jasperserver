@@ -1,0 +1,7 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+before_script:
+  - "pep8 --ignore=E501,E225 ."
+  - pyflakes -x W src
