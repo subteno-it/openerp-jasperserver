@@ -61,9 +61,9 @@ class ShowSample(osv.osv_memory):
         }
 
         return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'jasper.partner_list',
-                'datas': data,
+            'type': 'ir.actions.report.xml',
+            'report_name': 'jasper.partner_list',
+            'datas': data,
         }
 
 ShowSample()
