@@ -32,6 +32,7 @@ import logging
 
 logger = logging.getLogger('jasper_server')
 
+
 class report_jasper(report_int):
     """
     Extend report_int to use Jasper Server

@@ -84,39 +84,36 @@ class format_choice(wizard.interface):
             'attachment_use': document.attachment_use,
         }
         uri = '/openerp/bases/%s/%s' % (cr.dbname, document.report_unit)
-        data['form']['params'] = (document.format, uri, document.mode, document.depth, option)
+        data['form']['params'] = (document.format, uri, document.mode,
+                                  document.depth, option)
         data['form']['ids'] = data['ids']
         return data['form']
 
     states = {
         'init': {
             'actions': [],
-            'result': {
-                    'type': 'choice',
-                    'next_state': _select_format,
-                }
-            },
+            'result': {'type': 'choice',
+                       'next_state': _select_format}
+        },
         'format_choice': {
             'actions': [],
             'result': {
-                    'type': 'form',
-                    'arch': form,
-                    'fields': fields,
-                    'state': (
-                            ('end', 'Cancel', 'gtk-cancel'),
-                            ('create_wizard', 'OK', 'gtk-ok', True),
-                        )
-                }
-            },
+                'type': 'form',
+                'arch': form,
+                'fields': fields,
+                'state': (('end', 'Cancel', 'gtk-cancel'),
+                          ('create_wizard', 'OK', 'gtk-ok', True))
+            }
+        },
         'create_wizard': {
             'actions': [_create_wizard],
             'result': {
                 'type': 'print',
                 'report': 'print.jasper.server',
                 'state': 'end'
-                }
-            },
-        }
+            }
+        },
+    }
 
 format_choice('jasper_server.document_print')
 
