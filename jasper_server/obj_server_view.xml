@@ -27,12 +27,7 @@
             icon="STOCK_PRINT" 
             sequence="50" 
             name="Jasper Report" 
-            parent="base.menu_administration"/>
-
-        <menuitem id="menu_jasper_configuration" 
-            parent="menu_jasper"
-            sequence="5"
-            name="Configuration"/>
+            parent="base.menu_custom"/>
 
         #
         # Jasper Server configuration
@@ -109,7 +104,7 @@
         <menuitem id="menu_jasper_server"
             action="action_jasper_server"
             icon="STOCK_PREFERENCES"
-            parent="menu_jasper_configuration"/>
+            parent="menu_jasper"/>
 
 
     </data>
