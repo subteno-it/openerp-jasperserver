@@ -279,6 +279,7 @@
                 <search string="Documents">
                     <filter string="Enabled" icon="terp-accessories-archiver" domain="[('enabled','=',1)]"/>
                     <separator orientation="vertical"/>
+                    <field name="name"/>
                     <field name="model_id"/>
                     <field name="service"/>
                     <field name="report_unit"/>
@@ -295,7 +296,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_open_document_view">
-            <field name="name">Jasper Document</field>
+            <field name="name">Jasper Report</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">jasper.document</field>
             <field name="view_type">form</field>
@@ -319,7 +320,7 @@
         </record>
 
         <menuitem id="menu_jasper_document" 
-            parent="jasper_server.menu_jasper"
+            parent="base.menu_config"
             sequence="20"
             action="act_open_document_view"/>
     </data>
