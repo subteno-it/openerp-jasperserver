@@ -322,6 +322,7 @@
         <menuitem id="menu_jasper_document" 
             parent="base.menu_config"
             sequence="20"
-            action="act_open_document_view"/>
+            action="act_open_document_view"
+            groups="group_jasper_manager"/>
     </data>
 </openerp>
