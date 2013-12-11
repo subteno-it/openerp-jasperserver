@@ -24,7 +24,7 @@
 
 from cStringIO import StringIO
 from HTMLParser import HTMLParser
-from lxml.etree import parse
+from lxml.etree import parse, tostring
 from tempfile import mkstemp
 from dime import Message
 import os
@@ -109,8 +109,10 @@ def ParseXML(source):
     fp = StringIO(r[0].text.encode('utf-8'))
     tree = parse(fp)
     fp.close()
-    return (tree.xpath('//returnCode')[0].text,
-            tree.xpath('//returnMessage')[0].text)
+    rcode = tree.xpath('//returnCode')
+    rmess = tree.xpath('//returnMessage')
+    return (rcode and rcode[0].text or '0',
+            rmess and rmess[0].text or 'unknow message')
 
 
 def ParseHTML(source):
