@@ -79,7 +79,6 @@ class jasper_document(orm.Model):
         'after': fields.text('After', help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),
         'attachment': fields.char('Save As Attachment Prefix', size=255, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
-        'toolbar': fields.boolean('Hide in toolbar', help='Check this if you want to hide button in toolbar'),
         'param_ids': fields.one2many('jasper.document.parameter', 'document_id', 'Parameters', ),
         'ctx': fields.char('Context', size=128, help="Enter condition with context does match to see the print action\neg: context.get('foo') == 'bar'"),
         'sql_view': fields.text('SQL View', help='Insert your SQL view, if the report is base on it'),
@@ -101,7 +100,6 @@ class jasper_document(orm.Model):
         'format_choice': 'mono',
         'mode': 'sql',
         'attachment': False,
-        'toolbar': True,
         'depth': 0,
         'sequence': 100,
         'format': 'PDF',
@@ -135,7 +133,7 @@ class jasper_document(orm.Model):
                 'model': doc.model_id.model,
                 'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
                 'header': False,
-                'multi': doc.toolbar,
+                'multi': False,
             }
             act_report_obj.write(cr, uid, [doc.report_id.id], args, context=context)
         else:
@@ -147,7 +145,7 @@ class jasper_document(orm.Model):
                 'report_type': 'jasper',
                 'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
                 'header': False,
-                'multi': doc.toolbar,
+                'multi': False,
             }
             report_id = act_report_obj.create(cr, uid, args, context=context)
             #ir_model_data_obj = self.pool.get('ir.model.data')

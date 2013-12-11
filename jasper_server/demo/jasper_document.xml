@@ -34,7 +34,6 @@
             <field name="mode">sql</field>
             <field name="service">partner_list</field>
             <field name="format">PDF</field>
-            <field name="toolbar" eval="0"/>
         </record>
 
         <record id="jasper_server_1" model="jasper.server">
