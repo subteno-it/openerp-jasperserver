@@ -262,11 +262,14 @@ class jasper_document(orm.Model):
 
         jss = js_server.browse(cr, uid, js_server_ids[0], context=context)
 
+        def compose_path(basename):
+            return jss['prefix'] and '/' + jss['prefix'] + '/instances/%s/%s' or basename
+
         curr = self.browse(cr, uid, ids[0], context=context)
         try:
             js = jasperlib.Jasper(jss.host, jss.port, jss.user, jss['pass'])
             js.auth()
-            uri = '/openerp/bases/%s/%s' % (cr.dbname, curr.report_unit)
+            uri = compose_path('/openerp/bases/%s/%s') % (cr.dbname, curr.report_unit)
             envelop = js.run_report(uri=uri, output='PDF', params={})
             js.send(jasperlib.SoapEnv('runReport', envelop).output())
         except jasperlib.ServerNotFound:
