@@ -195,6 +195,14 @@
                             </div>
                             <h1><field name="name" /></h1>
                         </div>
+                        <group>
+                            <group>
+                                <field name="format"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                            </group>
+                        </group>
 
                         <notebook colspan="4">
                             <page string="General">
@@ -202,7 +210,7 @@
                                     <field name="model_id" domain="[('osv_memory','=', False)]"/>
                                     <field name="service" />
                                     <field name="report_unit" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
-                                    <field name="sequence"/>
+                                    <newline/>
                                     <field name="jasper_file" colspan="4" attrs="{'required': [('mode','!=', 'multi')], 'readonly': [('mode','=', 'multi')]}"/>
                                     <field name="mode"/>
                                     <field name="report_id"/>
@@ -210,23 +218,22 @@
                                     <field name="only_one" attrs="{'readonly': [('mode','=', 'multi')]}"/>
                                     <newline/>
                                     <field name="lang" colspan="4"/>
-                                    <separator string="Output format" colspan="4"/>
-                                    <field name="format"/>
+                                    <field name="duplicate" colspan="4"/>
                                     <separator string="Attachment" colspan="4"/>
                                     <field name="attachment" colspan="4"/>
                                     <field name="attachment_use"/>
-                                    <separator string="Expression for duplicate the number of copie" colspan="4"/>
-                                    <field name="duplicate" colspan="4"/>
-                                    <separator string="Condition to launch the printing report" colspan="4"/>
-                                    <field name="check_sel"/>
-                                    <field name="message_simple" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
-                                    <newline/>
-                                    <field name="check_simple" colspan="4" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
-
                                 </group>
                             </page>
                             <page string="Groups">
                                 <field name="group_ids" nolabel="1" colspan="4"/>
+                            </page>
+                            <page string="Blocking">
+                                <group>
+                                    <separator string="Condition to launch the printing report" colspan="4"/>
+                                    <field name="check_sel"/>
+                                    <field name="message_simple" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
+                                    <field name="check_simple" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
+                                </group>
                             </page>
                             <page string="XML" attrs="{'invisible': [('mode','!=','xml')]}">
                                 <field name="depth"/>
