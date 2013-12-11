@@ -23,6 +23,7 @@
 
 
 from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 from openerp.tools.sql import drop_view_if_exists
 from openerp.tools.translate import _
@@ -33,7 +34,7 @@ import logging
 _logger = logging.getLogger('jasper_server')
 
 
-class jasper_document_extension(osv.Model):
+class jasper_document_extension(orm.Model):
     _name = 'jasper.document.extension'
     _description = 'Jasper Document Extension'
 
@@ -44,7 +45,7 @@ class jasper_document_extension(osv.Model):
     }
 
 
-class jasper_document(osv.Model):
+class jasper_document(orm.Model):
     _name = 'jasper.document'
     _description = 'Jasper Document'
     _order = 'sequence'
@@ -56,8 +57,8 @@ class jasper_document(osv.Model):
         if not context:
             context = {}
         extension_obj = self.pool.get('jasper.document.extension')
-        ext_ids = extension_obj.search(cr, uid, [])
-        extensions = self.pool.get('jasper.document.extension').read(cr, uid, ext_ids)
+        ext_ids = extension_obj.search(cr, uid, [], context=context)
+        extensions = self.pool.get('jasper.document.extension').read(cr, uid, ext_ids, context=context)
         extensions = [(extension['jasper_code'], extension['name'] + " (*." + extension['extension'] + ")") for extension in extensions]
         return extensions
 
@@ -290,7 +291,7 @@ class jasper_document(osv.Model):
         return True
 
 
-class jasper_document_parameter(osv.Model):
+class jasper_document_parameter(orm.Model):
     _name = 'jasper.document.parameter'
     _description = 'Add parameter to send to jasper server'
 
@@ -306,7 +307,7 @@ class jasper_document_parameter(osv.Model):
     }
 
 
-class jasper_document_label(osv.Model):
+class jasper_document_label(orm.Model):
     _name = 'jasper.document.label'
     _description = 'Manage label in document, for different language'
 

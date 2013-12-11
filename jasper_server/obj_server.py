@@ -22,6 +22,7 @@
 ##############################################################################
 
 from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 from openerp.tools import ustr, config
 from openerp.tools.translate import _
@@ -40,7 +41,7 @@ def log_error(message):
     _logger.error(message)
 
 
-class JasperServer(osv.Model):
+class JasperServer(orm.Model):
     """
     Class to store the Jasper Server configuration
     """
@@ -61,12 +62,12 @@ class JasperServer(osv.Model):
     }
 
     _defaults = {
-        'host': lambda *a: 'localhost',
-        'port': lambda *a: 8080,
-        'user': lambda *a: 'jasperadmin',
-        'pass': lambda *a: 'jasperadmin',
-        'repo': lambda *a: '/jasperserver/services/repository',
-        'sequence': lambda *a: 10,
+        'host': 'localhost',
+        'port': 8080,
+        'user': 'jasperadmin',
+        'pass': 'jasperadmin',
+        'repo': '/jasperserver/services/repository',
+        'sequence': 10,
         'prefix': False,
     }
 
@@ -133,7 +134,7 @@ class JasperServer(osv.Model):
 
             fct_file = openerp.tools.misc.file_open(os.path.join(get_module_path('jasper_server'), 'sql', 'plpython.sql'))
             try:
-                query = fct_file.read() % {'db_user': config.get('db_user', 'oerp'),}
+                query = fct_file.read() % {'db_user': config.get('db_user', 'oerp')}
                 cr.execute(query)
                 cr.commit()
             finally:
@@ -154,11 +155,15 @@ class JasperServer(osv.Model):
                                   pwd=js_config['pass'])
             js.auth()
         except jasperlib.ServerNotFound:
-            return self.write(cr, uid, ids, {'status': _('Error, server not found %s %d') % (js.host, js.port)}, context=context)
+            message = _('Error, JasperServer not found at %s (port: %d)') % (js.host, js.port)
+            _logger.error(message)
+            return self.write(cr, uid, ids, {'status': message}, context=context)
         except jasperlib.AuthError:
-            return self.write(cr, uid, ids, {'status': _('Error, Authentification failed for %s/%s') % (js.user, js.pwd)}, context=context)
+            message = _('Error, JasperServer authentification failed for user %s/%s') % (js.user, js.pwd)
+            _logger.error(message)
+            return self.write(cr, uid, ids, {'status': message}, context=context)
 
-        return self.write(cr, uid, ids, {'status': _('Connection OK')}, context=context)
+        return self.write(cr, uid, ids, {'status': _('JasperServer Connection OK')}, context=context)
 
     ## ************************************************
     # These method can create an XML for Jasper Server
