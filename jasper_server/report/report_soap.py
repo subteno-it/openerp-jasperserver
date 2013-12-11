@@ -43,7 +43,7 @@ logger = logging.getLogger('jasper_server')
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from StringIO import StringIO  # noqa
 
 
 class external_pdf(render):
@@ -109,17 +109,14 @@ class Report(object):
         """
         name = aname + '.' + self.outputFormat
         ctx = context.copy()
-        ctx['type'] ='binary'
-        ctx['default_type'] ='binary'
+        ctx['type'] = 'binary'
+        ctx['default_type'] = 'binary'
 
-        return self.pool.get('ir.attachment').create(self.cr, self.uid, {
-                    'name': aname,
-                    'datas': base64.encodestring(content),
-                    'datas_fname': name,
-                    'res_model': self.model,
-                    'res_id': id,
-                    }, context=ctx
-        )
+        return self.pool.get('ir.attachment').create(self.cr, self.uid, {'name': aname,
+                                                                         'datas': base64.encodestring(content),
+                                                                         'datas_fname': name,
+                                                                         'res_model': self.model,
+                                                                         'res_id': id}, context=ctx)
 
     def _jasper_execute(self, ex, current_document, js_conf, pdf_list, reload=False,
                         ids=None, context=None):
@@ -223,7 +220,9 @@ class Report(object):
         if self.attrs['reload'] and aname:
             logger.info('Printing must be reload from attachment if exists (%s)' % aname)
             aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
-                    [('name', '=', aname), ('res_model', '=', self.model), ('res_id', '=', ex)])
+                                                         [('name', '=', aname),
+                                                          ('res_model', '=', self.model),
+                                                          ('res_id', '=', ex)])
             if aids:
                 reload_ok = True
                 logger.info('Attachment found, reload it!')
@@ -255,8 +254,7 @@ class Report(object):
 
             # If XML we must compose it
             if self.attrs['params'][2] == 'xml':
-                d_xml = self.js_obj.generator(self.cr, self.uid, self.model, self.ids[0],
-                        self.attrs['params'][3], context=context)
+                d_xml = self.js_obj.generator(self.cr, self.uid, self.model, self.ids[0], self.attrs['params'][3], context=context)
                 d_par['xml_data'] = d_xml
 
             # Retrieve the company information and send them in parameter
@@ -289,7 +287,7 @@ class Report(object):
             })
 
             for p in current_document.param_ids:
-                if p.code and  p.code.startswith('[['):
+                if p.code and p.code.startswith('[['):
                     d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': cny, 't': time, 'u': user}) or ''
                 else:
                     d_par[p.name] = p.code
