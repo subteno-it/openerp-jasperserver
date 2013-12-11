@@ -82,7 +82,7 @@ class Report(object):
     def __init__(self, name, cr, uid, ids, data, context):
         """Initialise the report"""
         self.name = name
-        self.service = name.replace('report.jasper.', '')
+        self.service = name.replace('report.jasper.report_', '')
         self.cr = cr
         self.uid = uid
         self.ids = ids
@@ -111,7 +111,7 @@ class Report(object):
         ctx = context.copy()
         ctx['type'] ='binary'
         ctx['default_type'] ='binary'
-        
+
         return self.pool.get('ir.attachment').create(self.cr, self.uid, {
                     'name': aname,
                     'datas': base64.encodestring(content),
@@ -400,7 +400,7 @@ class Report(object):
         # For each IDS, launch a query, and return only one result
         #
         pdf_list = []
-        doc_ids = self.doc_obj.search(self.cr, self.uid, [('service', '=', self.service)], context=context)
+        doc_ids = self.doc_obj.search(self.cr, self.uid, [('id', '=', self.service)], context=context)
         if not doc_ids:
             raise JasperException(_('Configuration Error'), _("Service name doesn't match!"))
 

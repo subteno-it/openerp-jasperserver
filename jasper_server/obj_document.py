@@ -64,8 +64,6 @@ class jasper_document(orm.Model):
 
     _columns = {
         'name': fields.char('Name', size=128, translate=True, required=True, placeholder="InvoiceJ"),  # button name
-        'service': fields.char('Service name', size=64, required=True,
-                               help='Enter the service name register at start by OpenERP Server'),
         'enabled': fields.boolean('Active', help="Indicates if this document is active or not"),
         'model_id': fields.many2one('ir.model', 'Object Model', required=True),  # object model in ir.model
         'jasper_file': fields.char('Jasper file', size=128),  # jasper filename
@@ -129,7 +127,7 @@ class jasper_document(orm.Model):
             _logger.info('Update "%s" service' % doc.name)
             args = {
                 'name': doc.name,
-                'report_name': 'jasper.' + doc.service,
+                'report_name': 'jasper.report_%d' % (doc.id,),
                 'model': doc.model_id.model,
                 'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
                 'header': False,
@@ -140,7 +138,7 @@ class jasper_document(orm.Model):
             _logger.info('Create "%s" service' % doc.name)
             args = {
                 'name': doc.name,
-                'report_name': 'jasper.' + doc.service,
+                'report_name': 'jasper.report_%d' % (doc.id,),
                 'model': doc.model_id.model,
                 'report_type': 'jasper',
                 'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
@@ -148,17 +146,10 @@ class jasper_document(orm.Model):
                 'multi': False,
             }
             report_id = act_report_obj.create(cr, uid, args, context=context)
-            #ir_model_data_obj = self.pool.get('ir.model.data')
-            #ir_model_data_obj.create(cr, uid, {
-            #    'name': 'jasper_' + doc.service,
-            #    'module': '',
-            #    'model': 'ir.actions.report.xml',
-            #    'res_id': report_id,
-            #}, context=context)
             cr.execute("""UPDATE jasper_document SET report_id=%s WHERE id=%s""", (report_id, id))
             value = 'ir.actions.report.xml,' + str(report_id)
             self.pool.get('ir.model.data').ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
-        registered_report('jasper.' + doc.service)
+        registered_report('jasper.report_%d' % (doc.id,))
 
     def action_values(self, cr, uid, report_id, context=None):
         """
@@ -245,7 +236,6 @@ class jasper_document(orm.Model):
         doc = self.browse(cr, uid, id, context=context)
 
         default['report_id'] = False
-        default['service'] = doc.service + '_copy'
         default['name'] = doc.name + _(' (copy)')
         return super(jasper_document, self).copy(cr, uid, id, default, context=context)
 
