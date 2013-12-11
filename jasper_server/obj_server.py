@@ -144,8 +144,8 @@ class JasperServer(orm.Model):
 
     def check_auth(self, cr, uid, ids, context=None):
         """
-        Check if we can contact JasperServer instance
-        and check the authentification
+        Check if we can join the JasperServer instance,
+        send the authentification and check the result
         """
         js_config = self.read(cr, uid, ids[0], context=context)
         try:
