@@ -7,4 +7,4 @@ install:
   - pip install https://github.com/dcramer/pyflakes/tarball/master
 before_script:
   - "pep8 --ignore=E501,E225 ."
-  - pyflakes -x W .
+  - pyflakes .
