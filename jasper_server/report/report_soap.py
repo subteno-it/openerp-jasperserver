@@ -430,14 +430,17 @@ class Report(object):
                 (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, reload, ids, context=self.context)
                 one_check[doc.id] = True
 
+        # If We must add Begin and End file in the current PDF
+
         ##
         ## We use pyPdf to merge all PDF in unique file
         #
         if len(pdf_list) > 1 or duplicate > 1:
             tmp_content = PdfFileWriter()
             for pdf in pdf_list:
+                fp = open(pdf, 'r')
                 for x in range(0, duplicate):
-                    fp = open(pdf, 'r')
+                    fp.seek(0)
                     tmp_pdf = PdfFileReader(fp)
                     for page in range(tmp_pdf.getNumPages()):
                         tmp_content.addPage(tmp_pdf.getPage(page))
@@ -445,15 +448,16 @@ class Report(object):
                     tmp_content.write(c)
                     content = c.getvalue()
                     c.close()
-                    fp.close()
-                    del fp
                     del c
+                fp.close()
+                del fp
         elif len(pdf_list) == 1:
             fp = open(pdf_list[0], 'r')
             content = fp.read()
             fp.close()
             del fp
 
+        # Remove all files on the disk
         for f in pdf_list:
             os.remove(f)
 
