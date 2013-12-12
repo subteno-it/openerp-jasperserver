@@ -117,6 +117,70 @@ class Report(object):
                                                                          'datas_fname': name,
                                                                          'res_model': self.model,
                                                                          'res_id': id}, context=ctx)
+    def _eval_attachment(self, cur_obj):
+        """
+        Launch eval on attachement field, and return the value
+        """
+        try:
+            return eval(self.attrs['attachment'], {'object': cur_obj, 'time': time})
+        except SyntaxError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Attachment Error'),
+                            _('Syntax error when evaluate attachment\n\nMessage: "%s"') % str(e))
+        except NameError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Attachment Error'),
+                            _('Error when evaluate attachment\n\nMessage: "%s"') % str(e))
+        except AttributeError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Attachment Error'),
+                            _('Attribute error when evaluate attachment\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+        except Exception, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Attachment Error'),
+                            _('Unknown error when evaluate attachment\nMessage: "%s"') % str(e))
+
+    def _eval_duplicate(self, cur_obj, current_document):
+        """
+        Evaluate the duplicate field
+        """
+        try:
+            return int(eval(current_document.duplicate, {'o': cur_obj}))
+        except SyntaxError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Duplicate Error'),
+                            _('Syntax error when evaluate duplicate\n\nMessage: "%s"') % str(e))
+        except NameError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Duplicate Error'),
+                            _('Error when evaluate duplicate\n\nMessage: "%s"') % str(e))
+        except AttributeError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Duplicate Error'),
+                            _('Attribute error when evaluate duplicate\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+        except Exception, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Duplicate Error'),
+                            _('Unknown error when evaluate duplicate\nMessage: "%s"') % str(e))
+
+    def _eval_lang(self, cur_obj, current_document):
+        """
+        Evaluate the lang field
+        """
+        try:
+            return eval(current_document.lang, {'o': cur_obj})
+        except SyntaxError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Language Error'), _('Syntax error when evaluate language\n\nMessage: "%s"') % str(e))
+        except NameError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Language Error'), _('Error when evaluate language\n\nMessage: "%s"') % str(e))
+        except AttributeError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Language Error'), _('Attribute error when evaluate language\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+        except Exception, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))
 
     def _jasper_execute(self, ex, current_document, js_conf, pdf_list, reload=False,
                         ids=None, context=None):
@@ -137,56 +201,17 @@ class Report(object):
         cur_obj = self.model_obj.browse(self.cr, self.uid, ex, context=context)
         aname = False
         if self.attrs['attachment']:
-            try:
-                aname = eval(self.attrs['attachment'], {'object': cur_obj, 'time': time})
-            except SyntaxError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Attachment Error'), _('Syntax error when evaluate attachment\n\nMessage: "%s"') % str(e))
-            except NameError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Attachment Error'), _('Error when evaluate attachment\n\nMessage: "%s"') % str(e))
-            except AttributeError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Attachment Error'), _('Attribute error when evaluate attachment\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
-            except Exception, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Attachment Error'), _('Unknown error when evaluate attachment\nMessage: "%s"') % str(e))
+            aname = self._eval_attachment(cur_obj)
 
         duplicate = 1
         if current_document.duplicate:
-            try:
-                duplicate = int(eval(current_document.duplicate, {'o': cur_obj}))
-            except SyntaxError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Duplicate Error'), _('Syntax error when evaluate duplicate\n\nMessage: "%s"') % str(e))
-            except NameError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Duplicate Error'), _('Error when evaluate duplicate\n\nMessage: "%s"') % str(e))
-            except AttributeError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Duplicate Error'), _('Attribute error when evaluate duplicate\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
-            except Exception, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Duplicate Error'), _('Unknown error when evaluate duplicate\nMessage: "%s"') % str(e))
+            duplicate = self._eval_duplicate(cur_obj, current_document)
 
         log_debug('Number of duplicate copy: %d' % int(duplicate))
 
         language = context.get('lang', 'en_US')
         if current_document.lang:
-            try:
-                language = eval(current_document.lang, {'o': cur_obj})
-            except SyntaxError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Language Error'), _('Syntax error when evaluate language\n\nMessage: "%s"') % str(e))
-            except NameError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Language Error'), _('Error when evaluate language\n\nMessage: "%s"') % str(e))
-            except AttributeError, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Language Error'), _('Attribute error when evaluate language\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
-            except Exception, e:
-                logger.warning('Error %s' % str(e))
-                raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))
+            language = self._eval_lang(cur_obj, current_document)
 
         # Check if we can launch this reports
         # Test can be simple, or un a function
