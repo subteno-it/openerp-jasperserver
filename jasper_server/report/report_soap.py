@@ -28,13 +28,13 @@ import time
 import base64
 import logging
 
-from report.render import render
+from openerp.report.render import render
+from openerp.tools.translate import _
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent, ParseMultipart
 from common import BODY_TEMPLATE, parameter
 from report_exception import JasperException, AuthError, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
-from tools.translate import _
 
 logger = logging.getLogger('jasper_server')
 
