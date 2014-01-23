@@ -437,7 +437,8 @@ class Report(object):
         ids = self.ids
         js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
         if not len(js_ids):
-            raise JasperException(_('Configuration Error'), _('No JasperServer configuration found!'))
+            raise JasperException(_('Configuration Error'),
+                                  _('No JasperServer configuration found!'))
 
         js = self.js_obj.read(self.cr, self.uid, js_ids, context=context)[0]
         log_debug('DATA:')
@@ -449,7 +450,8 @@ class Report(object):
         pdf_list = []
         doc_ids = self.doc_obj.search(self.cr, self.uid, [('id', '=', self.service)], context=context)
         if not doc_ids:
-            raise JasperException(_('Configuration Error'), _("Service name doesn't match!"))
+            raise JasperException(_('Configuration Error'),
+                                  _("Service name doesn't match!"))
 
         def compose_path(basename):
             return js['prefix'] and '/' + js['prefix'] + '/instances/%s/%s' or basename
