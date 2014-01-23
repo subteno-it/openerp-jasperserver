@@ -349,7 +349,7 @@ class Report(object):
 
             # we must retrieve label in the language document (not user's language)
             for l in self.doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
-                special_dict['I18N_' + l.name.upper()] = (l.value_type == 'char' and l.value) or l.value_text or ''
+                special_dict['I18N_' + l.name.upper()] = l.value or ''
 
             # If report is launched since a wizard, we can retrieve some parameters
             for d in self.custom.keys():
