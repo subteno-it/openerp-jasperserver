@@ -117,6 +117,30 @@ class Report(object):
                                                                          'datas_fname': name,
                                                                          'res_model': self.model,
                                                                          'res_id': id}, context=ctx)
+
+    def _eval_field(self, cur_obj, fieldcontent):
+        """
+        Evaluate the field
+        """
+        try:
+            return eval(fieldcontent, {'object': cur_obj, 'time': time})
+        except SyntaxError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Syntax error when evaluate field\n\nMessage: "%s"') % str(e))
+        except NameError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Error when evaluate field\n\nMessage: "%s"') % str(e))
+        except AttributeError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Attribute error when evaluate field\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+        except Exception, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Unknown error when evaluate field\nMessage: "%s"') % str(e))
+
     def _eval_attachment(self, cur_obj):
         """
         Launch eval on attachement field, and return the value
