@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="partner_list" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08e18970-153f-48eb-9d02-de5773e63892">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Contact Type">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Contact Type} == "invoice"]]></conditionExpression>
+			<style mode="Opaque" forecolor="#FF0000" isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Contact Type} == "delivery"]]></conditionExpression>
+			<style mode="Opaque" forecolor="#00FF00" isBold="true"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="OERP_ACTIVE_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[8]]></defaultValueExpression>
+	</parameter>
+	<parameter name="I18N_TITLE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Partner and contacts information"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT part.id as "Partner ID",
+       part.name as "Company",
+       part.street as "Partner Address",
+       part.street2 as "Partner Address2",
+       part.zip as "Partner ZIP",
+       part.city as "Partner City",
+       part_ctry.name as "Partner country",
+       cntc.name as "Contact",
+       cntc.street as "Contact Address",
+       cntc.street2 as "Contact Address2",
+       cntc.zip as "Contact ZIP",
+       cntc.city as "Contact City",
+       cntc_ctry.name as "Contact country",
+       cntc.type as "Contact Type"
+  FROM res_partner part
+  LEFT JOIN res_partner cntc ON (cntc.parent_id = part.id)
+  LEFT JOIN res_country part_ctry ON (part_ctry.id = part.country_id)
+  LEFT JOIN res_country cntc_ctry ON (cntc_ctry.id = cntc.country_id)
+  WHERE part.id =$P{OERP_ACTIVE_ID}
+    AND cntc.active = true]]>
+	</queryString>
+	<field name="Partner ID" class="java.lang.Integer"/>
+	<field name="Company" class="java.lang.String"/>
+	<field name="Partner Address" class="java.lang.String"/>
+	<field name="Partner Address2" class="java.lang.String"/>
+	<field name="Partner ZIP" class="java.lang.String"/>
+	<field name="Partner City" class="java.lang.String"/>
+	<field name="Partner country" class="java.lang.String"/>
+	<field name="Contact" class="java.lang.String"/>
+	<field name="Contact Address" class="java.lang.String"/>
+	<field name="Contact Address2" class="java.lang.String"/>
+	<field name="Contact ZIP" class="java.lang.String"/>
+	<field name="Contact City" class="java.lang.String"/>
+	<field name="Contact country" class="java.lang.String"/>
+	<field name="Contact Type" class="java.lang.String"/>
+	<group name="Partner">
+		<groupExpression><![CDATA[$F{Partner ID}]]></groupExpression>
+		<groupHeader>
+			<band height="101">
+				<textField>
+					<reportElement uuid="3633d7f7-ef98-4125-a630-40739005d323" x="23" y="0" width="280" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Company}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="555212cb-c6bc-4b29-9b88-4606263fe2cd" x="23" y="20" width="280" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Partner Address}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8dcbd048-cc21-4828-b555-2bdf554d5040" x="23" y="40" width="280" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Partner Address2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="a361126f-6a43-4b4f-83e4-0b2e3cadc993" x="23" y="59" width="278" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Partner ZIP} + " " + $F{Partner City}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="589dc211-3b49-49af-b073-b6bf15fdfb79" x="23" y="79" width="278" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Partner country}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="d641d367-cce1-4bc4-9108-b2090a27bee2" x="17" y="0" width="1" height="99"/>
+					<graphicElement>
+						<pen lineWidth="2.5"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement uuid="12cf8f71-1cec-42b5-ac65-4d2397e73d7b" x="0" y="0" width="555" height="35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{I18N_TITLE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e356654e-bd88-4787-a824-96dbe0b60151" x="109" y="2" width="197" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="281c1619-5a0a-42bd-af72-32407b432101" x="315" y="2" width="61" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[ZIP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="905423bb-9c8a-43d7-a737-aad415a733e4" x="385" y="2" width="88" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="243af6be-cfa6-4a68-934c-7ef85aa1aaf7" x="482" y="2" width="74" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Country]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2aa40fe2-e982-46f1-8552-7d09ff288a29" x="0" y="2" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Contact]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="bedb6c62-caa3-461a-b0b5-4df91f343f68" style="Contact Type" x="109" y="2" width="197" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Contact Address}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="64e0f4e4-eb74-4265-bea5-3f0ea11ec50f" style="Contact Type" x="109" y="22" width="197" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Contact Address2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf67dd3-fe79-4ad4-a83b-44aee6fdf7dc" style="Contact Type" x="315" y="2" width="61" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Contact ZIP}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4ddbdef6-0652-4dd8-a0a4-7739cea9af7a" style="Contact Type" x="385" y="2" width="88" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Contact City}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6be6bc2e-6764-49bf-a94c-6b44b3579775" style="Contact Type" x="482" y="2" width="74" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Contact country}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e6144d33-856f-4301-83b3-9a68b8ff0662" style="Contact Type" x="0" y="2" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Contact}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="16" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement uuid="10f05b5c-fe7a-42cb-9dcf-433fc008f837" x="0" y="-1" width="167" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c9582aad-b117-426c-9f65-8f8457a1a5e6" x="435" y="0" width="80" height="16"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="f3dc252c-703d-4cf1-b2ca-be07e64ec9eb" x="515" y="0" width="40" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="3a25c50e-4224-4f19-9c0f-e1d7babda3b6" x="0" y="0" width="555" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
