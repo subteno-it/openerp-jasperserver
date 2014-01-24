@@ -23,10 +23,17 @@
 ##############################################################################
 
 from lxml.etree import Element, tostring
-from tools.misc import ustr
+from pyPdf import PdfFileWriter, PdfFileReader
+from openerp.tools.misc import ustr
 import logging
 
 _logger = logging.getLogger('jasper_server')
+
+# CStringIO is better than StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO  # noqa
 
 ##
 # Construct the body template for SOAP
@@ -123,5 +130,31 @@ def parameter(dico, resource, special=None):
         res += '&lt;parameter class=&quot;java.lang.String&quot; name=&quot;XML_DATA&quot;&gt;'
         res += '&lt;![CDATA[&quot;%s&quot;]]&gt;&lt;/parameter&gt;' % resource['xml_data']
     return res
+
+
+def merge_pdf(lpdf):
+    """
+    Merge all PDF in the list and return the content as a File Object
+
+    :param lpdf: List of PDF as File Object
+    :type  lpdf: list
+    :return: return a file object
+    :rtype: File Object
+    """
+    fo_pdf = StringIO()
+    ret = PdfFileWriter()
+    for current_pdf in lpdf:
+        if current_pdf is None:
+            continue
+        # We ensure we start at the begining of the file
+        current_pdf.seek(0)
+        tmp_pdf = PdfFileReader(current_pdf)
+        for page in range(tmp_pdf.getNumPages()):
+            ret.addPage(tmp_pdf.getPage(page))
+
+    # We store the content of the merge into a file object
+    ret.write(fo_pdf)
+    return fo_pdf
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
