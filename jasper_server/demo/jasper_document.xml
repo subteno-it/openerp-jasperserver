@@ -23,10 +23,20 @@
         #
         ##############################################################################
 
+        <!-- Add local server, by default at 8080 port -->
+        <record id="jasper_server_1" model="jasper.server">
+            <field name="host">localhost</field>
+            <field name="port">8080</field>
+            <field name="user">jasperadmin</field>
+            <field name="pass">jasperadmin</field>
+            <field name="enable" eval="1"/>
+        </record>
+
+        <!-- Add one entry for print partner list -->
         <record model="jasper.document" id="jasper_document_4">
-            <field name="name">Partner List</field>
+            <field name="name">Partner's List</field>
             <field name="depth">2</field>
-            <field name="jasper_file">partner_list.jrxml</field>
+            <field name="jasper_file">jasper_server/demo/partner_list.jrxml</field>
             <field name="format_choice">mono</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="enabled" eval="1"/>
@@ -36,13 +46,14 @@
             <field name="format">PDF</field>
         </record>
 
-        <record id="jasper_server_1" model="jasper.server">
-            <field name="host">localhost</field>
-            <field name="port">8180</field>
-            <field name="user">jasperadmin</field>
-            <field name="pass">jasperadmin</field>
-            <field name="enable" eval="1"/>
+        <!-- We can translate the document with a parameter send to JasperServer -->
+        <!-- a parameter name TEST become I18N_TEST when it send to JasperServer -->
+        <record id="i18N_title" model="jasper.document.label">
+            <field name="document_id" ref="jasper_document_4"/>
+            <field name="name">TITLE</field>
+            <field name="value">&quot;Partners and contacts information&quot;</field>
         </record>
+
 
     </data>
 </openerp>

@@ -28,13 +28,13 @@ import time
 import base64
 import logging
 
-from report.render import render
+from openerp.report.render import render
+from openerp.tools.translate import _
 from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent, ParseMultipart
-from common import BODY_TEMPLATE, parameter
+from .common import BODY_TEMPLATE, parameter, merge_pdf
 from report_exception import JasperException, AuthError, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
-from tools.translate import _
 
 logger = logging.getLogger('jasper_server')
 
@@ -117,6 +117,30 @@ class Report(object):
                                                                          'datas_fname': name,
                                                                          'res_model': self.model,
                                                                          'res_id': id}, context=ctx)
+
+    def _eval_field(self, cur_obj, fieldcontent):
+        """
+        Evaluate the field
+        """
+        try:
+            return eval(fieldcontent, {'object': cur_obj, 'time': time})
+        except SyntaxError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Syntax error when evaluate field\n\nMessage: "%s"') % str(e))
+        except NameError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Error when evaluate field\n\nMessage: "%s"') % str(e))
+        except AttributeError, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Attribute error when evaluate field\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+        except Exception, e:
+            logger.warning('Error %s' % str(e))
+            raise EvalError(_('Field Eval Error'),
+                            _('Unknown error when evaluate field\nMessage: "%s"') % str(e))
+
     def _eval_attachment(self, cur_obj):
         """
         Launch eval on attachement field, and return the value
@@ -325,7 +349,7 @@ class Report(object):
 
             # we must retrieve label in the language document (not user's language)
             for l in self.doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
-                special_dict['I18N_' + l.name.upper()] = (l.value_type == 'char' and l.value) or l.value_text or ''
+                special_dict['I18N_' + l.name.upper()] = l.value or ''
 
             # If report is launched since a wizard, we can retrieve some parameters
             for d in self.custom.keys():
@@ -413,7 +437,8 @@ class Report(object):
         ids = self.ids
         js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
         if not len(js_ids):
-            raise JasperException(_('Configuration Error'), _('No JasperServer configuration found!'))
+            raise JasperException(_('Configuration Error'),
+                                  _('No JasperServer configuration found!'))
 
         js = self.js_obj.read(self.cr, self.uid, js_ids, context=context)[0]
         log_debug('DATA:')
@@ -425,7 +450,8 @@ class Report(object):
         pdf_list = []
         doc_ids = self.doc_obj.search(self.cr, self.uid, [('id', '=', self.service)], context=context)
         if not doc_ids:
-            raise JasperException(_('Configuration Error'), _("Service name doesn't match!"))
+            raise JasperException(_('Configuration Error'),
+                                  _("Service name doesn't match!"))
 
         def compose_path(basename):
             return js['prefix'] and '/' + js['prefix'] + '/instances/%s/%s' or basename
@@ -455,36 +481,81 @@ class Report(object):
                 (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, reload, ids, context=self.context)
                 one_check[doc.id] = True
 
-        # If We must add Begin and End file in the current PDF
+        def find_pdf_attachment(pdfname, current_obj):
+            """
+            Evaluate the pdfname, and return it as a fiel object
+            """
+            if not pdfname:
+                return None
+
+            filename = self._eval_field(current_obj, pdfname)
+            att_obj = self.pool.get('ir.attachment')
+            aids = att_obj.search(self.cr, self.uid,
+                                  [('name', '=', filename),
+                                   ('res_model', '=', self.model_obj._name),
+                                   ('res_id', '=', ex)])
+            if not aids:
+                return None
+
+            att = att_obj.browse(self.cr, self.uid, aids[0], context=context)
+            datas = StringIO()
+            if att.datas:
+                datas.write(base64.decodestring(att.datas))
+                return datas
+            return None
+
+        # If We must add begin and end file in the current PDF
+        cur_obj = self.model_obj.browse(self.cr, self.uid, ex, context=context)
+        pdf_fo_begin = find_pdf_attachment(doc.pdf_begin, cur_obj)
+        pdf_fo_ended = find_pdf_attachment(doc.pdf_ended, cur_obj)
 
         ##
         ## We use pyPdf to merge all PDF in unique file
-        #
+        ##
+        c = StringIO()
         if len(pdf_list) > 1 or duplicate > 1:
+            #content = ''
             tmp_content = PdfFileWriter()
-            for pdf in pdf_list:
-                fp = open(pdf, 'r')
+
+            # We add all PDF file in a list of file pointer to close them
+            # at the end of treatment
+            tmp_pdf_list = []
+            for curpdf in pdf_list:
+                tmp_pdf_list.append(open(curpdf, 'r'))
+
+            for fo_pdf in tmp_pdf_list:
                 for x in range(0, duplicate):
-                    fp.seek(0)
-                    tmp_pdf = PdfFileReader(fp)
+                    fo_pdf.seek(0)
+                    tmp_pdf = PdfFileReader(fo_pdf)
                     for page in range(tmp_pdf.getNumPages()):
                         tmp_content.addPage(tmp_pdf.getPage(page))
-                    c = StringIO()
-                    tmp_content.write(c)
-                    content = c.getvalue()
-                    c.close()
-                    del c
-                fp.close()
-                del fp
+            else:
+                tmp_content.write(c)
+                #content = c.getvalue()
+
+            # It seem there is a bug on PyPDF if we close the "fp" file,
+            # we cannot call tmp_content.write(c) We received
+            # an exception "ValueError: I/O operation on closed file"
+            for fo_pdf in tmp_pdf_list:
+                if not fo_pdf.closed:
+                    fo_pdf.close()
+
         elif len(pdf_list) == 1:
             fp = open(pdf_list[0], 'r')
-            content = fp.read()
+            c.write(fp.read())
             fp.close()
-            del fp
 
         # Remove all files on the disk
         for f in pdf_list:
             os.remove(f)
+
+        # If covers, we merge PDF
+        fo_merge = merge_pdf([pdf_fo_begin, c, pdf_fo_ended])
+        content = fo_merge.getvalue()
+        fo_merge.close()
+
+        if not c.closed:
+            c.close()
 
         self.obj = external_pdf(content)
         self.obj.set_output_type(self.outputFormat)

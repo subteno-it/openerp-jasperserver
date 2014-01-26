@@ -92,6 +92,8 @@ class jasper_document(orm.Model):
         'check_simple': fields.char('Check Simple', size=256, help="This code inside this field must return True to send report execution\neg o.state in ('draft', 'open')"),
         'message_simple': fields.char('Return message', size=256, translate=True, help="Error message when check simple doesn't valid"),
         'label_ids': fields.one2many('jasper.document.label', 'document_id', 'Labels'),
+        'pdf_begin': fields.char('PDF at begin', size=128, help='Name of the PDF file store as attachment to add at the first page (page number not recompute)'),
+        'pdf_ended': fields.char('PDF at end', size=128, help='Name of the PDF file store as attachment to add at the last page (page number not recompute)'),
     }
 
     _defaults = {

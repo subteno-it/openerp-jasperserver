@@ -234,6 +234,12 @@
                                     <field name="check_simple" attrs="{'readonly': [('check_sel','!=', 'simple')], 'required': [('check_sel','=', 'simple')]}"/>
                                 </group>
                             </page>
+                            <page string="PDF Merge" attrs="{'invisible': [('format','!=', 'PDF')]}">
+                                <group>
+                                    <field name="pdf_begin"/>
+                                    <field name="pdf_ended"/>
+                                </group>
+                            </page>
                             <page string="XML" attrs="{'invisible': [('mode','!=','xml')]}">
                                 <field name="depth"/>
                             </page>
