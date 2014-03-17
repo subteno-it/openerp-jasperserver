@@ -115,6 +115,18 @@ def parameter(dico, resource, special=None):
             e.text = val and ustr(val) or ''
         res += tostring(e) + '\n'
 
+        # Duplicate WIZARD parameters with prefix OERP
+        e = Element('parameter')
+        e.set('name', 'OERP_%s' % key.upper())
+        if isinstance(val, list):
+            if isinstance(val[0], tuple):
+                e.text = ','.join(map(str, val[0][2]))
+            else:
+                e.text = ','.join(map(str, val))
+        else:
+            e.text = val and ustr(val) or ''
+        res += tostring(e) + '\n'
+
     if special is None:
         special = {}
 
