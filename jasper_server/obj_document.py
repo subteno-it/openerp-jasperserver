@@ -165,6 +165,37 @@ class jasper_document(orm.Model):
         ]
         return self.pool.get('ir.values').search(cr, uid, args, context=context)
 
+    def get_action_report(self, cr, uid, module, name, datas=None, context=None):
+        """
+        Give the XML ID dans retrieve the report action
+
+        :param module: name fo the module where the XMLID is reference
+        :type module: str
+        :param name: name of the XMLID (afte rthe dot)
+        :type name: str
+        :return: return an ir.actions.report.xml
+        :rtype: dict
+        """
+        if context is None:
+            context = {}
+
+        if datas is None:
+            datas = {}
+
+        mod_obj = self.pool.get('ir.model.data')
+        result = mod_obj.get_object_reference(cr, uid, module, name)
+        id = result and result[1] or False
+        service = 'jasper.report_%d' % (id,)
+        _logger.debug('get_action_report -> ' + service)
+
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': service,
+            'datas': datas,
+            'context': context,
+        }
+
+
     def create_values(self, cr, uid, id, context=None):
         doc = self.browse(cr, uid, id, context=context)
         if not self.action_values(cr, uid, doc.report_id.id, context=context):
