@@ -31,7 +31,7 @@ from jasper_server.common import registered_report
 import jasperlib
 import logging
 
-_logger = logging.getLogger('jasper_server')
+_logger = logging.getLogger(__name__)
 
 
 class jasper_document_extension(orm.Model):
@@ -195,11 +195,11 @@ class jasper_document(orm.Model):
             'context': context,
         }
 
-
     def create_values(self, cr, uid, id, context=None):
         doc = self.browse(cr, uid, id, context=context)
         if not self.action_values(cr, uid, doc.report_id.id, context=context):
             value = 'ir.actions.report.xml,%d' % doc.report_id.id
+            _logger.debug('create_values -> ' + value)
             self.pool.get('ir.model.data').ir_set(cr, uid, 'action', 'client_print_multi', doc.name, [doc.model_id.model], value, replace=False, isobject=True)
         return True
 
@@ -209,6 +209,7 @@ class jasper_document(orm.Model):
         """
         doc = self.browse(cr, uid, id, context=context)
         self.pool.get('ir.values').unlink(cr, uid, self.action_values(cr, uid, doc.report_id.id, context=context))
+        _logger.debug('unlink_values')
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -217,6 +218,7 @@ class jasper_document(orm.Model):
         """
         if context is None:
             context = {}
+
         doc_id = super(jasper_document, self).create(cr, uid, vals, context=context)
         self.make_action(cr, uid, doc_id, context=context)
 

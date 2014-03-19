@@ -26,7 +26,7 @@ from openerp import netsvc
 import logging
 from jasper import report_jasper
 
-logger = logging.getLogger('jasper_server')
+_logger = logging.getLogger(__name__)
 
 
 def registered_report(name):
@@ -35,6 +35,6 @@ def registered_report(name):
     if gname in netsvc.Service._services:
         return
     report_jasper(gname)
-    logger.info('Register the jasper report service [%s]' % name)
+    _logger.info('Register the jasper report service [%s]' % name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

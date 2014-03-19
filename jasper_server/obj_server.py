@@ -34,7 +34,7 @@ import jasperlib
 from lxml.etree import Element, tostring
 
 import logging
-_logger = logging.getLogger('jasper_server')
+_logger = logging.getLogger(__name__)
 
 
 def log_error(message):

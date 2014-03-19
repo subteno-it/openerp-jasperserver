@@ -30,7 +30,7 @@ from report.report_exception import JasperException
 
 import logging
 
-logger = logging.getLogger('jasper_server')
+_logger = logging.getLogger(__name__)
 
 
 class report_jasper(report_int):
@@ -42,7 +42,8 @@ class report_jasper(report_int):
         if context is None:
             context = {}
 
-        logger.debug('Call %s' % self.name)
+        if _logger.isEnabledFor(logging.DEBUG):
+            _logger.debug('Call %s' % self.name)
         try:
             return Report(self.name, cr, uid, ids, data, context).execute()
         except JasperException, e:

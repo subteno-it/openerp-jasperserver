@@ -27,7 +27,7 @@ from pyPdf import PdfFileWriter, PdfFileReader
 from openerp.tools.misc import ustr
 import logging
 
-_logger = logging.getLogger('jasper_server')
+_logger = logging.getLogger('openerp.addons.jasper_server.report')
 
 # CStringIO is better than StringIO
 try:

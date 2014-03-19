@@ -25,7 +25,7 @@
 import logging
 
 __name__ = "Upgrade existing reports, service name changed"
-_logger = logging.getLogger('jasper_server')
+_logger = logging.getLogger(__name__)
 
 
 def migrate(cr, v):

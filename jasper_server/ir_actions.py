@@ -26,7 +26,7 @@ from openerp.osv import osv
 from jasper_server.common import registered_report
 import logging
 
-_logger = logging.getLogger('jasper_server')
+_logger = logging.getLogger(__name__)
 
 
 class IrActionReport(osv.Model):
