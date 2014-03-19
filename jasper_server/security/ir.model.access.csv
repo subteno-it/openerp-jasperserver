@@ -8,3 +8,4 @@
 "access_jasper_document_manager","jasper_document manager","model_jasper_document","group_jasper_manager",1,1,1,1
 "access_jasper_document_extension_manager","jasper_document_extension manager","model_jasper_document_extension","group_jasper_manager",1,1,1,1
 "access_jasper_document_parameter_manager","jasper_document_parameter manager","model_jasper_document_parameter","group_jasper_manager",1,1,1,1
+"access_ir_values_jasper_manager","ir_values_jasper manager","base.model_ir_values","group_jasper_manager",1,1,1,1
