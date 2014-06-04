@@ -436,12 +436,6 @@ class Report(object):
         context = self.context.copy()
 
         ids = self.ids
-        js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
-        if not len(js_ids):
-            raise JasperException(_('Configuration Error'),
-                                  _('No JasperServer configuration found!'))
-
-        js = self.js_obj.read(self.cr, self.uid, js_ids, context=context)[0]
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
 
@@ -454,10 +448,20 @@ class Report(object):
             raise JasperException(_('Configuration Error'),
                                   _("Service name doesn't match!"))
 
+        doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
+
+        if doc.server_id:
+            js_ids = [doc.server_id.id]
+        else:
+            js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
+            if not len(js_ids):
+                raise JasperException(_('Configuration Error'),
+                                      _('No JasperServer configuration found!'))
+
+        js = self.js_obj.read(self.cr, self.uid, js_ids[0], context=context)
         def compose_path(basename):
             return js['prefix'] and '/' + js['prefix'] + '/instances/%s/%s' or basename
 
-        doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
         self.attrs['attachment'] = doc.attachment
         self.attrs['reload'] = doc.attachment_use
         if not self.attrs.get('params'):
