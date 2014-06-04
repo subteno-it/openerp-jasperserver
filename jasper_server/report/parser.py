@@ -168,6 +168,13 @@ def ParseMultipart(res, list_file):
     fpdf.close()
     os.close(fd)
 
+def ParseResponse(resp, list_file, doc_format='pdf'):
+    fd, f_name = mkstemp(suffix='.' + doc_format.lower(), prefix='jasper')
+    list_file.append(f_name)
+    fpdf = open(f_name, 'w+b')
+    fpdf.write(resp['data'])
+    fpdf.close()
+    os.close(fd)
 
 def WriteContent(content, list_file):
     """

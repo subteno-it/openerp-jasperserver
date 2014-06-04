@@ -143,6 +143,52 @@ def parameter(dico, resource, special=None):
         res += '&lt;![CDATA[&quot;%s&quot;]]&gt;&lt;/parameter&gt;' % resource['xml_data']
     return res
 
+def parameter_dict(dico, resource, special=None):
+    """
+    Convert value to a parameter for SOAP query
+
+    @type  dico: dict
+    @param dico: Contain parameter starts with OERP_
+    @type  resource: dict
+    @param resource: Contain parameter starts with WIZARD_
+    @rtype: dict
+    @return: All keys in a dict
+    """
+    res = {}
+    for key in resource:
+        _logger.debug(' PARAMETER -> RESOURCE: %s' % key)
+        if key in 'xml_data':
+            continue
+        res['OERP_%s' % key.upper()] = ustr(resource[key])
+
+    for key in dico:
+        _logger.debug(' PARAMETER -> DICO: %s' % key)
+        if key in 'params':
+            continue
+        val = dico[key]
+        if isinstance(val, list):
+            if isinstance(val[0], tuple):
+                res['WIZARD_%s' % key.upper()] = ','.join(map(str, val[0][2]))
+            else:
+                res['WIZARD_%s' % key.upper()] = ','.join(map(str, val))
+        else:
+            res['WIZARD_%s' % key.upper()] =  val and ustr(val) or ''
+
+        # Duplicate WIZARD parameters with prefix OERP
+        # Backward compatibility
+        if isinstance(val, list):
+            if isinstance(val[0], tuple):
+                res['OERP_%s' % key.upper()] = ','.join(map(str, val[0][2]))
+            else:
+                res['OERP_%s' % key.upper()] = ','.join(map(str, val))
+        else:
+            res['OERP_%s' % key.upper()] = val and ustr(val) or ''
+
+    for key in special:
+        _logger.debug(' PARAMETER -> SPECIAL: %s' % key)
+        res[key] = ustr(special[key])
+
+    return res
 
 def merge_pdf(lpdf):
     """

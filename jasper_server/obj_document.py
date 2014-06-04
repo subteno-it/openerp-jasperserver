@@ -58,7 +58,7 @@ class jasper_document(orm.Model):
             context = {}
         extension_obj = self.pool.get('jasper.document.extension')
         ext_ids = extension_obj.search(cr, uid, [], context=context)
-        extensions = self.pool.get('jasper.document.extension').read(cr, uid, ext_ids, context=context)
+        extensions = extension_obj.read(cr, uid, ext_ids, context=context)
         extensions = [(extension['jasper_code'], extension['name'] + " (*." + extension['extension'] + ")") for extension in extensions]
         return extensions
 
@@ -66,6 +66,7 @@ class jasper_document(orm.Model):
         'name': fields.char('Name', size=128, translate=True, required=True, placeholder="InvoiceJ"),  # button name
         'enabled': fields.boolean('Active', help="Indicates if this document is active or not"),
         'model_id': fields.many2one('ir.model', 'Object Model', required=True),  # object model in ir.model
+        'server_id': fields.many2one('jasper.server', 'Server', help='Select specific JasperServer'),
         'jasper_file': fields.char('Jasper file', size=128),  # jasper filename
         'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', 'Groups', ),
         'depth': fields.integer('Depth', required=True),
@@ -290,17 +291,20 @@ class jasper_document(orm.Model):
 
     def check_report(self, cr, uid, ids, context=None):
         # TODO, use jasperlib to check if report exists
+        curr = self.browse(cr, uid, ids[0], context=context)
         js_server = self.pool.get('jasper.server')
-        js_server_ids = js_server.search(cr, uid, [('enable', '=', True)], context=context)
-        if not js_server_ids:
-            raise osv.except_osv(_('Error'), _('No JasperServer configuration found !'))
+        if curr.server_id:
+            jss = js_server.browse(cr, uid, curr.server_id.id, context=context)
+        else:
+            js_server_ids = js_server.search(cr, uid, [('enable', '=', True)], context=context)
+            if not js_server_ids:
+                raise osv.except_osv(_('Error'), _('No JasperServer configuration found !'))
 
-        jss = js_server.browse(cr, uid, js_server_ids[0], context=context)
+            jss = js_server.browse(cr, uid, js_server_ids[0], context=context)
 
         def compose_path(basename):
             return jss['prefix'] and '/' + jss['prefix'] + '/instances/%s/%s' or basename
 
-        curr = self.browse(cr, uid, ids[0], context=context)
         try:
             js = jasperlib.Jasper(jss.host, jss.port, jss.user, jss['pass'])
             js.auth()

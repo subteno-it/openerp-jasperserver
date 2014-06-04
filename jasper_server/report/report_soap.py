@@ -30,11 +30,12 @@ import logging
 
 from openerp.report.render import render
 from openerp.tools.translate import _
-from httplib2 import Http, ServerNotFoundError, HttpLib2Error
-from parser import ParseHTML, ParseXML, ParseDIME, ParseContent, WriteContent, ParseMultipart
-from .common import BODY_TEMPLATE, parameter, merge_pdf
+#from httplib2 import Http, ServerNotFoundError, HttpLib2Error
+from parser import WriteContent, ParseResponse
+from .common import parameter_dict, merge_pdf
 from report_exception import JasperException, AuthError, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
+from openerp.addons.jasper_server import jasperlib as jslib
 
 _logger = logging.getLogger('openerp.addons.jasper_server.report')
 
@@ -47,10 +48,10 @@ except ImportError:
 
 
 class external_pdf(render):
-    def __init__(self, pdf):
+    def __init__(self, pdf, doc_format='pdf'):
         render.__init__(self)
         self.content = pdf
-        self.output_type = 'pdf'
+        self.output_type = doc_format
 
     def _render(self):
         return self.content
@@ -92,7 +93,7 @@ class Report(object):
         self.custom = data.get('jasper', {})
         self.model = data.get('model', False)
         self.pool = pooler.get_pool(cr.dbname)
-        self.outputFormat = 'pdf'
+        self.outputFormat = 'PDF'
         self.path = None
 
         # Reuse object pool
@@ -104,20 +105,21 @@ class Report(object):
         # If no context, retrieve one on the current user
         self.context = context or self.pool.get('res.users').context_get(cr, uid, uid)
 
-    def add_attachment(self, id, aname, content, context=None):
+    def add_attachment(self, res_id, aname, content, mimetype='binary', context=None):
         """
         Add attachment for this report
         """
         name = aname + '.' + self.outputFormat
         ctx = context.copy()
-        ctx['type'] = 'binary'
+        ctx['type'] = mimetype
         ctx['default_type'] = 'binary'
 
-        return self.pool.get('ir.attachment').create(self.cr, self.uid, {'name': aname,
+        return self.pool.get('ir.attachment').create(self.cr, self.uid, {'name': name,
                                                                          'datas': base64.encodestring(content),
                                                                          'datas_fname': name,
+                                                                         'file_type': mimetype,
                                                                          'res_model': self.model,
-                                                                         'res_id': id}, context=ctx)
+                                                                         'res_id': res_id}, context=ctx)
 
     def _eval_field(self, cur_obj, fieldcontent):
         """
@@ -361,13 +363,7 @@ class Report(object):
                 for d in context['jasper'].keys():
                     special_dict['CONTEXT_' + d.upper()] = context['jasper'][d]
 
-            par = parameter(self.attrs, d_par, special_dict)
-            body_args = {
-                'format': self.attrs['params'][0],
-                'path': self.path or self.attrs['params'][1],
-                'param': par,
-                'database': '/openerp/databases/%s' % self.cr.dbname,
-            }
+            par = parameter_dict(self.attrs, d_par, special_dict)
 
             ###
             ## Execute the before query if it available
@@ -375,48 +371,23 @@ class Report(object):
             if js_conf.get('before'):
                 self.cr.execute(js_conf['before'], {'id': ex})
 
-            body = BODY_TEMPLATE % body_args
-            log_debug('****\n%s\n****' % body)
-
-            headers = {'Content-type': 'text/xml', 'charset': 'UTF-8', 'SOAPAction': 'runReport'}
-            h = Http()
-            h.add_credentials(js_conf['user'], js_conf['pass'])
             try:
-                uri = 'http://%s:%d%s' % (js_conf['host'], js_conf['port'], js_conf['repo'])
-                resp, content = h.request(uri, "POST", body, headers)
-            except ServerNotFoundError:
+                js = jslib.Jasper(js_conf['host'], js_conf['port'], js_conf['user'], js_conf['pass'])
+                js.auth()
+                envelop = js.run_report(uri=self.path or self.attrs['params'][1], output=self.outputFormat.upper(), params=par)
+                response = js.send(jslib.SoapEnv('runReport', envelop).output())
+                content = response['data']
+                mimetype = response['content-type']
+                ParseResponse(response, pdf_list, self.outputFormat)
+            except jslib.ServerNotFound:
                 raise JasperException(_('Error'), _('Server not found !'))
-            except HttpLib2Error, e:
-                raise JasperException(_('Error'), '%s' % str(e))
-            except Exception, e:
-                # Bad fix for bug in httplib2 http://code.google.com/p/httplib2/issues/detail?id=96
-                # not fix yet
-                if str(e).find("'makefile'") >= 0:
-                    raise JasperException(_('Connection error'), _('Cannot find the JasperServer at this address %s') % (uri,))
-                raise JasperException(_('Error'), '%s' % str(e))
-
-            log_debug('HTTP -> RESPONSE:')
-            log_debug('\n'.join(['%s: %s' % (x, resp[x]) for x in resp]))
-            if resp.get('content-type').startswith('text/xml'):
-                log_debug('CONTENT: %r' % content)
-                raise JasperException(_('Error'), _('Code: %s\nMessage: %s') % ParseXML(content))
-            elif resp.get('content-type').startswith('text/html'):
-                log_debug('CONTENT: %r' % content)
-                if ParseHTML(content).find('Bad credentials'):
-                    raise AuthError(_('Authentification Error'), _('Invalid login or password'))
-                else:
-                    raise JasperException(_('Error'), '%s' % ParseHTML(content))
-            elif resp.get('content-type') == 'application/dime':
-                ParseDIME(content, pdf_list)
-            elif resp.get('content-type').startswith('multipart/related'):
-                ParseMultipart(content, pdf_list)
-            else:
-                raise JasperException(_('Unknown Error'), _('Content-type: %s\nMessage:%s') % (resp.get('content-type'), content))
+            except jslib.AuthError:
+                raise JasperException(_('Error'), _('Autentification failed !'))
 
             ###
             ## Store the content in ir.attachment if ask
             if aname:
-                self.add_attachment(ex, aname, ParseContent(content, resp.get('content-type')), context=self.context)
+                self.add_attachment(ex, aname, content, mimetype=mimetype, context=self.context)
 
             ###
             ## Execute the before query if it available
@@ -436,12 +407,6 @@ class Report(object):
         context = self.context.copy()
 
         ids = self.ids
-        js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
-        if not len(js_ids):
-            raise JasperException(_('Configuration Error'),
-                                  _('No JasperServer configuration found!'))
-
-        js = self.js_obj.read(self.cr, self.uid, js_ids, context=context)[0]
         log_debug('DATA:')
         log_debug('\n'.join(['%s: %s' % (x, self.data[x]) for x in self.data]))
 
@@ -454,10 +419,22 @@ class Report(object):
             raise JasperException(_('Configuration Error'),
                                   _("Service name doesn't match!"))
 
+        doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
+        self.outputFormat = doc.format
+        log_debug('Format: %s' % doc.format)
+
+        if doc.server_id:
+            js_ids = [doc.server_id.id]
+        else:
+            js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
+            if not len(js_ids):
+                raise JasperException(_('Configuration Error'),
+                                      _('No JasperServer configuration found!'))
+
+        js = self.js_obj.read(self.cr, self.uid, js_ids[0], context=context)
         def compose_path(basename):
             return js['prefix'] and '/' + js['prefix'] + '/instances/%s/%s' or basename
 
-        doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
         self.attrs['attachment'] = doc.attachment
         self.attrs['reload'] = doc.attachment_use
         if not self.attrs.get('params'):
@@ -469,7 +446,7 @@ class Report(object):
         content = ''
         duplicate = 1
         for ex in ids:
-            if doc.mode == 'multi':
+            if doc.mode == 'multi' and self.outputFormat == 'PDF':
                 for d in doc.child_ids:
                     if d.only_one and one_check.get(d.id, False):
                         continue
@@ -481,6 +458,12 @@ class Report(object):
                     continue
                 (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, reload, ids, context=self.context)
                 one_check[doc.id] = True
+
+        # If format is not PDF, we return it directly
+        # ONLY PDF CAN BE MERGE!
+        if self.outputFormat != 'PDF':
+            self.obj = external_pdf(content, self.outputFormat)
+            return (self.obj.content, self.outputFormat)
 
         def find_pdf_attachment(pdfname, current_obj):
             """
@@ -558,8 +541,7 @@ class Report(object):
         if not c.closed:
             c.close()
 
-        self.obj = external_pdf(content)
-        self.obj.set_output_type(self.outputFormat)
+        self.obj = external_pdf(content, self.outputFormat)
         return (self.obj.content, self.outputFormat)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
