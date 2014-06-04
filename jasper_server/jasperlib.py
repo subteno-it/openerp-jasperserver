@@ -29,7 +29,13 @@ from StringIO import StringIO
 import socket
 import re
 import email
+import os
 
+KNOWN_FORMAT = [
+    'PDF', 'XLS', 'XLSX', 'HTML', 'RTF',
+    'CSV', 'XML', 'DOCX', 'ODT', 'ODS',
+    'JPRINT'
+]
 
 ## Create some exception
 class JasperException(Exception):
@@ -55,6 +61,8 @@ class UnknownResponse(JasperException):
 class ServerError(JasperException):
     pass
 
+class UnknownFormat(JasperException):
+    pass
 
 ## Create some XML element to resourceDescriptor
 class Request(etree.ElementBase):
@@ -202,6 +210,9 @@ class Jasper(object):
         """
         Launch a runReport in Jasper
         """
+        if output not in KNOWN_FORMAT:
+            raise UnknownFormat(output)
+
         args = {
             'RUN_OUTPUT_FORMAT': output,
             'PAGE': '0',
@@ -229,8 +240,13 @@ class Jasper(object):
         return self.body
 
 if __name__ == '__main__':
-    js = Jasper('localhost', 8180, 'jasperadmin', 'jasperadmin')
+    tjs_host = os.environ.get('JS_HOST', 'localhost')
+    tjs_port = os.environ.get('JS_PORT', 8080)
+    tjs_user = os.environ.get('JS_USER', 'jasperadmin')
+    tjs_pass = os.environ.get('JS_PASS', 'jasperadmin')
+
     try:
+        js = Jasper(tjs_host, int(tjs_port), tjs_user, tjs_pass)
         js.auth()
     except ServerNotFound:
         print 'Error, server not found %s %d' % (js.host, js.port)
@@ -242,8 +258,8 @@ if __name__ == '__main__':
         'OERP_ACTIVE_ID': 1,
         'OERP_ACTIVE_IDS': '1,2,3',
     }
-    envelop = js.run_report(uri='/reports/samples/AllAccounts', output='PDF', params=params)
     try:
+        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='PDF', params=params)
         a = js.send(SoapEnv('runReport', envelop).output())
         f = file('AllAccounts.pdf', 'w')
         f.write(a['data'])
@@ -253,8 +269,8 @@ if __name__ == '__main__':
     except AuthError:
         print 'Error, Authentification failed for %s/%s' % (js.user, js.pwd)
 
-    envelop = js.run_report(uri='/reports/samples/AllAccounts2', output='XLS', params=params)
     try:
+        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='XLS', params=params)
         a = js.send(SoapEnv('runReport', envelop).output())
         f = file('AllAccounts.xls', 'w')
         f.write(a['data'])
@@ -265,5 +281,32 @@ if __name__ == '__main__':
         print 'Error, Authentification failed for %s/%s' % (js.user, js.pwd)
     except ServerError, e:
         print str(e)
+
+    try:
+        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='ODS', params=params)
+        a = js.send(SoapEnv('runReport', envelop).output())
+        f = file('AllAccounts.ods', 'w')
+        f.write(a['data'])
+        f.close()
+    except ServerNotFound:
+        print 'Error, server not found %s %d' % (js.host, js.port)
+    except AuthError:
+        print 'Error, Authentification failed for %s/%s' % (js.user, js.pwd)
+    except ServerError, e:
+        print str(e)
+
+    # Check unknown format
+    try:
+        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='PDX', params=params)
+        a = js.send(SoapEnv('runReport', envelop).output())
+        f = file('AllAccounts.pdf', 'w')
+        f.write(a['data'])
+        f.close()
+    except ServerNotFound:
+        print 'Error, server not found %s %d' % (js.host, js.port)
+    except AuthError:
+        print 'Error, Authentification failed for %s/%s' % (js.user, js.pwd)
+    except UnknownFormat as e:
+        pass
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

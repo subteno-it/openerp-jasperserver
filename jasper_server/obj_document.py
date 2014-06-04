@@ -58,7 +58,7 @@ class jasper_document(orm.Model):
             context = {}
         extension_obj = self.pool.get('jasper.document.extension')
         ext_ids = extension_obj.search(cr, uid, [], context=context)
-        extensions = self.pool.get('jasper.document.extension').read(cr, uid, ext_ids, context=context)
+        extensions = extension_obj.read(cr, uid, ext_ids, context=context)
         extensions = [(extension['jasper_code'], extension['name'] + " (*." + extension['extension'] + ")") for extension in extensions]
         return extensions
 
