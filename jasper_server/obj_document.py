@@ -369,6 +369,10 @@ class jasper_document(orm.Model):
         # We retrieve the name of the report with the attribute name from the jasperReport element
         filename = '%s.jrxml' % tree.xpath('//root:jasperReport/@name', namespaces=JRXML_NS)[0]
 
+        att_ids = att_obj.search(cr, uid, [('name', '=', filename), ('res_model', '=', 'jasper.document'), ('res_id', '=', ids[0])], context=context)
+        if att_ids:
+            att_obj.unlink(cr, uid, att_ids, context=context)
+
         ctx = context.copy()
         ctx['type'] = 'binary'
         ctx['default_type'] = 'binary'
