@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="partner_list" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08e18970-153f-48eb-9d02-de5773e63892">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="167"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Contact Type">
 		<conditionalStyle>
@@ -33,6 +33,9 @@
 	</parameter>
 	<parameter name="I18N_COL_COUNTRY" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["Country"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OERP_DATE_START" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2014-01-01"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT part.id as "Partner ID",
