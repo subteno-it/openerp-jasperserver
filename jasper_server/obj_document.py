@@ -27,11 +27,18 @@ from openerp.osv import orm
 from openerp.osv import fields
 from openerp.tools.sql import drop_view_if_exists
 from openerp.tools.translate import _
-from jasper_server.common import registered_report
+from jasper_server.common import registered_report, KNOWN_PARAMETERS
+from StringIO import StringIO
+from lxml import etree
+import base64
 import jasperlib
 import logging
 
 _logger = logging.getLogger(__name__)
+
+JRXML_NS = {
+    'root': 'http://jasperreports.sourceforge.net/jasperreports',
+}
 
 
 class jasper_document_extension(orm.Model):
@@ -162,7 +169,7 @@ class jasper_document(orm.Model):
             ('key', '=', 'action'),
             ('key2', '=', 'client_print_multi'),
             ('value', '=', 'ir.actions.report.xml,%d' % report_id),
-            #('object', '=', True),
+            # ('object', '=', True),
         ]
         return self.pool.get('ir.values').search(cr, uid, args, context=context)
 
@@ -320,6 +327,65 @@ class jasper_document(orm.Model):
 
         return True
 
+    def parse_jrxml(self, cr, uid, ids, content, context=None):
+        """
+        Parse JRXML file to retrieve I18N parameters and OERP parameters
+        are not standard
+        """
+        label_obj = self.pool['jasper.document.label']
+        param_obj = self.pool['jasper.document.parameter']
+        att_obj = self.pool['ir.attachment']
+
+        fp = StringIO(content)
+        tree = etree.parse(fp)
+        param = tree.xpath('//root:parameter/@name', namespaces=JRXML_NS)
+        for label in param:
+            val = tree.xpath('//root:parameter[@name="' + label + '"]//root:defaultValueExpression', namespaces=JRXML_NS)[0].text
+            _logger.debug('%s -> %s' % (label, val))
+
+            if label.startswith('I18N_'):
+                lab = label.replace('I18N_', '')
+                label_ids = label_obj.search(cr, uid, [('name', '=', lab)], context=context)
+                if label_ids:
+                    continue
+                label_obj.create(cr, uid, {
+                    'document_id': ids[0],
+                    'name': lab,
+                    'value': val.replace('"', ''),
+                }, context=context)
+            if label.startswith('OERP_') and label not in KNOWN_PARAMETERS:
+                lab = label.replace('OERP_', '')
+                param_ids = param_obj.search(cr, uid, [('name', '=', lab)], context=context)
+                if param_ids:
+                    continue
+                param_obj.create(cr, uid, {
+                    'document_id': ids[0],
+                    'name': lab,
+                    'code': val.replace('"', ''),
+                    'enabled': True,
+                }, context=context)
+
+        # Now we save JRXML as attachment
+        # We retrieve the name of the report with the attribute name from the jasperReport element
+        filename = '%s.jrxml' % tree.xpath('//root:jasperReport/@name', namespaces=JRXML_NS)[0]
+
+        att_ids = att_obj.search(cr, uid, [('name', '=', filename), ('res_model', '=', 'jasper.document'), ('res_id', '=', ids[0])], context=context)
+        if att_ids:
+            att_obj.unlink(cr, uid, att_ids, context=context)
+
+        ctx = context.copy()
+        ctx['type'] = 'binary'
+        ctx['default_type'] = 'binary'
+        att_obj.create(cr, uid, {'name': filename,
+                                 'datas': base64.encodestring(content),
+                                 'datas_fname': filename,
+                                 'file_type': 'text/xml',
+                                 'res_model': 'jasper.document',
+                                 'res_id': ids[0]}, context=ctx)
+
+
+        fp.close()
+        return True
 
 class jasper_document_parameter(orm.Model):
     _name = 'jasper.document.parameter'

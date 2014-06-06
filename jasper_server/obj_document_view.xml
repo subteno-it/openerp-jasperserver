@@ -184,6 +184,7 @@
                 <form string="Jasper Document" version="7.0">
                     <header>
                         <button string="Check report" icon="gtk-ok" type="object" name="check_report"/>
+                        <button string="Import JRXML" icon="gtk-ok" type="action" name="%(load_jrxml_file_wizard_action)d"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
