@@ -26,7 +26,7 @@ from cStringIO import StringIO
 from HTMLParser import HTMLParser
 from lxml.etree import parse, tostring
 from tempfile import mkstemp
-from dime import Message
+# from dime import Message
 import os
 
 import email
@@ -77,24 +77,24 @@ class HTML2Text(HTMLParser):
             self.is_title = True
 
 
-def ParseDIME(source, list_file):
-    """
-    We must decompose the dime record to return the PDF only
-    """
-    fp = StringIO(source)
-    a = Message.load(fp)
-    for x in a.records:
-        if x.type.value == 'application/pdf':
-            content = x.data
-            # Store the PDF in TEMP directory
-            fd, f_name = mkstemp(suffix='.pdf', prefix='jasper')
-            list_file.append(f_name)
-            fpdf = open(f_name, 'w+b')
-            fpdf.write(content)
-            fpdf.close()
-            os.close(fd)
-
-
+# def ParseDIME(source, list_file):
+#     """
+#     We must decompose the dime record to return the PDF only
+#     """
+#     fp = StringIO(source)
+#     a = Message.load(fp)
+#     for x in a.records:
+#         if x.type.value == 'application/pdf':
+#             content = x.data
+#             # Store the PDF in TEMP directory
+#             fd, f_name = mkstemp(suffix='.pdf', prefix='jasper')
+#             list_file.append(f_name)
+#             fpdf = open(f_name, 'w+b')
+#             fpdf.write(content)
+#             fpdf.close()
+#             os.close(fd)
+#
+#
 def ParseXML(source):
     """
     Read the JasperServer Error code
