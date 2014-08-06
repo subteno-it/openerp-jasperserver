@@ -61,7 +61,8 @@ if __name__ == '__main__':
         try:
             raise JasperException('Error', 'Test JasperException')
         except JasperException, e:
-            assert e.message == 'Test JasperException', 'Message must return "Test JasperException"'
+            assert e.message == 'Test JasperException', \
+                'Message must return "Test JasperException"'
 
     except AssertionError, a:
         print 'Test failed: %s' % a

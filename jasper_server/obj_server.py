@@ -2,7 +2,8 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP,
-#    Copyright (C) 2009-2011 SYLEAM Info Services (<http://www.syleam.fr/>) Christophe CHAUVET
+#    Copyright (C) 2009-2011 SYLEAM Info Services (<http://www.syleam.fr/>)
+#                            Christophe CHAUVET
 #
 #    This file is a part of jasper_server
 #
@@ -21,7 +22,7 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
+# from openerp.osv import osv
 from openerp.osv import orm
 from openerp.osv import fields
 from openerp.tools import ustr, config
@@ -50,15 +51,22 @@ class JasperServer(orm.Model):
     _rec_name = 'host'
 
     _columns = {
-        'host': fields.char('Host', size=128, required=True, help='Enter hostname or IP address'),
+        'host': fields.char('Host', size=128, required=True,
+                            help='Enter hostname or IP address'),
         'port': fields.integer('Port'),
-        'user': fields.char('Username', size=128, help='Enter the username for JasperServer user, by default is jasperadmin'),
-        'pass': fields.char('Password', size=128, help='Enter the password for the user, by defaul is jasperadmin'),
-        'repo': fields.char('Repository', size=256, required=True, help='Enter the address of the repository'),
+        'user': fields.char('Username', size=128,
+                            help='Enter the username for JasperServer user, by default is jasperadmin'),  # noqa
+        'pass': fields.char('Password', size=128,
+                            help='Enter the password for the user, by defaul is jasperadmin'),  # noqa
+        'repo': fields.char('Repository', size=256, required=True,
+                            help='Enter the address of the repository'),
         'sequence': fields.integer('Sequence'),
-        'enable': fields.boolean('Enable', help='Check this, if the server is available',),
-        'status': fields.char('Status', size=64, help='Check the registered and authentification status'),
-        'prefix': fields.char('Prefix', size=32, help='If prefix is filled, the reportUnit must in the new tree, usefull on a share hosting'),
+        'enable': fields.boolean('Enable',
+                                 help='Check this, if the server is available',),  # noqa
+        'status': fields.char('Status', size=64,
+                              help='Check the registered and authentification status'),  # noqa
+        'prefix': fields.char('Prefix', size=32,
+                              help='If prefix is filled, the reportUnit must in the new tree, usefull on a share hosting'),  # noqa
     }
 
     _defaults = {
@@ -96,45 +104,52 @@ class JasperServer(orm.Model):
                           AND    tablename='dimension_date'""")
             if not cr.fetchone()[0]:
                 _logger.info('Analysis temporal table have been created !')
-                cr.execute("""create table analysis.dimension_date as
-                              select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
-                                     to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
-                                     extract(year from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "year",
-                                     extract(month from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "month",
-                                     extract(day from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day",
-                                     extract(quarter from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "quarter",
-                                     extract(week from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "week",
-                                     extract(dow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_week",
-                                     extract(isodow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "iso_day_of_week",
-                                     extract(doy from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_year",
-                                     extract(century from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "century"
-                              from
-                              (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
-                               from   generate_series(0, 15000) m) x""")
+                cr.execute("""
+    create table analysis.dimension_date as
+    select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
+           to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
+           extract(year from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "year",
+           extract(month from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "month",
+           extract(day from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day",
+           extract(quarter from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "quarter",
+           extract(week from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "week",
+           extract(dow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_week",
+           extract(isodow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "iso_day_of_week",
+           extract(doy from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_year",
+           extract(century from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "century"
+    from
+    (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
+     from   generate_series(0, 15000) m) x""")  # noqa
 
         # Check if plpgsql language is installed, if not raise an error
-        cr.execute("""select count(*) as "installed" from pg_language where lanname='plpgsql';""")
+        cr.execute("""select count(*) as "installed" from pg_language
+                       where lanname='plpgsql';""")
         if not cr.fetchone()[0]:
-            _logger.warn('Please installed plpgsql in your database, before update your OpenERP server!\nused for translation')
+            _logger.warn('Please installed plpgsql in your database, before update your OpenERP server!\nused for translation')  # noqa
 
         # For some function, we must add plpythonu as language
-        _logger.info("Admin role for the database: %s" % config.get('db_admin', 'oerpadmin'))
-        cr.execute("""SELECT count(*) from pg_roles WHERE rolname=%s and rolcanlogin=false;""", (config.get('db_admin', 'oerpadmin'),))
+        _logger.info("Admin role for the database: %s" % config.get('db_admin', 'oerpadmin'))  # noqa
+        cr.execute("""SELECT count(*) from pg_roles
+                       WHERE rolname=%s and rolcanlogin=false;""",
+                   (config.get('db_admin', 'oerpadmin'),))
         if not cr.fetchone()[0]:
-            _logger.warn('Role admin not found, we cannot install plpython and function for jasperserver')
+            _logger.warn('Role admin not found, we cannot install plpython and function for jasperserver')  # noqa
         else:
             # Check if plpythonu is installed
-            cr.execute("""SET ROLE %s""", (config.get('db_admin', 'oerpadmin'),))
-            cr.execute("""select count(*) as "installed" from pg_language where lanname='plpythonu';""")
+            cr.execute("""SET ROLE %s""", (config.get('db_admin', 'oerpadmin'),))  # noqa
+            cr.execute("""select count(*) as "installed" from pg_language
+                           where lanname='plpythonu';""")
             if not cr.fetchone()[0]:
                 # Install this language
                 _logger.info('Add PL/Python for this database')
                 cr.execute("""CREATE LANGUAGE plpythonu;""")
                 cr.commit()
 
-            fct_file = openerp.tools.misc.file_open(os.path.join(get_module_path('jasper_server'), 'sql', 'plpython.sql'))
+            fct_file = openerp.tools.misc.file_open(os.path.join(
+                get_module_path('jasper_server'), 'sql', 'plpython.sql'))
             try:
-                query = fct_file.read() % {'db_user': config.get('db_user', 'oerp')}
+                query = fct_file.read() % {'db_user': config.get('db_user',
+                                                                 'oerp')}
                 cr.execute(query)
                 cr.commit()
             finally:
@@ -155,26 +170,31 @@ class JasperServer(orm.Model):
                                   pwd=js_config['pass'])
             js.auth()
         except jasperlib.ServerNotFound:
-            message = _('Error, JasperServer not found at %s (port: %d)') % (js.host, js.port)
+            message = _('Error, JasperServer not found at %s (port: %d)') % (js.host, js.port)  # noqa
             _logger.error(message)
-            return self.write(cr, uid, ids, {'status': message}, context=context)
+            return self.write(cr, uid, ids, {'status': message},
+                              context=context)
         except jasperlib.AuthError:
-            message = _('Error, JasperServer authentification failed for user %s/%s') % (js.user, js.pwd)
+            message = _('Error, JasperServer authentification failed for user %s/%s') % (js.user, js.pwd)  # noqa
             _logger.error(message)
-            return self.write(cr, uid, ids, {'status': message}, context=context)
+            return self.write(cr, uid, ids, {'status': message},
+                              context=context)
 
-        return self.write(cr, uid, ids, {'status': _('JasperServer Connection OK')}, context=context)
+        return self.write(cr, uid, ids,
+                          {'status': _('JasperServer Connection OK')},
+                          context=context)
 
-    ## ************************************************
+    # ************************************************
     # These method can create an XML for Jasper Server
     # *************************************************
     # TODO: ban element per level
     ban = (
-        'res.company', 'ir.model', 'ir.model.fields', 'res.groups', 'ir.model.data',
-        'ir.model.grid', 'ir.model.access', 'ir.ui.menu', 'ir.actions.act_window',
-        'ir.action.wizard', 'ir.attachment', 'ir.cron', 'ir.rule', 'ir.rule.group',
-        'ir.actions.actions', 'ir.actions.report.custom', 'ir.actions.report.xml',
-        'ir.actions.url', 'ir.ui.view', 'ir.sequence', 'res.partner.event',
+        'res.company', 'ir.model', 'ir.model.fields', 'res.groups',
+        'ir.model.data', 'ir.model.grid', 'ir.model.access', 'ir.ui.menu',
+        'ir.actions.act_window', 'ir.action.wizard', 'ir.attachment',
+        'ir.cron', 'ir.rule', 'ir.rule.group', 'ir.actions.actions',
+        'ir.actions.report.custom', 'ir.actions.report.xml', 'ir.actions.url',
+        'ir.ui.view', 'ir.sequence', 'res.partner.event',
     )
 
     @staticmethod
@@ -210,7 +230,8 @@ class JasperServer(orm.Model):
 
         return ctx
 
-    def generate_xml(self, cr, uid, relation, id, depth, old_relation='', old_field='', context=None):
+    def generate_xml(self, cr, uid, relation, id, depth, old_relation='',
+                     old_field='', context=None):
         """
         Generate xml for an object recursively
         """
@@ -229,10 +250,11 @@ class JasperServer(orm.Model):
         # We must ban many model
         #
         ban = (
-            'res.company', 'ir.model', 'ir.model.fields', 'res.groups', 'ir.model.data',
-            'ir.model.grid', 'ir.model.access', 'ir.ui.menu', 'ir.actions.act_window',
-            'ir.action.wizard', 'ir.attachment', 'ir.cron', 'ir.rule', 'ir.rule.group',
-            'ir.actions.actions', 'ir.actions.report.custom', 'ir.actions.report.xml',
+            'res.company', 'ir.model', 'ir.model.fields', 'res.groups',
+            'ir.model.data', 'ir.model.grid', 'ir.model.access', 'ir.ui.menu',
+            'ir.actions.act_window', 'ir.action.wizard', 'ir.attachment',
+            'ir.cron', 'ir.rule', 'ir.rule.group', 'ir.actions.actions',
+            'ir.actions.report.custom', 'ir.actions.report.xml',
             'ir.actions.url', 'ir.ui.view', 'ir.sequence',
         )
 
@@ -245,7 +267,8 @@ class JasperServer(orm.Model):
 
         irm_name = self.format_element(ir_model['name'])
         if old_field:
-            x = Element(self.format_element(old_field), relation=relation, id=str(id))
+            x = Element(self.format_element(old_field), relation=relation,
+                        id=str(id))
         else:
             x = Element(irm_name, id='%s' % id)
 
@@ -282,17 +305,25 @@ class JasperServer(orm.Model):
                 elif type == 'many2one':
                     if not isinstance(value, int):
                         value = value and value[0] or 0
-                    #log_error('Current: %r Old: %r' % (mod_fields[f]['relation'], relation))
-                    if depth > 0 and value and mod_fields[f]['relation'] != old_relation and mod_fields[f]['relation'] not in ban:
-                        e = self.generate_xml(cr, uid, mod_fields[f]['relation'], value, depth - 1, relation, field)
+                    # log_error('Current: %r Old: %r' %
+                    # (mod_fields[f]['relation'], relation))
+                    if depth > 0 and value and \
+                       mod_fields[f]['relation'] != old_relation and \
+                       mod_fields[f]['relation'] not in ban:
+                        e = self.generate_xml(
+                            cr, uid, mod_fields[f]['relation'], value,
+                            depth - 1, relation, field)
                     else:
                         e.set('id', '%r' % value or 0)
                         if not isinstance(value, int):
                             e.text = str(mod[f][1])
                 elif type in ('one2many', 'many2many'):
-                    if depth > 0 and value and mod_fields[f]['relation'] not in ban:
+                    if depth > 0 and value and \
+                       mod_fields[f]['relation'] not in ban:
                         for v in value:
-                            x.append(self.generate_xml(cr, uid, mod_fields[f]['relation'], v, depth - 1, relation, field))
+                            x.append(self.generate_xml(
+                                cr, uid, mod_fields[f]['relation'], v,
+                                depth - 1, relation, field))
                         continue
                     else:
                         e.set('id', '%r' % value)
@@ -306,7 +337,8 @@ class JasperServer(orm.Model):
     def generator(self, cr, uid, model, id, depth, context=None):
         root = Element('data')
         root.append(self.generate_context(cr, uid, context=context))
-        root.append(self.generate_xml(cr, uid, model, id, depth, context=context))
+        root.append(self.generate_xml(cr, uid, model, id, depth,
+                                      context=context))
         return tostring(root, pretty_print=context.get('indent', False))
 
 

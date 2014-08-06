@@ -8,8 +8,8 @@
 #    This file is a part of jasper_server
 #
 #    jasper_server is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    jasper_server is distributed in the hope that it will be useful,
@@ -37,7 +37,8 @@ KNOWN_FORMAT = [
     'JPRINT'
 ]
 
-## Create some exception
+
+# Create some exception
 class JasperException(Exception):
     pass
 
@@ -61,22 +62,26 @@ class UnknownResponse(JasperException):
 class ServerError(JasperException):
     pass
 
+
 class UnknownFormat(JasperException):
     pass
 
-## Create some XML element to resourceDescriptor
+
+# Create some XML element to resourceDescriptor
 class Request(etree.ElementBase):
     TAG = 'request'
 
     def __init__(self, operationName='runReport', locale='en_US'):
-        super(Request, self).__init__(operationName=operationName, locale=locale)
+        super(Request, self).__init__(operationName=operationName,
+                                      locale=locale)
 
 
 class RequestRD(etree.ElementBase):
     TAG = 'resourceDescriptor'
 
     def __init__(self, wsType, name='', uriString=''):
-        super(RequestRD, self).__init__(name=name, wsType=wsType, uriString=uriString)
+        super(RequestRD, self).__init__(name=name, wsType=wsType,
+                                        uriString=uriString)
 
 
 class RequestArgument(etree.ElementBase):
@@ -98,9 +103,12 @@ class SoapEnv(object):
     }
 
     def __init__(self, wsType='list', action=''):
-        self.soap = etree.Element('{%s}Envelope' % self.NSMAP['SOAP-ENV'], nsmap=self.NSMAP)
-        body = etree.SubElement(self.soap, '{%s}Body' % self.NSMAP['SOAP-ENV'])
-        action_body = etree.SubElement(body, '{%s}%s' % (self.NSMAP['ns4'], wsType))
+        self.soap = etree.Element('{%s}Envelope' % self.NSMAP['SOAP-ENV'],
+                                  nsmap=self.NSMAP)
+        body = etree.SubElement(self.soap, '{%s}Body' %
+                                self.NSMAP['SOAP-ENV'])
+        action_body = etree.SubElement(body, '{%s}%s' % (self.NSMAP['ns4'],
+                                                         wsType))
         request = etree.SubElement(action_body, 'request')
         request.set('{%s}type' % (self.NSMAP['xsi'],), 'xsd:string')
         request.text = action
@@ -111,7 +119,8 @@ class SoapEnv(object):
 
 class Jasper(object):
 
-    def __init__(self, host='localhost', port=8080, user='jasperadmin', pwd='jasperadmin'):
+    def __init__(self, host='localhost', port=8080, user='jasperadmin',
+                 pwd='jasperadmin'):
         """
         Initialise new Jasper Object
         """
@@ -144,7 +153,8 @@ class Jasper(object):
         rq.append(RequestRD('folder', '', '/'))
         self.body = SoapEnv('list', etree.tostring(rq)).output()
         try:
-            res, content = self.cnx.request(self.uri, 'POST', self.body, self.headers)
+            res, content = self.cnx.request(self.uri, 'POST', self.body,
+                                            self.headers)
         except socket.error:
             raise ServerNotFound('Server not found')
 
@@ -157,7 +167,8 @@ class Jasper(object):
 
     def send(self, soapQuery=''):
         try:
-            res, content = self.cnx.request(self.uri, 'POST', soapQuery, self.headers)
+            res, content = self.cnx.request(self.uri, 'POST', soapQuery,
+                                            self.headers)
         except socket.error:
             raise ServerNotFound('Server not found')
 
@@ -180,9 +191,13 @@ class Jasper(object):
             tree = etree.parse(fp)
             fp.close()
 
-            raise ServerError('[' + tree.xpath('//returnCode')[0].text.encode('utf-8') + ']' + tree.xpath('//returnMessage')[0].text.encode('utf-8'))
+            raise ServerError('[' +
+                              tree.xpath('//returnCode')[0].text.encode('utf-8')  # noqa
+                              + ']' +
+                              tree.xpath('//returnMessage')[0].text.encode('utf-8'))  # noqa
 
-    def create_request(self, operation='list', wsType='', uri='/', name='', arguments=None, params=None):
+    def create_request(self, operation='list', wsType='', uri='/', name='',
+                       arguments=None, params=None):
         if arguments is None:
             arguments = {}
 
@@ -218,7 +233,8 @@ class Jasper(object):
             'PAGE': '0',
         }
 
-        return self.create_request(operation='runReport', wsType='reportUnit', uri=uri, arguments=args, params=params)
+        return self.create_request(operation='runReport', wsType='reportUnit',
+                                   uri=uri, arguments=args, params=params)
 
     @staticmethod
     def parseMultipart(res):
@@ -228,10 +244,12 @@ class Jasper(object):
 
         boundary = srch.group()
         res = " \n" + res
-        res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)
+        res = "Content-Type: multipart/alternative; boundary=%s\n%s" % \
+              (boundary, res)
         message = email.message_from_string(res)
         attachment = message.get_payload()[1]
-        return {'content-type': attachment.get_content_type(), 'data': attachment.get_payload()}
+        return {'content-type': attachment.get_content_type(),
+                'data': attachment.get_payload()}
 
     def log_last_request(self,):
         """
@@ -259,7 +277,8 @@ if __name__ == '__main__':
         'OERP_ACTIVE_IDS': '1,2,3',
     }
     try:
-        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='PDF', params=params)
+        envelop = js.run_report(uri='/reports/samples/AllAccounts',
+                                output='PDF', params=params)
         a = js.send(SoapEnv('runReport', envelop).output())
         f = file('AllAccounts.pdf', 'w')
         f.write(a['data'])
@@ -270,7 +289,8 @@ if __name__ == '__main__':
         print 'Error, Authentification failed for %s/%s' % (js.user, js.pwd)
 
     try:
-        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='XLS', params=params)
+        envelop = js.run_report(uri='/reports/samples/AllAccounts',
+                                output='XLS', params=params)
         a = js.send(SoapEnv('runReport', envelop).output())
         f = file('AllAccounts.xls', 'w')
         f.write(a['data'])
@@ -283,7 +303,8 @@ if __name__ == '__main__':
         print str(e)
 
     try:
-        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='ODS', params=params)
+        envelop = js.run_report(uri='/reports/samples/AllAccounts',
+                                output='ODS', params=params)
         a = js.send(SoapEnv('runReport', envelop).output())
         f = file('AllAccounts.ods', 'w')
         f.write(a['data'])
@@ -297,7 +318,8 @@ if __name__ == '__main__':
 
     # Check unknown format
     try:
-        envelop = js.run_report(uri='/reports/samples/AllAccounts', output='PDX', params=params)
+        envelop = js.run_report(uri='/reports/samples/AllAccounts',
+                                output='PDX', params=params)
         a = js.send(SoapEnv('runReport', envelop).output())
         f = file('AllAccounts.pdf', 'w')
         f.write(a['data'])

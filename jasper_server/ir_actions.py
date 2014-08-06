@@ -37,7 +37,9 @@ class IrActionReport(osv.Model):
         Register all jasper report
         """
         _logger.info('====[REGISTER JASPER REPORT]========================')
-        cursor.execute("SELECT id, report_name FROM ir_act_report_xml WHERE report_type = 'jasper'")
+        cursor.execute("""SELECT id, report_name
+                            FROM ir_act_report_xml
+                           WHERE report_type = 'jasper'""")
         records = cursor.dictfetchall()
         for record in records:
             registered_report(record['report_name'])

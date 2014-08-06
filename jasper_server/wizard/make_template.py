@@ -42,10 +42,14 @@ init_form = """<?xml version="1.0" ?>
 """
 
 init_fields = {
-    'model': {'string': 'Model', 'type': 'many2one', 'relation': 'ir.model', 'required': True},
-    'depth': {'string': 'Depth', 'type': 'integer', 'required': True, 'default': 3},
-    'model_id': {'string': 'Id', 'type': 'integer', 'required': True, 'default': 1},
-    'indent': {'string': 'Indent the XML output ?', 'type': 'boolean', 'default': True},
+    'model': {'string': 'Model', 'type': 'many2one',
+              'relation': 'ir.model', 'required': True},
+    'depth': {'string': 'Depth', 'type': 'integer',
+              'required': True, 'default': 3},
+    'model_id': {'string': 'Id', 'type': 'integer',
+                 'required': True, 'default': 1},
+    'indent': {'string': 'Indent the XML output ?',
+               'type': 'boolean', 'default': True},
 }
 
 
@@ -74,7 +78,8 @@ def _generate(self, cr, uid, data, context):
     j_obj = pooler.get_pool(cr.dbname).get('jasper.server')
     context['indent'] = form['indent']
     buf = StringIO()
-    buf.write(j_obj.generator(cr, uid, form['model'], form['model_id'], form['depth'], context=context))
+    buf.write(j_obj.generator(cr, uid, form['model'], form['model_id'],
+                              form['depth'], context=context))
 
     datas = base64.encodestring(buf.getvalue())
     buf.close()
@@ -92,7 +97,8 @@ class make_template(wizard.interface):
                 'type': 'form',
                 'arch': init_form,
                 'fields': init_fields,
-                'state': [('end', 'Cancel', 'gtk-cancel'), ('valid', 'OK', 'gtk-ok', True)],
+                'state': [('end', 'Cancel', 'gtk-cancel'),
+                          ('valid', 'OK', 'gtk-ok', True)],
             }
         },
         'valid': {

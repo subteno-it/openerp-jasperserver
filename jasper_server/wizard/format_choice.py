@@ -2,7 +2,8 @@
 ##############################################################################
 #
 #    jasper_server module for OpenERP,
-#    Copyright (C) 2010-2011 SYLEAM Info Services (<http://www.Syleam.fr/>) Damien CRIER
+#    Copyright (C) 2010-2011 SYLEAM Info Services (<http://www.Syleam.fr/>)
+#                            Damien CRIER
 #
 #    This file is a part of jasper_server
 #
@@ -34,19 +35,21 @@ form = """<?xml version="1.0" ?>
 
 def _get_formats(self, cr, uid, data, context=None):
     pool = pooler.get_pool(cr.dbname)
-    #print 'data %r'%data
+    # print 'data %r'%data
     res = pool.get('jasper.document').get_formats(cr, uid, [])
     return res
 
 fields = {
-    'format_choice': {'string': 'Format', 'type': 'selection', 'selection': _get_formats, 'required': True},
+    'format_choice': {'string': 'Format', 'type': 'selection',
+                      'selection': _get_formats, 'required': True},
 }
 
 
 class format_choice(wizard.interface):
     """
     If format = multi, compose a wizard to ask the extension of document
-    if format = mono, juste launch teh report and return the format previously defined
+    if format = mono, just launch teh report and return the format previously
+                      defined
     """
 
     def _select_format(self, cr, uid, data, context=None):
@@ -64,7 +67,8 @@ class format_choice(wizard.interface):
                 action = 'create_wizard'
             elif document.format_choice == 'multi':
                 action = 'format_choice'
-                raise wizard.except_wizard(_('Error'), _('No implemented yet!'))
+                raise wizard.except_wizard(_('Error'),
+                                           _('No implemented yet!'))
         ##
         # Compose the uri to launch to JasperServer
         #

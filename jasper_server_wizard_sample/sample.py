@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    jasper_server_wizard_sample module for OpenERP, Sample to show haw to launch report from wizard
+#    jasper_server_wizard_sample module for OpenERP, Sample to show haw to
+#       launch report from wizard
 #    Copyright (C) 2011 SYLEAM (<http://www.syleam.fr/>)
 #              Christophe CHAUVET <christophe.chauvet@syleam.fr>
 #
 #    This file is a part of jasper_server_wizard_sample
 #
-#    jasper_server_wizard_sample is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    jasper_server_wizard_sample is free software: you can redistribute it i
+#    and/or modify it under the terms of the GNU General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-#    jasper_server_wizard_sample is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    jasper_server_wizard_sample is distributed in the hope that it will be
+#    useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
@@ -32,7 +33,8 @@ class ShowSample(osv.osv_memory):
     _description = 'Demonstration how to launch report from wizard'
 
     _columns = {
-        'name': fields.char('Name', size=64, help='Name of the printing document', required=True),
+        'name': fields.char('Name', size=64, required=True,
+                            help='Name of the printing document'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'final': fields.boolean('Final'),
         'date_start': fields.date('Start date', required=True),

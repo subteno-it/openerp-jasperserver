@@ -34,15 +34,18 @@ def migrate(cr, v):
     :param v: version number
     """
     cr.execute("""
-        CREATE OR REPLACE FUNCTION get_trad(langue varchar, typ varchar, nom varchar, texte varchar) RETURNS varchar AS
+        CREATE OR REPLACE FUNCTION get_trad(langue varchar, typ varchar,
+               nom varchar, texte varchar) RETURNS varchar AS
         $$
             DECLARE
               resultat varchar;
             BEGIN
                 IF texte IS NOT NULL THEN
-                    SELECT INTO resultat value FROM ir_translation WHERE lang=langue AND type=typ AND name=nom AND src=texte;
+                    SELECT INTO resultat value FROM ir_translation
+                     WHERE lang=langue AND type=typ AND name=nom AND src=texte;
                 ELSE
-                    SELECT INTO resultat value FROM ir_translation WHERE lang=langue AND type=typ AND name=nom;
+                    SELECT INTO resultat value FROM ir_translation
+                     WHERE lang=langue AND type=typ AND name=nom;
                 END IF;
 
                 IF NOT FOUND THEN
@@ -52,6 +55,5 @@ def migrate(cr, v):
                 END IF;
             END;
         $$ LANGUAGE plpgsql;""")
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

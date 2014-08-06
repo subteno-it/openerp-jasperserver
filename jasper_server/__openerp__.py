@@ -36,7 +36,8 @@ Features:
 - Launch multiple reports and merge in one printing action
 - Add additionnals parameters (ex from fields function)
 - Affect group on report
-- Use context to display or not the print button (eg: in stock.picking separate per type)
+- Use context to display or not the print button
+    (eg: in stock.picking separate per type)
 - Execute SQL query before and after treatement
 - Launch report based on SQL View
 - Add additional pages at the begining or at the end of the document
@@ -51,7 +52,8 @@ In collaboration with Eric Vernichon (from Everlibre)
 """,
     'author': 'SYLEAM',
     'website': 'http://www.syleam.fr',
-    'images': ['images/accueil.png', 'images/palette.png', 'images/document_form.png'],
+    'images': ['images/accueil.png', 'images/palette.png',
+               'images/document_form.png'],
     'depends': [
         'base',
     ],

@@ -8,8 +8,8 @@
 #    This file is a part of jasper_server
 #
 #    jasper_server is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    jasper_server is distributed in the hope that it will be useful,
@@ -42,12 +42,14 @@ def migrate(cr, v):
     if cr.fetchone()[0]:
 
         # We change all service defined on ir.action.report.xml
-        cr.execute("""SELECT report_id, 'jasper.report_'||id as id, name FROM jasper_document WHERE report_id IS NOT NULL""")
+        cr.execute("""SELECT report_id, 'jasper.report_'||id as id, name
+                        FROM jasper_document WHERE report_id IS NOT NULL""")
         for line in cr.fetchall():
-            cr.execute("""UPDATE ir_act_report_xml SET report_name=%s WHERE id=%s""", (line[1], line[0]))
+            cr.execute("""UPDATE ir_act_report_xml
+                             SET report_name=%s WHERE id=%s""",
+                       (line[1], line[0]))
             _logger.info('Upgrade jasper report %s' % line[2])
 
         cr.commit()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

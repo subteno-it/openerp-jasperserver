@@ -30,10 +30,10 @@ import logging
 
 from openerp.report.render import render
 from openerp.tools.translate import _
-#from httplib2 import Http, ServerNotFoundError, HttpLib2Error
+# from httplib2 import Http, ServerNotFoundError, HttpLib2Error
 from parser import WriteContent, ParseResponse
 from .common import parameter_dict, merge_pdf
-from report_exception import JasperException, AuthError, EvalError
+from report_exception import JasperException, EvalError
 from pyPdf import PdfFileWriter, PdfFileReader
 from openerp.addons.jasper_server import jasperlib as jslib
 
@@ -103,9 +103,11 @@ class Report(object):
         self.obj = None
 
         # If no context, retrieve one on the current user
-        self.context = context or self.pool.get('res.users').context_get(cr, uid, uid)
+        self.context = context or self.pool.get('res.users').context_get(
+            cr, uid, uid)
 
-    def add_attachment(self, res_id, aname, content, mimetype='binary', context=None):
+    def add_attachment(self, res_id, aname, content, mimetype='binary',
+                       context=None):
         """
         Add attachment for this report
         """
@@ -114,12 +116,13 @@ class Report(object):
         ctx['type'] = mimetype
         ctx['default_type'] = 'binary'
 
-        return self.pool.get('ir.attachment').create(self.cr, self.uid, {'name': name,
-                                                                         'datas': base64.encodestring(content),
-                                                                         'datas_fname': name,
-                                                                         'file_type': mimetype,
-                                                                         'res_model': self.model,
-                                                                         'res_id': res_id}, context=ctx)
+        return self.pool.get('ir.attachment').create(
+            self.cr, self.uid, {'name': name,
+                                'datas': base64.encodestring(content),
+                                'datas_fname': name,
+                                'file_type': mimetype,
+                                'res_model': self.model,
+                                'res_id': res_id}, context=ctx)
 
     def _eval_field(self, cur_obj, fieldcontent):
         """
@@ -130,42 +133,43 @@ class Report(object):
         except SyntaxError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Field Eval Error'),
-                            _('Syntax error when evaluate field\n\nMessage: "%s"') % str(e))
+                            _('Syntax error when evaluate field\n\nMessage: "%s"') % str(e))  # noqa
         except NameError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Field Eval Error'),
-                            _('Error when evaluate field\n\nMessage: "%s"') % str(e))
+                            _('Error when evaluate field\n\nMessage: "%s"') % str(e))  # noqa
         except AttributeError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Field Eval Error'),
-                            _('Attribute error when evaluate field\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+                            _('Attribute error when evaluate field\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))  # noqa
         except Exception, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Field Eval Error'),
-                            _('Unknown error when evaluate field\nMessage: "%s"') % str(e))
+                            _('Unknown error when evaluate field\nMessage: "%s"') % str(e))  # noqa
 
     def _eval_attachment(self, cur_obj):
         """
         Launch eval on attachement field, and return the value
         """
         try:
-            return eval(self.attrs['attachment'], {'object': cur_obj, 'time': time})
+            return eval(self.attrs['attachment'], {'object': cur_obj,
+                                                   'time': time})
         except SyntaxError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Attachment Error'),
-                            _('Syntax error when evaluate attachment\n\nMessage: "%s"') % str(e))
+                            _('Syntax error when evaluate attachment\n\nMessage: "%s"') % str(e))  # noqa
         except NameError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Attachment Error'),
-                            _('Error when evaluate attachment\n\nMessage: "%s"') % str(e))
+                            _('Error when evaluate attachment\n\nMessage: "%s"') % str(e))  # noqa
         except AttributeError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Attachment Error'),
-                            _('Attribute error when evaluate attachment\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+                            _('Attribute error when evaluate attachment\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))  # noqa
         except Exception, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Attachment Error'),
-                            _('Unknown error when evaluate attachment\nMessage: "%s"') % str(e))
+                            _('Unknown error when evaluate attachment\nMessage: "%s"') % str(e))  # noqa
 
     def _eval_duplicate(self, cur_obj, current_document):
         """
@@ -176,19 +180,19 @@ class Report(object):
         except SyntaxError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Duplicate Error'),
-                            _('Syntax error when evaluate duplicate\n\nMessage: "%s"') % str(e))
+                            _('Syntax error when evaluate duplicate\n\nMessage: "%s"') % str(e))  # noqa
         except NameError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Duplicate Error'),
-                            _('Error when evaluate duplicate\n\nMessage: "%s"') % str(e))
+                            _('Error when evaluate duplicate\n\nMessage: "%s"') % str(e))  # noqa
         except AttributeError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Duplicate Error'),
-                            _('Attribute error when evaluate duplicate\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+                            _('Attribute error when evaluate duplicate\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))  # noqa
         except Exception, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Duplicate Error'),
-                            _('Unknown error when evaluate duplicate\nMessage: "%s"') % str(e))
+                            _('Unknown error when evaluate duplicate\nMessage: "%s"') % str(e))  # noqa
 
     def _eval_lang(self, cur_obj, current_document):
         """
@@ -198,21 +202,22 @@ class Report(object):
             return eval(current_document.lang, {'o': cur_obj})
         except SyntaxError, e:
             _logger.warning('Error %s' % str(e))
-            raise EvalError(_('Language Error'), _('Syntax error when evaluate language\n\nMessage: "%s"') % str(e))
+            raise EvalError(_('Language Error'), _('Syntax error when evaluate language\n\nMessage: "%s"') % str(e))  # noqa
         except NameError, e:
             _logger.warning('Error %s' % str(e))
-            raise EvalError(_('Language Error'), _('Error when evaluate language\n\nMessage: "%s"') % str(e))
+            raise EvalError(_('Language Error'), _('Error when evaluate language\n\nMessage: "%s"') % str(e))  # noqa
         except AttributeError, e:
             _logger.warning('Error %s' % str(e))
-            raise EvalError(_('Language Error'), _('Attribute error when evaluate language\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+            raise EvalError(_('Language Error'), _('Attribute error when evaluate language\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))  # noqa
         except Exception, e:
             _logger.warning('Error %s' % str(e))
-            raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))
+            raise EvalError(_('Language Error'), _('Unknown error when evaluate language\nMessage: "%s"') % str(e))  # noqa
 
-    def _jasper_execute(self, ex, current_document, js_conf, pdf_list, reload=False,
-                        ids=None, context=None):
+    def _jasper_execute(self, ex, current_document, js_conf, pdf_list,
+                        reload=False, ids=None, context=None):
         """
-        After retrieve datas to launch report, execute it and return the content
+        After retrieve datas to launch report, execute it and
+        return the content
         """
         # Issue 934068 with web client with model is missing from the context
         if not self.model:
@@ -244,41 +249,47 @@ class Report(object):
         # Test can be simple, or un a function
         if current_document.check_sel != 'none':
             try:
-                if current_document.check_sel == 'simple' and not eval(current_document.check_simple, {'o': cur_obj}):
-                    raise JasperException(_('Check Print Error'), current_document.message_simple)
-                elif current_document.check_sel == 'func' and not hasattr(self.model_obj, 'check_print'):
-                    raise JasperException(_('Check Print Error'), _('"check_print" function not found in "%s" object') % self.model)
-                elif current_document.check_sel == 'func' and hasattr(self.model_obj, 'check_print') and \
-                        not self.model_obj.check_print(self.cr, self.uid, cur_obj, context=context):
-                    raise JasperException(_('Check Print Error'), _('Function "check_print" return an error'))
+                if current_document.check_sel == 'simple' and \
+                   not eval(current_document.check_simple, {'o': cur_obj}):
+                    raise JasperException(_('Check Print Error'), current_document.message_simple)  # noqa
+                elif current_document.check_sel == 'func' and \
+                        not hasattr(self.model_obj, 'check_print'):
+                    raise JasperException(_('Check Print Error'), _('"check_print" function not found in "%s" object') % self.model)  # noqa
+                elif current_document.check_sel == 'func' and \
+                        hasattr(self.model_obj, 'check_print') and \
+                        not self.model_obj.check_print(self.cr, self.uid,
+                                                       cur_obj,
+                                                       context=context):
+                    raise JasperException(_('Check Print Error'), _('Function "check_print" return an error'))  # noqa
 
             except SyntaxError, e:
                 _logger.warning('Error %s' % str(e))
-                raise EvalError(_('Check Error'), _('Syntax error when check condition\n\nMessage: "%s"') % str(e))
+                raise EvalError(_('Check Error'), _('Syntax error when check condition\n\nMessage: "%s"') % str(e))  # noqa
             except NameError, e:
                 _logger.warning('Error %s' % str(e))
-                raise EvalError(_('Check Error'), _('Error when check condition\n\nMessage: "%s"') % str(e))
+                raise EvalError(_('Check Error'), _('Error when check condition\n\nMessage: "%s"') % str(e))  # noqa
             except AttributeError, e:
                 _logger.warning('Error %s' % str(e))
-                raise EvalError(_('Check Error'), _('Attribute error when check condition\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))
+                raise EvalError(_('Check Error'), _('Attribute error when check condition\nVerify if specify field exists and valid\n\nMessage: "%s"') % str(e))  # noqa
             except JasperException, e:
                 _logger.warning('Error %s' % str(e))
                 raise JasperException(e.title, e.message)
             except Exception, e:
                 _logger.warning('Error %s' % str(e))
-                raise EvalError(_('Check Error'), _('Unknown error when check condition\nMessage: "%s"') % str(e))
+                raise EvalError(_('Check Error'), _('Unknown error when check condition\nMessage: "%s"') % str(e))  # noqa
 
         reload_ok = False
         if self.attrs['reload'] and aname:
-            _logger.info('Printing must be reload from attachment if exists (%s)' % aname)
-            aids = self.pool.get('ir.attachment').search(self.cr, self.uid,
-                                                         [('name', '=', aname),
-                                                          ('res_model', '=', self.model),
-                                                          ('res_id', '=', ex)])
+            _logger.info('Printing must be reload from attachment if exists (%s)' % aname)  # noqa
+            aids = self.pool.get('ir.attachment').search(
+                self.cr, self.uid, [('name', '=', aname),
+                                    ('res_model', '=', self.model),
+                                    ('res_id', '=', ex)])
             if aids:
                 reload_ok = True
                 _logger.info('Attachment found, reload it!')
-                brow_rec = self.pool.get('ir.attachment').browse(self.cr, self.uid, aids[0])
+                brow_rec = self.pool.get('ir.attachment').browse(
+                    self.cr, self.uid, aids[0])
                 if brow_rec.datas:
                     d = base64.decodestring(brow_rec.datas)
                     WriteContent(d, pdf_list)
@@ -295,9 +306,9 @@ class Report(object):
                 'active_id': ex,
                 'active_ids': ','.join(str(i) for i in ids),
                 'model': self.model,
-                'sql_query': self.attrs.get('query', "SELECT 'NO QUERY' as nothing"),
+                'sql_query': self.attrs.get('query', "SELECT 'NO QUERY' as nothing"),  # noqa
                 'sql_query_where': self.attrs.get('query_where', '1 = 1'),
-                'report_name': self.attrs.get('report_name', _('No report name')),
+                'report_name': self.attrs.get('report_name', _('No report name')),  # noqa
                 'lang': language or 'en_US',
                 'duplicate': duplicate,
                 'dbname': self.cr.dbname,
@@ -306,21 +317,28 @@ class Report(object):
 
             # If XML we must compose it
             if self.attrs['params'][2] == 'xml':
-                d_xml = self.js_obj.generator(self.cr, self.uid, self.model, self.ids[0], self.attrs['params'][3], context=context)
+                d_xml = self.js_obj.generator(self.cr, self.uid, self.model,
+                                              self.ids[0],
+                                              self.attrs['params'][3],
+                                              context=context)
                 d_par['xml_data'] = d_xml
 
             # Retrieve the company information and send them in parameter
             # Is document have company field, to print correctly the document
             # Or take it to the user
-            user = self.pool.get('res.users').browse(self.cr, self.uid, self.uid, context=context)
+            user = self.pool.get('res.users').browse(self.cr, self.uid,
+                                                     self.uid,
+                                                     context=context)
             if hasattr(cur_obj, 'company_id') and cur_obj.company_id:
-                cny = self.pool.get('res.company').browse(self.cr, self.uid, cur_obj.company_id.id, context=context)
+                cny = self.pool.get('res.company').browse(
+                    self.cr, self.uid, cur_obj.company_id.id, context=context)
             else:
                 cny = user.company_id
 
             d_par.update({
                 'company_name': cny.name,
-                'company_logo': cny.name.encode('ascii', 'ignore').replace(' ', '_'),
+                'company_logo': cny.name.encode('ascii',
+                                                'ignore').replace(' ', '_'),
                 'company_header1': cny.rml_header1 or '',
                 'company_footer1': cny.rml_footer or '',
                 'company_footer2': '',
@@ -340,7 +358,7 @@ class Report(object):
 
             for p in current_document.param_ids:
                 if p.code and p.code.startswith('[['):
-                    d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': cny, 't': time, 'u': user}) or ''
+                    d_par[p.name.lower()] = eval(p.code.replace('[[', '').replace(']]', ''), {'o': cur_obj, 'c': cny, 't': time, 'u': user}) or ''  # noqa
                 else:
                     d_par[p.name] = p.code
 
@@ -350,55 +368,65 @@ class Report(object):
                 'IS_JASPERSERVER': 'yes',
             }
 
-            # we must retrieve label in the language document (not user's language)
-            for l in self.doc_obj.browse(self.cr, self.uid, current_document.id, context={'lang': language}).label_ids:
+            # we must retrieve label in the language document
+            # (not user's language)
+            for l in self.doc_obj.browse(self.cr, self.uid,
+                                         current_document.id,
+                                         context={'lang': language}).label_ids:
                 special_dict['I18N_' + l.name.upper()] = l.value or ''
 
-            # If report is launched since a wizard, we can retrieve some parameters
+            # If report is launched since a wizard,
+            # we can retrieve some parameters
             for d in self.custom.keys():
                 special_dict['CUSTOM_' + d.upper()] = self.custom[d]
 
-            # If special value is available in context, we add them as parameters
+            # If special value is available in context,
+            # we add them as parameters
             if context.get('jasper') and isinstance(context['jasper'], dict):
                 for d in context['jasper'].keys():
                     special_dict['CONTEXT_' + d.upper()] = context['jasper'][d]
 
             par = parameter_dict(self.attrs, d_par, special_dict)
 
-            ###
-            ## Execute the before query if it available
-            ##
+            # Execute the before query if it available
             if js_conf.get('before'):
                 self.cr.execute(js_conf['before'], {'id': ex})
 
             try:
-                js = jslib.Jasper(js_conf['host'], js_conf['port'], js_conf['user'], js_conf['pass'])
+                js = jslib.Jasper(js_conf['host'], js_conf['port'],
+                                  js_conf['user'], js_conf['pass'])
                 js.auth()
-                envelop = js.run_report(uri=self.path or self.attrs['params'][1], output=self.outputFormat.upper(), params=par)
-                response = js.send(jslib.SoapEnv('runReport', envelop).output())
+                envelop = js.run_report(uri=self.path or
+                                        self.attrs['params'][1],
+                                        output=self.outputFormat.upper(),
+                                        params=par)
+                response = js.send(jslib.SoapEnv('runReport',
+                                                 envelop).output())
                 content = response['data']
                 mimetype = response['content-type']
                 ParseResponse(response, pdf_list, self.outputFormat)
             except jslib.ServerNotFound:
                 raise JasperException(_('Error'), _('Server not found !'))
             except jslib.AuthError:
-                raise JasperException(_('Error'), _('Autentification failed !'))
+                raise JasperException(_('Error'), _('Autentification failed !'))  # noqa
 
-            ###
-            ## Store the content in ir.attachment if ask
+            # Store the content in ir.attachment if ask
             if aname:
-                self.add_attachment(ex, aname, content, mimetype=mimetype, context=self.context)
+                self.add_attachment(ex, aname, content, mimetype=mimetype,
+                                    context=self.context)
 
-            ###
-            ## Execute the before query if it available
-            ##
+            # Execute the before query if it available
             if js_conf.get('after'):
                 self.cr.execute(js_conf['after'], {'id': ex})
 
-            ## Update the number of print on object
+            # Update the number of print on object
             fld = self.model_obj.fields_get(self.cr, self.uid)
             if 'number_of_print' in fld:
-                self.model_obj.write(self.cr, self.uid, [cur_obj.id], {'number_of_print': (getattr(cur_obj, 'number_of_print', None) or 0) + 1}, context=context)
+                self.model_obj.write(
+                    self.cr, self.uid, [cur_obj.id],
+                    {'number_of_print': (getattr(cur_obj, 'number_of_print',
+                                                 None) or 0) + 1},
+                    context=context)
 
         return (content, duplicate)
 
@@ -414,31 +442,37 @@ class Report(object):
         # For each IDS, launch a query, and return only one result
         #
         pdf_list = []
-        doc_ids = self.doc_obj.search(self.cr, self.uid, [('id', '=', self.service)], context=context)
+        doc_ids = self.doc_obj.search(self.cr, self.uid,
+                                      [('id', '=', self.service)],
+                                      context=context)
         if not doc_ids:
             raise JasperException(_('Configuration Error'),
                                   _("Service name doesn't match!"))
 
-        doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0], context=context)
+        doc = self.doc_obj.browse(self.cr, self.uid, doc_ids[0],
+                                  context=context)
         self.outputFormat = doc.format
         log_debug('Format: %s' % doc.format)
 
         if doc.server_id:
             js_ids = [doc.server_id.id]
         else:
-            js_ids = self.js_obj.search(self.cr, self.uid, [('enable', '=', True)])
+            js_ids = self.js_obj.search(self.cr, self.uid,
+                                        [('enable', '=', True)])
             if not len(js_ids):
                 raise JasperException(_('Configuration Error'),
-                                      _('No JasperServer configuration found!'))
+                                      _('No JasperServer configuration found!'))  # noqa
 
         js = self.js_obj.read(self.cr, self.uid, js_ids[0], context=context)
+
         def compose_path(basename):
-            return js['prefix'] and '/' + js['prefix'] + '/instances/%s/%s' or basename
+            return js['prefix'] and '/' + js['prefix'] + '/instances/%s/%s' or basename   # noqa
 
         self.attrs['attachment'] = doc.attachment
         self.attrs['reload'] = doc.attachment_use
         if not self.attrs.get('params'):
-            uri = compose_path('/openerp/bases/%s/%s') % (self.cr.dbname, doc.report_unit)
+            uri = compose_path('/openerp/bases/%s/%s') % (self.cr.dbname,
+                                                          doc.report_unit)
             self.attrs['params'] = (doc.format, uri, doc.mode, doc.depth, {})
 
         one_check = {}
@@ -450,13 +484,15 @@ class Report(object):
                 for d in doc.child_ids:
                     if d.only_one and one_check.get(d.id, False):
                         continue
-                    self.path = compose_path('/openerp/bases/%s/%s') % (self.cr.dbname, d.report_unit)
-                    (content, duplicate) = self._jasper_execute(ex, d, js, pdf_list, reload, ids, context=self.context)
+                    self.path = compose_path('/openerp/bases/%s/%s') % (self.cr.dbname, d.report_unit)  # noqa
+                    (content, duplicate) = self._jasper_execute(
+                        ex, d, js, pdf_list, reload, ids, context=self.context)
                     one_check[d.id] = True
             else:
                 if doc.only_one and one_check.get(doc.id, False):
                     continue
-                (content, duplicate) = self._jasper_execute(ex, doc, js, pdf_list, reload, ids, context=self.context)
+                (content, duplicate) = self._jasper_execute(
+                    ex, doc, js, pdf_list, reload, ids, context=self.context)
                 one_check[doc.id] = True
 
         # If format is not PDF, we return it directly
@@ -493,12 +529,10 @@ class Report(object):
         pdf_fo_begin = find_pdf_attachment(doc.pdf_begin, cur_obj)
         pdf_fo_ended = find_pdf_attachment(doc.pdf_ended, cur_obj)
 
-        ##
-        ## We use pyPdf to merge all PDF in unique file
-        ##
+        # We use pyPdf to merge all PDF in unique file
         c = StringIO()
         if len(pdf_list) > 1 or duplicate > 1:
-            #content = ''
+            # content = ''
             tmp_content = PdfFileWriter()
 
             # We add all PDF file in a list of file pointer to close them
@@ -515,7 +549,7 @@ class Report(object):
                         tmp_content.addPage(tmp_pdf.getPage(page))
             else:
                 tmp_content.write(c)
-                #content = c.getvalue()
+                # content = c.getvalue()
 
             # It seem there is a bug on PyPDF if we close the "fp" file,
             # we cannot call tmp_content.write(c) We received

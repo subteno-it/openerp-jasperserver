@@ -24,9 +24,9 @@
 
 from cStringIO import StringIO
 from HTMLParser import HTMLParser
-from lxml.etree import parse, tostring
+from lxml.etree import parse
 from tempfile import mkstemp
-# from dime import Message
+from dime import Message
 import os
 
 import email
@@ -142,7 +142,7 @@ def ParseContent(source, content_type='application/dime'):
             raise NotMultipartError()
         boundary = srch.group()
         res = " \n" + source
-        res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)
+        res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)  # noqa
         message = email.message_from_string(res)
         attachment = message.get_payload()[1]
         return attachment.get_payload()
@@ -156,10 +156,11 @@ def ParseMultipart(res, list_file):
         raise NotMultipartError()
     boundary = srch.group()
     res = " \n" + res
-    res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)
+    res = "Content-Type: multipart/alternative; boundary=%s\n%s" % (boundary, res)  # noqa
     message = email.message_from_string(res)
     attachment = message.get_payload()[1]
-    #return {'content-type': attachment.get_content_type(), 'data': attachment.get_payload()}
+    # return {'content-type': attachment.get_content_type(),
+    # 'data': attachment.get_payload()}
     # Store the PDF in TEMP directory
     fd, f_name = mkstemp(suffix='.pdf', prefix='jasper')
     list_file.append(f_name)
@@ -168,6 +169,7 @@ def ParseMultipart(res, list_file):
     fpdf.close()
     os.close(fd)
 
+
 def ParseResponse(resp, list_file, doc_format='pdf'):
     fd, f_name = mkstemp(suffix='.' + doc_format.lower(), prefix='jasper')
     list_file.append(f_name)
@@ -175,6 +177,7 @@ def ParseResponse(resp, list_file, doc_format='pdf'):
     fpdf.write(resp['data'])
     fpdf.close()
     os.close(fd)
+
 
 def WriteContent(content, list_file):
     """
@@ -189,13 +192,20 @@ def WriteContent(content, list_file):
 
 if __name__ == '__main__':
     print ParseHTML("""<html><head><title>Apache Tomcat/5.5.20 - Rapport d'erreur</title>
-<style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;}
-           H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;}
-           H3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;}
-           BODY {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;}
-           B {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;}
-           P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}
-           A {color : black;}A.name {color : black;}HR {color : #525D76;}--></style>
+<style><!--H1 {font-family:Tahoma,Arial,sans-serif;color:white;
+                    background-color:#525D76;font-size:22px;}
+           H2 {font-family:Tahoma,Arial,sans-serif;color:white;
+                    background-color:#525D76;font-size:16px;}
+           H3 {font-family:Tahoma,Arial,sans-serif;color:white;
+                    background-color:#525D76;font-size:14px;}
+           BODY {font-family:Tahoma,Arial,sans-serif;color:black;
+                    background-color:white;}
+           B {font-family:Tahoma,Arial,sans-serif;color:white;
+                    background-color:#525D76;}
+           P {font-family:Tahoma,Arial,sans-serif;
+                    background:white;color:black;font-size:12px;}
+           A {color : black;}A.name {color : black;}
+                    HR {color : #525D76;}--></style>
 </head><body>
 <h1>Etat HTTP 401 - Bad credentials</h1>
 <HR size="1" noshade="noshade"><p><b>type</b> Rapport d'état</p>
