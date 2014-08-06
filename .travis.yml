@@ -15,6 +15,7 @@ install:
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - sudo apt-get install -y python-pypdf 
   - sudo apt-get install -y python-httplib2
+  - pip install -q python-dime
   - travis_install_nightly
 
 script:
