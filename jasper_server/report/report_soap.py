@@ -111,7 +111,7 @@ class Report(object):
         """
         Add attachment for this report
         """
-        name = aname + '.' + self.outputFormat
+        name = aname + '.' + self.outputFormat.lower()
         ctx = context.copy()
         ctx['type'] = mimetype
         ctx['default_type'] = 'binary'
@@ -362,7 +362,7 @@ class Report(object):
                 else:
                     d_par[p.name] = p.code
 
-            self.outputFormat = current_document.format.lower()
+            self.outputFormat = current_document.format
             special_dict = {
                 'REPORT_LOCALE': language or 'en_US',
                 'IS_JASPERSERVER': 'yes',
@@ -398,13 +398,13 @@ class Report(object):
                 js.auth()
                 envelop = js.run_report(uri=self.path or
                                         self.attrs['params'][1],
-                                        output=self.outputFormat.upper(),
+                                        output=self.outputFormat,
                                         params=par)
                 response = js.send(jslib.SoapEnv('runReport',
                                                  envelop).output())
                 content = response['data']
                 mimetype = response['content-type']
-                ParseResponse(response, pdf_list, self.outputFormat)
+                ParseResponse(response, pdf_list, self.outputFormat.lower())
             except jslib.ServerNotFound:
                 raise JasperException(_('Error'), _('Server not found !'))
             except jslib.AuthError:
