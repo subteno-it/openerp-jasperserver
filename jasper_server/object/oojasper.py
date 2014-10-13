@@ -25,7 +25,6 @@ from osv import osv
 from osv import fields
 from lxml.etree import Element, tostring
 from tools import ustr
-from tools.translate import _
 import netsvc
 logger = netsvc.Logger()
 
@@ -60,66 +59,6 @@ class jasper_server(osv.osv):
         'repo': lambda *a: '/jasperserver/services/repository',
         'sequence': lambda *a: 10,
     }
-
-    def __init__(self, pool, cr):
-        """
-        Check if analysis schema and temporal table is present in the database
-        if not, create it
-        """
-        cr.execute("""show server_version""")
-        pg_version = cr.fetchone()[0].split('.')
-        pg_version = tuple([int(x) for x in pg_version])
-
-        if pg_version >= (8, 3, 0):
-            cr.execute("""SELECT count(*)
-                          FROM   pg_namespace
-                          WHERE  nspname='analysis'""")
-            if not cr.fetchone()[0]:
-                logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis schema have been created !')
-                cr.execute("""CREATE SCHEMA analysis;
-                       COMMENT ON SCHEMA analysis
-                       IS 'Schema use for customize view in Jasper BI';""")
-
-            cr.execute("""SELECT count(*)
-                          FROM   pg_tables
-                          WHERE  schemaname = 'analysis'
-                          AND    tablename='dimension_date'""")
-            if not cr.fetchone()[0]:
-                logger.notifyChannel('jasper_server', netsvc.LOG_INFO, 'Analysis temporal table have been created !')
-                cr.execute("""create table analysis.dimension_date as
-                              select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
-                                     to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
-                                     extract(year from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "year",
-                                     extract(month from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "month",
-                                     extract(day from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day",
-                                     extract(quarter from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "quarter",
-                                     extract(week from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "week",
-                                     extract(dow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_week",
-                                     extract(isodow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "iso_day_of_week",
-                                     extract(doy from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_year",
-                                     extract(century from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "century"
-                              from
-                              (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
-                               from   generate_series(0, 15000) m) x""")
-
-        # Check if plpgsql language is installed, if not raise an error
-        cr.execute("""select count(*) as "installed" from pg_language where lanname='plpgsql';""")
-        if not cr.fetchone()[0]:
-            logger.notifyChannel('jasper_server', netsvc.LOG_WARNING, 'Please installed plpgsql in your database, before update your OpenERP server!\nused for translation')
-
-        super(jasper_server, self).__init__(pool, cr)
-
-    ## ************************************************
-    # These method can create an XML for Jasper Server
-    # *************************************************
-    # TODO: ban element per level
-    ban = (
-        'res.company', 'ir.model', 'ir.model.fields', 'res.groups', 'ir.model.data',
-        'ir.model.grid', 'ir.model.access', 'ir.ui.menu', 'ir.actions.act_window',
-        'ir.action.wizard', 'ir.attachment', 'ir.cron', 'ir.rule', 'ir.rule.group',
-        'ir.actions.actions', 'ir.actions.report.custom', 'ir.actions.report.xml',
-        'ir.actions.url', 'ir.ui.view', 'ir.sequence', 'res.partner.event',
-    )
 
     @staticmethod
     def format_element(element):
