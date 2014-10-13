@@ -79,84 +79,6 @@ class JasperServer(orm.Model):
         'prefix': False,
     }
 
-    def __init__(self, pool, cr):
-        """
-        Check if analysis schema and temporal table is present in the database
-        if not, create it
-        """
-        cr.execute("""show server_version""")
-        pg_version = cr.fetchone()[0].split('.')
-        pg_version = tuple([int(x) for x in pg_version])
-
-        if pg_version >= (8, 3, 0):
-            cr.execute("""SELECT count(*)
-                          FROM   pg_namespace
-                          WHERE  nspname='analysis'""")
-            if not cr.fetchone()[0]:
-                _logger.info('Analysis schema have been created !')
-                cr.execute("""CREATE SCHEMA analysis;
-                       COMMENT ON SCHEMA analysis
-                       IS 'Schema use for customize view in Jasper BI';""")
-
-            cr.execute("""SELECT count(*)
-                          FROM   pg_tables
-                          WHERE  schemaname = 'analysis'
-                          AND    tablename='dimension_date'""")
-            if not cr.fetchone()[0]:
-                _logger.info('Analysis temporal table have been created !')
-                cr.execute("""
-    create table analysis.dimension_date as
-    select to_number(to_char(x.datum, 'YYYYMMDD'), 'FM99999999') as id,
-           to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD') as "date",
-           extract(year from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "year",
-           extract(month from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "month",
-           extract(day from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day",
-           extract(quarter from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "quarter",
-           extract(week from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "week",
-           extract(dow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_week",
-           extract(isodow from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "iso_day_of_week",
-           extract(doy from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "day_of_year",
-           extract(century from to_date(to_char(x.datum, 'YYYY-MM-DD'), 'YYYY-MM-DD'))::integer as "century"
-    from
-    (select to_date('2000-01-01','YYYY-MM-DD') + (to_char(m, 'FM9999999999')||' day')::interval as datum
-     from   generate_series(0, 15000) m) x""")  # noqa
-
-        # Check if plpgsql language is installed, if not raise an error
-        cr.execute("""select count(*) as "installed" from pg_language
-                       where lanname='plpgsql';""")
-        if not cr.fetchone()[0]:
-            _logger.warn('Please installed plpgsql in your database, before update your OpenERP server!\nused for translation')  # noqa
-
-        # For some function, we must add plpythonu as language
-        _logger.info("Admin role for the database: %s" % config.get('db_admin', 'oerpadmin'))  # noqa
-        cr.execute("""SELECT count(*) from pg_roles
-                       WHERE rolname=%s and rolcanlogin=false;""",
-                   (config.get('db_admin', 'oerpadmin'),))
-        if not cr.fetchone()[0]:
-            _logger.warn('Role admin not found, we cannot install plpython and function for jasperserver')  # noqa
-        else:
-            # Check if plpythonu is installed
-            cr.execute("""SET ROLE %s""", (config.get('db_admin', 'oerpadmin'),))  # noqa
-            cr.execute("""select count(*) as "installed" from pg_language
-                           where lanname='plpythonu';""")
-            if not cr.fetchone()[0]:
-                # Install this language
-                _logger.info('Add PL/Python for this database')
-                cr.execute("""CREATE LANGUAGE plpythonu;""")
-                cr.commit()
-
-            fct_file = openerp.tools.misc.file_open(os.path.join(
-                get_module_path('jasper_server'), 'sql', 'plpython.sql'))
-            try:
-                query = fct_file.read() % {'db_user': config.get('db_user',
-                                                                 'oerp')}
-                cr.execute(query)
-                cr.commit()
-            finally:
-                fct_file.close()
-
-        super(JasperServer, self).__init__(pool, cr)
-
     def check_auth(self, cr, uid, ids, context=None):
         """
         Check if we can join the JasperServer instance,
@@ -183,19 +105,6 @@ class JasperServer(orm.Model):
         return self.write(cr, uid, ids,
                           {'status': _('JasperServer Connection OK')},
                           context=context)
-
-    # ************************************************
-    # These method can create an XML for Jasper Server
-    # *************************************************
-    # TODO: ban element per level
-    ban = (
-        'res.company', 'ir.model', 'ir.model.fields', 'res.groups',
-        'ir.model.data', 'ir.model.grid', 'ir.model.access', 'ir.ui.menu',
-        'ir.actions.act_window', 'ir.action.wizard', 'ir.attachment',
-        'ir.cron', 'ir.rule', 'ir.rule.group', 'ir.actions.actions',
-        'ir.actions.report.custom', 'ir.actions.report.xml', 'ir.actions.url',
-        'ir.ui.view', 'ir.sequence', 'res.partner.event',
-    )
 
     @staticmethod
     def format_element(element):
