@@ -216,7 +216,10 @@ class Jasper(object):
         # Add query parameters
         for k, v in params.items():
             p = etree.SubElement(rd, 'parameter', name=k)
-            p.text = str(v)
+            if isinstance(v, basestring):
+                p.text = v
+            else:
+                p.text = str(v)
 
         rq.append(rd)
         return etree.tostring(rq, pretty_print=True)
