@@ -22,15 +22,22 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
-from jasper_server.common import registered_report
+import openerp
+from openerp import models
 import logging
+from jasper import report_jasper
+from common import registered_report
 
 _logger = logging.getLogger(__name__)
 
 
-class IrActionReport(osv.Model):
+class IrActionReport(models.Model):
     _inherit = 'ir.actions.report.xml'
+
+    def __init__(self, pool, cr):
+        report_types = self._columns['report_type'].selection
+        if 'jasper' not in [key for key, val in report_types]:
+            self._columns['report_type'].selection.append(('jasper', 'Jasper'))
 
     def register_all(self, cursor):
         """
@@ -46,5 +53,28 @@ class IrActionReport(osv.Model):
         _logger.info('====[END REGISTER JASPER REPORT]====================')
         return True
 
+    def _lookup_report(self, cr, name):
+        """
+        Look up a report definition.
+        """
+        # First lookup in the deprecated place, because if the report definition
+        # has not been updated, it is more likely the correct definition is there.
+        # Only reports with custom parser specified in Python are still there.
+        if 'report.' + name in openerp.report.interface.report_int._reports:
+            new_report = openerp.report.interface.report_int._reports['report.' + name]
+            if not isinstance(new_report, report_jasper):
+                new_report = None
+        else:
+            cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s and report_type=%s", (name, 'jasper'))
+            r = cr.dictfetchone()
+            if r:
+                new_report = report_jasper('report.'+r['report_name'])
+            else:
+                new_report = None
+
+        if new_report:
+            return new_report
+        else:
+            return super(IrActionReport, self)._lookup_report(cr, name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

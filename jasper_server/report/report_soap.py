@@ -22,12 +22,12 @@
 #
 ##############################################################################
 
-import pooler
 import os
 import time
 import base64
 import logging
 
+from openerp import pooler
 from openerp.report.render import render
 from openerp.tools.translate import _
 # from httplib2 import Http, ServerNotFoundError, HttpLib2Error

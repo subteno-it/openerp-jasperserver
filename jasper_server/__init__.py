@@ -22,7 +22,6 @@
 #
 ##############################################################################
 
-import ir_actions_wizard
 import obj_server
 import obj_document
 import ir_actions

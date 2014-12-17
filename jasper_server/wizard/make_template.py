@@ -24,7 +24,7 @@
 
 
 import wizard
-import pooler
+from openerp import pooler
 import base64
 
 try:

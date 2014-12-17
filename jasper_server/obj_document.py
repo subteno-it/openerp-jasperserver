@@ -28,7 +28,7 @@ from openerp.osv import orm
 from openerp.osv import fields
 from openerp.tools.sql import drop_view_if_exists
 from openerp.tools.translate import _
-from jasper_server.common import registered_report, KNOWN_PARAMETERS
+from openerp.addons.jasper_server.common import registered_report, KNOWN_PARAMETERS
 from StringIO import StringIO
 from lxml import etree
 import base64

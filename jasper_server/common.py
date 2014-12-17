@@ -22,7 +22,7 @@
 #
 ##############################################################################
 
-from openerp import netsvc
+import openerp
 import logging
 from jasper import report_jasper
 
@@ -41,7 +41,7 @@ KNOWN_PARAMETERS = [
 def registered_report(name):
     """ Register dynamicaly the report for each entry"""
     gname = 'report.' + name
-    if gname in netsvc.Service._services:
+    if gname in openerp.report.interface.report_int._reports:
         return
     report_jasper(gname)
     _logger.info('Register the jasper report service [%s]' % name)

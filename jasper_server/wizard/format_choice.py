@@ -23,8 +23,8 @@
 ##############################################################################
 
 import wizard
-import pooler
-from tools.translate import _
+from openerp import pooler
+from openerp.tools.translate import _
 
 form = """<?xml version="1.0" ?>
 <form string="Format choice">
