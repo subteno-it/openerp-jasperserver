@@ -162,6 +162,14 @@ class jasper_document(orm.Model):
         """
         Automaticaly registered service at server starts
         """
+        cr.execute("SELECT * FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'jasper_document'")
+        if cr.rowcount:
+            cr.execute('SELECT id FROM jasper_document')
+            for jasper_data in cr.fetchall():
+                registered_report('jasper.report_%d' % (jasper_data[0],))
+        else:
+            _logger.info('The jasper_server module is currently being installed, no report to load')
+
         super(jasper_document, self).__init__(pool, cr)
 
     def make_action(self, cr, uid, id, context=None):
