@@ -26,7 +26,6 @@ import openerp
 from openerp import models
 import logging
 from jasper import report_jasper
-from common import registered_report
 
 _logger = logging.getLogger(__name__)
 
@@ -39,19 +38,7 @@ class IrActionReport(models.Model):
         if 'jasper' not in [key for key, val in report_types]:
             self._columns['report_type'].selection.append(('jasper', 'Jasper'))
 
-    def register_all(self, cursor):
-        """
-        Register all jasper report
-        """
-        _logger.info('====[REGISTER JASPER REPORT]========================')
-        cursor.execute("""SELECT id, report_name
-                            FROM ir_act_report_xml
-                           WHERE report_type = 'jasper'""")
-        records = cursor.dictfetchall()
-        for record in records:
-            registered_report(record['report_name'])
-        _logger.info('====[END REGISTER JASPER REPORT]====================')
-        return True
+        return super(IrActionReport, self).__init__(pool, cr)
 
     def _lookup_report(self, cr, name):
         """

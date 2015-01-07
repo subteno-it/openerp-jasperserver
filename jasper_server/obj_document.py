@@ -28,7 +28,7 @@ from openerp.osv import orm
 from openerp.osv import fields
 from openerp.tools.sql import drop_view_if_exists
 from openerp.tools.translate import _
-from openerp.addons.jasper_server.common import registered_report, KNOWN_PARAMETERS
+from openerp.addons.jasper_server.common import KNOWN_PARAMETERS
 from StringIO import StringIO
 from lxml import etree
 import base64
@@ -158,20 +158,6 @@ class jasper_document(orm.Model):
         'message_simple': False,
     }
 
-    def __init__(self, pool, cr):
-        """
-        Automaticaly registered service at server starts
-        """
-        cr.execute("SELECT * FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'jasper_document'")
-        if cr.rowcount:
-            cr.execute('SELECT id FROM jasper_document')
-            for jasper_data in cr.fetchall():
-                registered_report('jasper.report_%d' % (jasper_data[0],))
-        else:
-            _logger.info('The jasper_server module is currently being installed, no report to load')
-
-        super(jasper_document, self).__init__(pool, cr)
-
     def make_action(self, cr, uid, id, context=None):
         """
         Create an entry in ir_actions_report_xml
@@ -214,7 +200,6 @@ class jasper_document(orm.Model):
                                                   value,
                                                   replace=False,
                                                   isobject=True)
-        registered_report('jasper.report_%d' % (doc.id,))
 
     def action_values(self, cr, uid, report_id, context=None):
         """
