@@ -680,8 +680,8 @@ msgstr "Le nom de service ne correspond pas!"
 
 #. module: jasper_server
 #: model:res.groups,name:jasper_server.group_jasper_user
-msgid "Jasper / User"
-msgstr "Jasper / Utilisateur"
+msgid "User"
+msgstr "Utilisateur"
 
 #. module: jasper_server
 #: field:jasper.document,duplicate:0
@@ -853,8 +853,8 @@ msgstr "Nom du libellé, ce champ sera traduit dans toutes les langues disponibl
 
 #. module: jasper_server
 #: model:res.groups,name:jasper_server.group_jasper_manager
-msgid "Jasper / Manager"
-msgstr "Jasper / Responsable"
+msgid "Manager"
+msgstr "Responsable"
 
 #. module: jasper_server
 #: selection:jasper.document,format_choice:0
