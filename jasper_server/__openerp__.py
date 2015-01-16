@@ -71,7 +71,7 @@ In collaboration with Eric Vernichon (from Everlibre)
     ],
     'installable': True,
     'auto_install': False,
-    'external_dependencies': {'python': ['httplib2', 'pyPdf']},
+    'external_dependencies': {'python': ['httplib2', 'pyPdf', 'dime']},
     'application': True,
 }
 
