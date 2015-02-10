@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-19 17:25+0000\n"
-"PO-Revision-Date: 2014-03-19 17:25+0000\n"
+"POT-Creation-Date: 2015-02-02 13:30+0000\n"
+"PO-Revision-Date: 2015-02-02 13:30+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,10 +16,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:130
-#: code:addons/jasper_server/report/report_soap.py:134
-#: code:addons/jasper_server/report/report_soap.py:138
-#: code:addons/jasper_server/report/report_soap.py:142
+#: code:addons/jasper_server/report/report_soap.py:135
+#: code:addons/jasper_server/report/report_soap.py:139
+#: code:addons/jasper_server/report/report_soap.py:143
+#: code:addons/jasper_server/report/report_soap.py:147
 #, python-format
 msgid "Field Eval Error"
 msgstr ""
@@ -40,35 +40,12 @@ msgid "Name of the PDF file store as attachment to add at the first page (page n
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:199
-#: code:addons/jasper_server/report/report_soap.py:202
-#: code:addons/jasper_server/report/report_soap.py:205
 #: code:addons/jasper_server/report/report_soap.py:208
+#: code:addons/jasper_server/report/report_soap.py:211
+#: code:addons/jasper_server/report/report_soap.py:214
+#: code:addons/jasper_server/report/report_soap.py:217
 #, python-format
 msgid "Language Error"
-msgstr ""
-
-#. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:395
-#, python-format
-msgid "Connection error"
-msgstr ""
-
-#. module: jasper_server
-#: code:addons/jasper_server/obj_document.py:296
-#: code:addons/jasper_server/obj_document.py:311
-#: code:addons/jasper_server/obj_document.py:313
-#: code:addons/jasper_server/obj_document.py:315
-#: code:addons/jasper_server/report/report_soap.py:388
-#: code:addons/jasper_server/report/report_soap.py:390
-#: code:addons/jasper_server/report/report_soap.py:396
-#: code:addons/jasper_server/report/report_soap.py:402
-#: code:addons/jasper_server/report/report_soap.py:408
-#: code:addons/jasper_server/wizard/format_choice.py:60
-#: code:addons/jasper_server/wizard/format_choice.py:67
-#: code:addons/jasper_server/wizard/format_choice.py:79
-#, python-format
-msgid "Error"
 msgstr ""
 
 #. module: jasper_server
@@ -77,7 +54,21 @@ msgid "This field must be filled with a valid SQL request and will be executed A
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:135
+#: code:addons/jasper_server/obj_document.py:381
+#: code:addons/jasper_server/obj_document.py:399
+#: code:addons/jasper_server/obj_document.py:403
+#: code:addons/jasper_server/obj_document.py:407
+#: code:addons/jasper_server/report/report_soap.py:413
+#: code:addons/jasper_server/report/report_soap.py:415
+#: code:addons/jasper_server/wizard/format_choice.py:63
+#: code:addons/jasper_server/wizard/format_choice.py:70
+#: code:addons/jasper_server/wizard/format_choice.py:83
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:140
 #, python-format
 msgid "Error when evaluate field\n"
 "\n"
@@ -101,7 +92,7 @@ msgid "Document"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:255
+#: code:addons/jasper_server/report/report_soap.py:271
 #, python-format
 msgid "Syntax error when check condition\n"
 "\n"
@@ -126,13 +117,13 @@ msgid "Jasper Document Extension"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/obj_document.py:311
+#: code:addons/jasper_server/obj_document.py:400
 #, python-format
 msgid "Error, server not found %s %d"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:205
+#: code:addons/jasper_server/report/report_soap.py:214
 #, python-format
 msgid "Attribute error when evaluate language\n"
 "Verify if specify field exists and valid\n"
@@ -151,8 +142,9 @@ msgid "Host"
 msgstr ""
 
 #. module: jasper_server
-#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_7
-msgid "Text Editor"
+#: view:jasper.document:0
+#: field:jasper.document,sql_view:0
+msgid "SQL View"
 msgstr ""
 
 #. module: jasper_server
@@ -173,14 +165,14 @@ msgid "Enter the code to retrieve data"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:143
+#: code:addons/jasper_server/report/report_soap.py:148
 #, python-format
 msgid "Unknown error when evaluate field\n"
 "Message: \"%s\""
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:162
+#: code:addons/jasper_server/report/report_soap.py:168
 #, python-format
 msgid "Attribute error when evaluate attachment\n"
 "Verify if specify field exists and valid\n"
@@ -194,6 +186,12 @@ msgid "Use [[ o.name ]] to called browse object, see below for possibility"
 msgstr ""
 
 #. module: jasper_server
+#: code:addons/jasper_server/obj_server.py:173
+#, python-format
+msgid "Error, JasperServer not found at %s (port: %d)"
+msgstr ""
+
+#. module: jasper_server
 #: view:jasper.server:0
 msgid "Check Auth"
 msgstr ""
@@ -204,7 +202,7 @@ msgid "c: for user s company"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:208
+#: code:addons/jasper_server/report/report_soap.py:217
 #, python-format
 msgid "Unknown error when evaluate language\n"
 "Message: \"%s\""
@@ -264,20 +262,20 @@ msgid "Documents extensions"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/obj_server.py:162
+#: code:addons/jasper_server/obj_server.py:178
 #, python-format
 msgid "Error, JasperServer authentification failed for user %s/%s"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/wizard/format_choice.py:60
-#: code:addons/jasper_server/wizard/format_choice.py:79
+#: code:addons/jasper_server/wizard/format_choice.py:63
+#: code:addons/jasper_server/wizard/format_choice.py:83
 #, python-format
 msgid "No report found!"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:251
+#: code:addons/jasper_server/report/report_soap.py:267
 #, python-format
 msgid "Function \"check_print\" return an error"
 msgstr ""
@@ -293,7 +291,7 @@ msgid "SQL"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/obj_document.py:274
+#: code:addons/jasper_server/obj_document.py:349
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -309,13 +307,12 @@ msgid "Before"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:406
-#, python-format
-msgid "Authentification Error"
+#: view:jasper.document:0
+msgid "Documents"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:202
+#: code:addons/jasper_server/report/report_soap.py:211
 #, python-format
 msgid "Error when evaluate language\n"
 "\n"
@@ -326,6 +323,12 @@ msgstr ""
 #: view:jasper.document:0
 #: field:jasper.document,param_ids:0
 msgid "Parameters"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/wizard/format_choice.py:71
+#, python-format
+msgid "No implemented yet!"
 msgstr ""
 
 #. module: jasper_server
@@ -354,9 +357,9 @@ msgid "PDF Merge"
 msgstr ""
 
 #. module: jasper_server
-#: view:jasper.document:0
-#: field:jasper.document,sql_view:0
-msgid "SQL View"
+#: code:addons/jasper_server/report/report_soap.py:415
+#, python-format
+msgid "Autentification failed !"
 msgstr ""
 
 #. module: jasper_server
@@ -402,8 +405,8 @@ msgid "Jasper Reports"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.document,report_id:0
-msgid "Report link"
+#: model:ir.model,name:jasper_server.model_load_jrxml_file
+msgid "Load file in the jasperdocument"
 msgstr ""
 
 #. module: jasper_server
@@ -417,20 +420,15 @@ msgid "eg: localhost or 127.0.0.1"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:246
-#: code:addons/jasper_server/report/report_soap.py:248
-#: code:addons/jasper_server/report/report_soap.py:251
+#: code:addons/jasper_server/report/report_soap.py:258
+#: code:addons/jasper_server/report/report_soap.py:261
+#: code:addons/jasper_server/report/report_soap.py:267
 #, python-format
 msgid "Check Print Error"
 msgstr ""
 
 #. module: jasper_server
-#: field:jasper.document,sql_name:0
-msgid "Name of view"
-msgstr ""
-
-#. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:199
+#: code:addons/jasper_server/report/report_soap.py:208
 #, python-format
 msgid "Syntax error when evaluate language\n"
 "\n"
@@ -438,7 +436,7 @@ msgid "Syntax error when evaluate language\n"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:131
+#: code:addons/jasper_server/report/report_soap.py:136
 #, python-format
 msgid "Syntax error when evaluate field\n"
 "\n"
@@ -446,13 +444,13 @@ msgid "Syntax error when evaluate field\n"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:298
+#: code:addons/jasper_server/report/report_soap.py:315
 #, python-format
 msgid "No report name"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:258
+#: code:addons/jasper_server/report/report_soap.py:274
 #, python-format
 msgid "Error when check condition\n"
 "\n"
@@ -495,31 +493,24 @@ msgid "The sequence is used when launch a multple report, to select the order to
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:395
-#, python-format
-msgid "Cannot find the JasperServer at this address %s"
+#: field:jasper.document,server_id:0
+msgid "Server"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:441
-#: code:addons/jasper_server/report/report_soap.py:454
+#: code:addons/jasper_server/report/report_soap.py:453
+#: code:addons/jasper_server/report/report_soap.py:467
 #, python-format
 msgid "Configuration Error"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:176
-#: code:addons/jasper_server/report/report_soap.py:180
-#: code:addons/jasper_server/report/report_soap.py:184
-#: code:addons/jasper_server/report/report_soap.py:188
+#: code:addons/jasper_server/report/report_soap.py:182
+#: code:addons/jasper_server/report/report_soap.py:186
+#: code:addons/jasper_server/report/report_soap.py:190
+#: code:addons/jasper_server/report/report_soap.py:194
 #, python-format
 msgid "Duplicate Error"
-msgstr ""
-
-#. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:406
-#, python-format
-msgid "Invalid login or password"
 msgstr ""
 
 #. module: jasper_server
@@ -543,7 +534,7 @@ msgid "Execute SQL query before treatment"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:181
+#: code:addons/jasper_server/report/report_soap.py:187
 #, python-format
 msgid "Error when evaluate duplicate\n"
 "\n"
@@ -581,13 +572,12 @@ msgid "All label are pass as parameter to the JasperServer, and start with I18N_
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/wizard/format_choice.py:67
-#, python-format
-msgid "No implemented yet!"
+#: view:jasper.document:0
+msgid "Import JRXML"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:388
+#: code:addons/jasper_server/report/report_soap.py:413
 #, python-format
 msgid "Server not found !"
 msgstr ""
@@ -608,6 +598,11 @@ msgid "ir.actions.report.xml"
 msgstr ""
 
 #. module: jasper_server
+#: help:load.jrxml.file,datafile:0
+msgid "Select file to transfert"
+msgstr ""
+
+#. module: jasper_server
 #: model:ir.model,name:jasper_server.model_jasper_document
 #: view:jasper.document:0
 msgid "Jasper Document"
@@ -620,13 +615,13 @@ msgid "Jasper Report"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/obj_document.py:296
+#: code:addons/jasper_server/obj_document.py:382
 #, python-format
 msgid "No JasperServer configuration found !"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:455
+#: code:addons/jasper_server/report/report_soap.py:454
 #, python-format
 msgid "Service name doesn't match!"
 msgstr ""
@@ -642,8 +637,8 @@ msgid "Duplicate"
 msgstr ""
 
 #. module: jasper_server
-#: view:jasper.document:0
-msgid "Documents"
+#: field:jasper.document,sql_name:0
+msgid "Name of view"
 msgstr ""
 
 #. module: jasper_server
@@ -677,7 +672,7 @@ msgid "Repository"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:189
+#: code:addons/jasper_server/report/report_soap.py:195
 #, python-format
 msgid "Unknown error when evaluate duplicate\n"
 "Message: \"%s\""
@@ -694,10 +689,8 @@ msgid "Enter hostname or IP address"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:402
-#, python-format
-msgid "Code: %s\n"
-"Message: %s"
+#: model:jasper.document.extension,name:jasper_server.jasper_document_extension_7
+msgid "Text Editor"
 msgstr ""
 
 #. module: jasper_server
@@ -718,32 +711,24 @@ msgid "Jasper file"
 msgstr ""
 
 #. module: jasper_server
-#: help:jasper.document,lang:0
-msgid "Indicate the lang to use for this report, use o as object to evaluate\n"
-"eg: o.partner_id.lang\n"
-"or\n"
-"'fr_FR'\n"
-"default use user's lang"
-msgstr ""
-
-#. module: jasper_server
 #: field:jasper.document,lang:0
 msgid "Lang"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:261
+#: help:jasper.document,check_sel:0
+msgid "if None, no check\n"
+"if Simple, define on Check Simple the condition\n"
+" if function, the object have check_print function"
+msgstr ""
+
+#. module: jasper_server
+#: code:addons/jasper_server/report/report_soap.py:277
 #, python-format
 msgid "Attribute error when check condition\n"
 "Verify if specify field exists and valid\n"
 "\n"
 "Message: \"%s\""
-msgstr ""
-
-#. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:414
-#, python-format
-msgid "Unknown Error"
 msgstr ""
 
 #. module: jasper_server
@@ -793,20 +778,30 @@ msgid "Jasper / Manager"
 msgstr ""
 
 #. module: jasper_server
+#: view:load.jrxml.file:0
+msgid "Next"
+msgstr ""
+
+#. module: jasper_server
 #: selection:jasper.document,format_choice:0
 msgid "Single Format"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:442
+#: code:addons/jasper_server/report/report_soap.py:468
 #, python-format
 msgid "No JasperServer configuration found!"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/obj_server.py:158
-#, python-format
-msgid "Error, JasperServer not found at %s (port: %d)"
+#: help:jasper.document,lang:0
+msgid "Indicate the lang to use for this report, use'                             'o as object to evaluate\n"
+"eg: o.partner_id.lang\n"
+"'                             'ctx as context\n"
+"eg: ctx.get('test'\\)\n"
+"'                             'or\n"
+"'fr_FR'\n"
+"default use user's lang"
 msgstr ""
 
 #. module: jasper_server
@@ -816,13 +811,13 @@ msgid "Code"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/obj_document.py:313
+#: code:addons/jasper_server/obj_document.py:404
 #, python-format
 msgid "Error, Authentification failed for %s/%s"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:139
+#: code:addons/jasper_server/report/report_soap.py:144
 #, python-format
 msgid "Attribute error when evaluate field\n"
 "Verify if specify field exists and valid\n"
@@ -851,6 +846,11 @@ msgid "Format Choice"
 msgstr ""
 
 #. module: jasper_server
+#: view:load.jrxml.file:0
+msgid "Cancel"
+msgstr ""
+
+#. module: jasper_server
 #: view:jasper.document.extension:0
 msgid "Document extensions"
 msgstr ""
@@ -872,7 +872,7 @@ msgid "Check Simple"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:154
+#: code:addons/jasper_server/report/report_soap.py:160
 #, python-format
 msgid "Syntax error when evaluate attachment\n"
 "\n"
@@ -890,7 +890,7 @@ msgid "eg: 8080"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:185
+#: code:addons/jasper_server/report/report_soap.py:191
 #, python-format
 msgid "Attribute error when evaluate duplicate\n"
 "Verify if specify field exists and valid\n"
@@ -899,10 +899,10 @@ msgid "Attribute error when evaluate duplicate\n"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:255
-#: code:addons/jasper_server/report/report_soap.py:258
-#: code:addons/jasper_server/report/report_soap.py:261
-#: code:addons/jasper_server/report/report_soap.py:267
+#: code:addons/jasper_server/report/report_soap.py:271
+#: code:addons/jasper_server/report/report_soap.py:274
+#: code:addons/jasper_server/report/report_soap.py:277
+#: code:addons/jasper_server/report/report_soap.py:283
 #, python-format
 msgid "Check Error"
 msgstr ""
@@ -918,7 +918,7 @@ msgid "Report Unit"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:177
+#: code:addons/jasper_server/report/report_soap.py:183
 #, python-format
 msgid "Syntax error when evaluate duplicate\n"
 "\n"
@@ -968,13 +968,6 @@ msgid "Name of the parameter send to JasperServer, prefix with I18N_\n"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:414
-#, python-format
-msgid "Content-type: %s\n"
-"Message:%s"
-msgstr ""
-
-#. module: jasper_server
 #: help:jasper.document,report_unit:0
 msgid "Enter the name for report unit in Jasper Server"
 msgstr ""
@@ -985,7 +978,7 @@ msgid "Multi Format"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:248
+#: code:addons/jasper_server/report/report_soap.py:261
 #, python-format
 msgid "\"check_print\" function not found in \"%s\" object"
 msgstr ""
@@ -1001,7 +994,7 @@ msgid "Enter the select query of the view only"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:267
+#: code:addons/jasper_server/report/report_soap.py:283
 #, python-format
 msgid "Unknown error when check condition\n"
 "Message: \"%s\""
@@ -1015,6 +1008,11 @@ msgid "Name"
 msgstr ""
 
 #. module: jasper_server
+#: help:jasper.document,server_id:0
+msgid "Select specific JasperServer"
+msgstr ""
+
+#. module: jasper_server
 #: help:jasper.document,duplicate:0
 msgid "Indicate the number of duplicate copie, use o as object to evaluate\n"
 "eg: o.partner_id.copy\n"
@@ -1023,7 +1021,7 @@ msgid "Indicate the number of duplicate copie, use o as object to evaluate\n"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/obj_server.py:166
+#: code:addons/jasper_server/obj_server.py:184
 #, python-format
 msgid "JasperServer Connection OK"
 msgstr ""
@@ -1055,7 +1053,7 @@ msgid "By default the password is jasperadmin"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:166
+#: code:addons/jasper_server/report/report_soap.py:172
 #, python-format
 msgid "Unknown error when evaluate attachment\n"
 "Message: \"%s\""
@@ -1067,10 +1065,9 @@ msgid "Insert your SQL view, if the report is base on it"
 msgstr ""
 
 #. module: jasper_server
-#: help:jasper.document,check_sel:0
-msgid "if None, no check\n"
-"if Simple, define on Check Simple the condition\n"
-" if function, the object have check_print function"
+#: model:ir.actions.act_window,name:jasper_server.load_jrxml_file_wizard_action
+#: view:load.jrxml.file:0
+msgid "Load JRXML file"
 msgstr ""
 
 #. module: jasper_server
@@ -1085,7 +1082,7 @@ msgid "Sequence"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:158
+#: code:addons/jasper_server/report/report_soap.py:164
 #, python-format
 msgid "Error when evaluate attachment\n"
 "\n"
@@ -1100,6 +1097,16 @@ msgstr ""
 #. module: jasper_server
 #: view:jasper.document.parameter:0
 msgid "t: for time module"
+msgstr ""
+
+#. module: jasper_server
+#: field:load.jrxml.file,datafile:0
+msgid "File"
+msgstr ""
+
+#. module: jasper_server
+#: field:jasper.document,report_id:0
+msgid "Report link"
 msgstr ""
 
 #. module: jasper_server
@@ -1118,10 +1125,10 @@ msgid "Hostname or IP address"
 msgstr ""
 
 #. module: jasper_server
-#: code:addons/jasper_server/report/report_soap.py:153
-#: code:addons/jasper_server/report/report_soap.py:157
-#: code:addons/jasper_server/report/report_soap.py:161
-#: code:addons/jasper_server/report/report_soap.py:165
+#: code:addons/jasper_server/report/report_soap.py:159
+#: code:addons/jasper_server/report/report_soap.py:163
+#: code:addons/jasper_server/report/report_soap.py:167
+#: code:addons/jasper_server/report/report_soap.py:171
 #, python-format
 msgid "Attachment Error"
 msgstr ""

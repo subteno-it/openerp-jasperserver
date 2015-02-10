@@ -194,12 +194,15 @@ class Report(object):
             raise EvalError(_('Duplicate Error'),
                             _('Unknown error when evaluate duplicate\nMessage: "%s"') % str(e))  # noqa
 
-    def _eval_lang(self, cur_obj, current_document):
+    def _eval_lang(self, cur_obj, current_document, context=None):
         """
         Evaluate the lang field
         """
+        if context is None:
+            context = {}
+
         try:
-            return eval(current_document.lang, {'o': cur_obj})
+            return eval(current_document.lang, {'o': cur_obj, 'ctx': context})
         except SyntaxError, e:
             _logger.warning('Error %s' % str(e))
             raise EvalError(_('Language Error'), _('Syntax error when evaluate language\n\nMessage: "%s"') % str(e))  # noqa
@@ -243,7 +246,8 @@ class Report(object):
 
         language = context.get('lang', 'en_US')
         if current_document.lang:
-            language = self._eval_lang(cur_obj, current_document)
+            language = self._eval_lang(
+                cur_obj, current_document, context=context)
 
         # Check if we can launch this reports
         # Test can be simple, or un a function
