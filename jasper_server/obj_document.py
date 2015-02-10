@@ -122,7 +122,10 @@ class jasper_document(orm.Model):
         'duplicate': fields.char('Duplicate', size=256,
                                  help="Indicate the number of duplicate copie, use o as object to evaluate\neg: o.partner_id.copy\nor\n'1'", ),  # noqa
         'lang': fields.char('Lang', size=256,
-                            help="Indicate the lang to use for this report, use o as object to evaluate\neg: o.partner_id.lang\nor\n'fr_FR'\ndefault use user's lang"),  # noqa
+                            help="Indicate the lang to use for this report, use' \
+                            'o as object to evaluate\neg: o.partner_id.lang\n' \
+                            'ctx as context\neg: ctx.get(\'test'\)\n' \
+                            'or\n'fr_FR'\ndefault use user's lang"),  # noqa
         'report_id': fields.many2one('ir.actions.report.xml', 'Report link',
                                      readonly=True, help='Link to the report in ir.actions.report.xml'),  # noqa
         'check_sel': fields.selection([('none', 'None'),
