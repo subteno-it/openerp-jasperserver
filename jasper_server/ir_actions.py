@@ -34,11 +34,13 @@ class IrActionReport(models.Model):
     _inherit = 'ir.actions.report.xml'
 
     def __init__(self, pool, cr):
-        report_types = self._columns['report_type'].selection
-        if 'jasper' not in [key for key, val in report_types]:
-            self._columns['report_type'].selection.append(('jasper', 'Jasper'))
+        res = super(IrActionReport, self).__init__(pool, cr)
 
-        return super(IrActionReport, self).__init__(pool, cr)
+        report_types = self._fields['report_type'].selection
+        if 'jasper' not in [key for key, val in report_types]:
+            self._fields['report_type'].selection.append(('jasper', 'Jasper'))
+
+        return res
 
     def _lookup_report(self, cr, name):
         """
