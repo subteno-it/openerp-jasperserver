@@ -33,12 +33,13 @@ _logger = logging.getLogger(__name__)
 class IrActionReport(models.Model):
     _inherit = 'ir.actions.report.xml'
 
-    def __init__(self, pool, cr):
-        res = super(IrActionReport, self).__init__(pool, cr)
+    @classmethod
+    def _add_field(self, name, field):
+        res = super(IrActionReport, self)._add_field(name, field)
 
-        report_types = self._fields['report_type'].selection
-        if 'jasper' not in [key for key, val in report_types]:
-            self._fields['report_type'].selection.append(('jasper', 'Jasper'))
+        if name == 'report_type':
+            if 'jasper' not in zip(*field.selection)[0]:
+                field.selection.append(('jasper', 'Jasper'))
 
         return res
 
