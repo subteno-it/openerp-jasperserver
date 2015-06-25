@@ -22,10 +22,7 @@
 #
 ##############################################################################
 
-
-from openerp.osv import osv
-from openerp.osv import orm
-from openerp.osv import fields
+from openerp import models, api, fields, exceptions
 from openerp.tools.sql import drop_view_if_exists
 from openerp.tools.translate import _
 from openerp.addons.jasper_server.common import KNOWN_PARAMETERS
@@ -42,164 +39,112 @@ JRXML_NS = {
 }
 
 
-class jasper_document_extension(orm.Model):
+class jasper_document_extension(models.Model):
     _name = 'jasper.document.extension'
     _description = 'Jasper Document Extension'
 
-    _columns = {
-        'name': fields.char('Name', size=128, translate=True),
-        'jasper_code': fields.char('Code', size=32, required=True),
-        'extension': fields.char('Extension', size=10, required=True),
-    }
+    name = fields.Char(size=128, translate=True)
+    jasper_code = fields.Char(string='Code', size=32, required=True)
+    extension = fields.Char(size=10, required=True)
 
 
-class jasper_document(orm.Model):
+class jasper_document(models.Model):
     _name = 'jasper.document'
     _description = 'Jasper Document'
     _order = 'sequence'
 
-    def _get_formats(self, cr, uid, context=None):
+    def _get_formats(self):
         """
         Return the list of all types of document that can be
         generate by JasperServer
         """
-        if not context:
-            context = {}
-        extension_obj = self.pool.get('jasper.document.extension')
-        ext_ids = extension_obj.search(cr, uid, [], context=context)
-        extensions = extension_obj.read(cr, uid, ext_ids, context=context)
-        ext = [(extension['jasper_code'],
-                extension['name'] + " (*." + extension['extension'] + ")")
-               for extension in extensions]
-        return ext
+        extension_obj = self.env['jasper.document.extension']
+        extensions = extension_obj.search([])
+        return [(extension.jasper_code, '%s (*.%s)' % (extension.name, extension.extension)) for extension in extensions]
 
-    _columns = {
-        'name': fields.char('Name', size=128, translate=True, required=True,
-                            placeholder="InvoiceJ"),  # button name
-        'enabled': fields.boolean('Active',
-                                  help="Indicates if this document is active or not"),  # noqa
-        'model_id': fields.many2one('ir.model', 'Object Model', required=True),
-        'server_id': fields.many2one('jasper.server', 'Server',
-                                     help='Select specific JasperServer'),
-        'jasper_file': fields.char('Jasper file', size=128),  # jasper filename
-        'group_ids': fields.many2many('res.groups', 'jasper_wizard_group_rel',
-                                      'document_id', 'group_id', 'Groups', ),
-        'depth': fields.integer('Depth', required=True),
-        'format_choice': fields.selection([('mono', 'Single Format'),
-                                           ('multi', 'Multi Format')],
-                                          'Format Choice', required=True),
-        'format': fields.selection(_get_formats, 'Formats'),
-        'report_unit': fields.char('Report Unit', size=128,
-                                   help='Enter the name for report unit in Jasper Server'),  # noqa
-        'mode': fields.selection([('sql', 'SQL'), ('xml', 'XML'),
-                                  ('multi', 'Multiple Report')], 'Mode',
-                                 required=True),
-        'before': fields.text('Before',
-                              help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',),  # noqa
-        'after': fields.text('After',
-                             help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',),  # noqa
-        'attachment': fields.char('Save As Attachment Prefix', size=255,
-                                  help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),  # noqa
-        'attachment_use': fields.boolean('Reload from Attachment',
-                                         help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),  # noqa
-        'param_ids': fields.one2many('jasper.document.parameter',
-                                     'document_id', 'Parameters', ),
-        'ctx': fields.char('Context', size=128,
-                           help="Enter condition with context does match to see the print action\neg: context.get('foo') == 'bar'"),  # noqa
-        'sql_view': fields.text('SQL View',
-                                help='Insert your SQL view, if the report is base on it'),  # noqa
-        'sql_name': fields.char('Name of view', size=128, ),
-        'child_ids': fields.many2many('jasper.document',
-                                      'jasper_document_multi_rel',
-                                      'source_id',
-                                      'destin_id',
-                                      'Child report',
-                                      help='Select reports to launch when this report is called'),  # noqa
-        'sequence': fields.integer('Sequence',
-                                   help='The sequence is used when launch a multple report, to select the order to launch'),  # noqa
-        'only_one': fields.boolean('Launch one time for all ids',
-                                   help='Launch the report only one time on multiple id'),  # noqa
-        'duplicate': fields.char('Duplicate', size=256,
-                                 help="Indicate the number of duplicate copie, use o as object to evaluate\neg: o.partner_id.copy\nor\n'1'", ),  # noqa
-        'lang': fields.char('Lang', size=256,
-                            help="Indicate the lang to use for this report, use' \
-                            'o as object to evaluate\neg: o.partner_id.lang\n' \
-                            'ctx as context\neg: ctx.get(\'test'\)\n' \
-                            'or\n'fr_FR'\ndefault use user's lang"),  # noqa
-        'report_id': fields.many2one('ir.actions.report.xml', 'Report link',
-                                     readonly=True, help='Link to the report in ir.actions.report.xml'),  # noqa
-        'check_sel': fields.selection([('none', 'None'),
-                                       ('simple', 'Simple'),
-                                       ('func', 'Function')],
-                                      'Checking type',
-                                      help='if None, no check\nif Simple, define on Check Simple the condition\n if function, the object have check_print function'),  # noqa
-        'check_simple': fields.char('Check Simple', size=256,
-                                    help="This code inside this field must return True to send report execution\neg o.state in ('draft', 'open')"),  # noqa
-        'message_simple': fields.char('Return message', size=256,
-                                      translate=True,
-                                      help="Error message when check simple doesn't valid"),  # noqa
-        'label_ids': fields.one2many('jasper.document.label', 'document_id',
-                                     'Labels'),
-        'pdf_begin': fields.char('PDF at begin', size=128,
-                                 help='Name of the PDF file store as attachment to add at the first page (page number not recompute)'),  # noqa
-        'pdf_ended': fields.char('PDF at end', size=128,
-                                 help='Name of the PDF file store as attachment to add at the last page (page number not recompute)'),  # noqa
-    }
+    name = fields.Char(size=128, translate=True, required=True, placeholder="InvoiceJ")
+    enabled = fields.Boolean(string='Active', help="Indicates if this document is active or not")
+    model_id = fields.Many2one('ir.model', string='Object Model', required=True),
+    server_id = fields.Many2one('jasper.server', string='Server', help='Select specific JasperServer')
+    jasper_file = fields.Char('Jasper file', size=128)
+    group_ids = fields.Many2many('res.groups', 'jasper_wizard_group_rel', 'document_id', 'group_id', string='Groups')
+    depth = fields.Integer(required=True, default=0)
+    format_choice = fields.Selection([
+        ('mono', 'Single Format'),
+        ('multi', 'Multi Format')
+    ], default='mono', required=True)
+    format = fields.Selection(_get_formats, defaumt='PDF', string='Formats')
+    report_unit = fields.Char(size=128, help='Enter the name for report unit in Jasper Server')
+    mode = fields.Selection([
+        ('sql', 'SQL'),
+        ('xml', 'XML'),
+        ('multi', 'Multiple Report'),
+    ], default='sql', required=True)
+    before = fields.Text(help='This field must be filled with a valid SQL request and will be executed BEFORE the report edition',)
+    after = fields.Text(help='This field must be filled with a valid SQL request and will be executed AFTER the report edition',)
+    attachment = fields.Char(
+        string='Save As Attachment Prefix', size=255, default=False,
+        help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.',
+    )
+    attachment_use = fields.Boolean(string='Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
+    param_ids = fields.One2many('jasper.document.parameter', 'document_id', string='Parameters', )
+    ctx = fields.Char(string='Context', size=128, help="Enter condition with context does match to see the print action\neg: context.get('foo') == 'bar'")
+    sql_view = fields.Text(string='SQL View', help='Insert your SQL view, if the report is base on it')
+    sql_name = fields.Char(string='Name of view', size=128)
+    child_ids = fields.Many2many('jasper.document', 'jasper_document_multi_rel', 'source_id', 'destin_id', string='Child report', help='Select reports to launch when this report is called')
+    sequence = fields.Integer(default=100, help='The sequence is used when launch a multple report, to select the order to launch')
+    only_one = fields.Boolean(string='Launch one time for all ids', help='Launch the report only one time on multiple id')
+    duplicate = fields.Char(size=256, default="'1'", help="Indicate the number of duplicate copie, use o as object to evaluate\neg: o.partner_id.copy\nor\n'1'")
+    lang = fields.Char(size=256, default=False, help="Indicate the lang to use for this report, use o as object to evaluate\neg: o.partner_id.lang\nor\n'fr_FR'\ndefault use user's lang")
+    report_id = fields.Many2one('ir.actions.report.xml', 'Report link', readonly=True, default=False, help='Link to the report in ir.actions.report.xml')
+    check_sel = fields.Selection([
+        ('none', 'None'),
+        ('simple', 'Simple'),
+        ('func', 'Function'),
+    ], string='Checking type', default='none', help='if None, no check\nif Simple, define on Check Simple the condition\n if function, the object have check_print function')
+    check_simple = fields.Char(size=256, help="This code inside this field must return True to send report execution\neg o.state in ('draft', 'open')")
+    message_simple = fields.Char(string='Return message', size=256, translate=True, help="Error message when check simple doesn't valid")
+    label_ids = fields.One2many('jasper.document.label', 'document_id', string='Labels')
+    pdf_begin = fields.Char(string='PDF at begin', size=128, help='Name of the PDF file store as attachment to add at the first page (page number not recompute)')
+    pdf_ended = fields.Char(string='PDF at end', size=128, help='Name of the PDF file store as attachment to add at the last page (page number not recompute)')
 
-    _defaults = {
-        'format_choice': 'mono',
-        'mode': 'sql',
-        'attachment': False,
-        'depth': 0,
-        'sequence': 100,
-        'format': 'PDF',
-        'duplicate': "'1'",
-        'lang': False,
-        'report_id': False,
-        'check_sel': 'none',
-        'check_simple': False,
-        'message_simple': False,
-    }
-
-    def make_action(self, cr, uid, id, context=None):
+    def make_action(self):
         """
         Create an entry in ir_actions_report_xml
         and ir.values
         """
         act_report_obj = self.pool.get('ir.actions.report.xml')
 
-        doc = self.browse(cr, uid, id, context=context)
-        if doc.report_id:
-            _logger.info('Update "%s" service' % doc.name)
+        if self.report_id:
+            _logger.info('Update "%s" service' % self.name)
             args = {
-                'name': doc.name,
-                'report_name': 'jasper.report_%d' % (doc.id,),
-                'model': doc.model_id.model,
-                'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
+                'name': self.name,
+                'report_name': 'jasper.report_%d' % (self.id,),
+                'model': self.model_id.model,
+                'groups_id': [(6, 0, [x.id for x in self.group_ids])],
                 'header': False,
                 'multi': False,
             }
-            act_report_obj.write(cr, uid, [doc.report_id.id], args,
-                                 context=context)
+            self.report_id.write(args)
         else:
-            _logger.info('Create "%s" service' % doc.name)
+            _logger.info('Create "%s" service' % self.name)
             args = {
-                'name': doc.name,
-                'report_name': 'jasper.report_%d' % (doc.id,),
-                'model': doc.model_id.model,
+                'name': self.name,
+                'report_name': 'jasper.report_%d' % (self.id,),
+                'model': self.model_id.model,
                 'report_type': 'jasper',
-                'groups_id': [(6, 0, [x.id for x in doc.group_ids])],
+                'groups_id': [(6, 0, [x.id for x in self.group_ids])],
                 'header': False,
                 'multi': False,
             }
-            report_id = act_report_obj.create(cr, uid, args, context=context)
-            cr.execute("""UPDATE jasper_document SET report_id=%s
+            report_id = act_report_obj.create(args)
+            self.env.cr.execute("""UPDATE jasper_document SET report_id=%s
                            WHERE id=%s""", (report_id, id))
             value = 'ir.actions.report.xml,' + str(report_id)
-            self.pool.get('ir.model.data').ir_set(cr, uid, 'action',
+            self.pool.get('ir.model.data').ir_set('action',
                                                   'client_print_multi',
-                                                  doc.name,
-                                                  [doc.model_id.model],
+                                                  self.name,
+                                                  [self.model_id.model],
                                                   value,
                                                   replace=False,
                                                   isobject=True)
@@ -249,14 +194,13 @@ class jasper_document(orm.Model):
         }
 
     def create_values(self, cr, uid, id, context=None):
-        doc = self.browse(cr, uid, id, context=context)
-        if not self.action_values(cr, uid, doc.report_id.id, context=context):
-            value = 'ir.actions.report.xml,%d' % doc.report_id.id
+        if not self.action_values(cr, uid, self.report_id.id, context=context):
+            value = 'ir.actions.report.xml,%d' % self.report_id.id
             _logger.debug('create_values -> ' + value)
             self.pool.get('ir.model.data').ir_set(cr, uid, 'action',
                                                   'client_print_multi',
-                                                  doc.name,
-                                                  [doc.model_id.model],
+                                                  self.name,
+                                                  [self.model_id.model],
                                                   value,
                                                   replace=False,
                                                   isobject=True)
@@ -266,10 +210,9 @@ class jasper_document(orm.Model):
         """
         Only remove link in ir.values, not the report
         """
-        doc = self.browse(cr, uid, id, context=context)
         self.pool.get('ir.values').unlink(cr, uid,
                                           self.action_values(cr, uid,
-                                                             doc.report_id.id,
+                                                             self.report_id.id,
                                                              context=context))
         _logger.debug('unlink_values')
         return True
@@ -336,10 +279,8 @@ class jasper_document(orm.Model):
         if default is None:
             default = {}
 
-        doc = self.browse(cr, uid, id, context=context)
-
         default['report_id'] = False
-        default['name'] = doc.name + _(' (copy)')
+        default['name'] = self.name + _(' (copy)')
         return super(jasper_document, self).copy(cr, uid, id, default,
                                                  context=context)
 
@@ -348,18 +289,12 @@ class jasper_document(orm.Model):
         When remove jasper_document, we must remove data to
         ir.actions.report.xml and ir.values
         """
-        if context is None:
-            context = {}
-
-        for doc in self.browse(cr, uid, ids, context=context):
+        for doc in self:
             if doc.report_id:
-                self.unlink_values(cr, uid, doc.id, context)
-                self.pool['ir.actions.report.xml'].unlink(cr, uid,
-                                                          [doc.report_id.id],
-                                                          context=context)
+                doc.unlink_values()
+                doc.report_id.unlink()
 
-        return super(jasper_document, self).unlink(cr, uid, ids,
-                                                   context=context)
+        return super(jasper_document, self).unlink()
 
     def check_report(self, cr, uid, ids, context=None):
         # TODO, use jasperlib to check if report exists
@@ -371,7 +306,7 @@ class jasper_document(orm.Model):
             js_server_ids = js_server.search(cr, uid, [('enable', '=', True)],
                                              context=context)
             if not js_server_ids:
-                raise osv.except_osv(_('Error'),
+                raise exceptions.Warning(_('Error'),
                                      _('No JasperServer configuration found !'))  # noqa
 
             jss = js_server.browse(cr, uid, js_server_ids[0], context=context)
@@ -388,16 +323,16 @@ class jasper_document(orm.Model):
             envelop = js.run_report(uri=uri, output='PDF', params={})
             js.send(jasperlib.SoapEnv('runReport', envelop).output())
         except jasperlib.ServerNotFound:
-            raise osv.except_osv(
+            raise exceptions.Warning(
                 _('Error'),
                 _('Error, server not found %s %d') % (js.host, js.port))
         except jasperlib.AuthError:
-            raise osv.except_osv(
+            raise exceptions.Warning(
                 _('Error'),
                 _('Error, Authentification failed for %s/%s') % (js.user,
                                                                  js.pwd))
         except jasperlib.ServerError, e:
-            raise osv.except_osv(_('Error'), str(e).decode('utf-8'))
+            raise exceptions.Warning(_('Error'), str(e).decode('utf-8'))
 
         return True
 
@@ -468,34 +403,28 @@ class jasper_document(orm.Model):
         return True
 
 
-class jasper_document_parameter(orm.Model):
+class jasper_document_parameter(models.Model):
     _name = 'jasper.document.parameter'
     _description = 'Add parameter to send to jasper server'
 
-    _columns = {
-        'name': fields.char('Name', size=32, help='Name of the jasper parameter, the prefix must be OERP_', required=True),  # noqa
-        'code': fields.char('Code', size=256, help='Enter the code to retrieve data', required=True),  # noqa
-        'enabled': fields.boolean('Enabled'),
-        'document_id': fields.many2one('jasper.document', 'Document',
-                                       required=True),
-    }
-
-    _defaults = {
-        'enabled': True,
-    }
+    name = fields.Char(size=32, help='Name of the jasper parameter, the prefix must be OERP_', required=True)
+    code = fields.Char(size=256, help='Enter the code to retrieve data', required=True)
+    enabled = fields.Boolean(default=True)
+    document_id = fields.Many2one('jasper.document', string='Document', required=True)
 
 
-class jasper_document_label(orm.Model):
+class jasper_document_label(models.Model):
     _name = 'jasper.document.label'
     _description = 'Manage label in document, for different language'
 
-    _columns = {
-        'name': fields.char('Parameter', size=64, required=True,
-                            help='Name of the parameter send to JasperServer, prefix with I18N_\neg: test become I18N_TEST as parameter'),  # noqa
-        'value': fields.char('Value', size=256, required=True, translate=True,
-                             help='Name of the label, this field must be translate in all languages available in the database'),  # noqa
-        'document_id': fields.many2one('jasper.document', 'Document',
-                                       required=True),
-    }
+    name = fields.Char(
+        string='Parameter', size=64, required=True,
+        help='Name of the parameter send to JasperServer, prefix with I18N_\neg: test become I18N_TEST as parameter',
+    )
+    value = fields.Char(
+        size=256, required=True, translate=True,
+        help='Name of the label, this field must be translate in all languages available in the database',
+    )
+    document_id = fields.Many2one('jasper.document', 'Document', required=True)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
