@@ -81,7 +81,7 @@
         </record>
 
         <menuitem id="menu_jasper_document_extension" 
-            parent="jasper_server.menu_jasper"
+            parent="menu_jasper"
             sequence="20"
             action="act_open_document_extension_view"/>
 
@@ -325,7 +325,7 @@
         </record>
 
         <menuitem id="menu_jasper_document" 
-            parent="base.menu_config"
+            parent="menu_jasper"
             name="Jasper Reports"
             sequence="20"
             action="act_open_document_view"

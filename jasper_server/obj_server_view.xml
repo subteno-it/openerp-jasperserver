@@ -27,7 +27,7 @@
             icon="STOCK_PRINT" 
             sequence="50" 
             name="Jasper Report" 
-            parent="base.menu_custom"/>
+            parent="base.menu_administration"/>
 
         #
         # Jasper Server configuration
